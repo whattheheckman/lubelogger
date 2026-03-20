@@ -1,0 +1,108 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+
+import '../providers/reminders_provider.dart';
+import '../domain/reminder_record.dart';
+
+class GlobalRemindersScreen extends ConsumerWidget {
+  const GlobalRemindersScreen({super.key});
+
+  String _urgencyLabel(ReminderRecord r) {
+    if (r.reminderMetric == 'date' || r.reminderMetric == 'both') {
+      if (r.dateMetric != null) {
+        final daysLeft = r.dateMetric!.difference(DateTime.now()).inDays;
+        if (daysLeft < 0) return 'overdue';
+        if (daysLeft <= 30) return 'due_soon';
+      }
+    }
+    return 'ok';
+  }
+
+  Color _urgencyColor(String label) => switch (label) {
+        'overdue' => Colors.red,
+        'due_soon' => Colors.orange,
+        _ => Colors.green,
+      };
+
+  String _urgencyText(String label) => switch (label) {
+        'overdue' => 'Overdue',
+        'due_soon' => 'Due Soon',
+        _ => 'OK',
+      };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncReminders = ref.watch(allRemindersProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('All Reminders')),
+      body: asyncReminders.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('Error: $e')),
+        data: (reminders) {
+          if (reminders.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.notifications_none, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text('No reminders across all vehicles.',
+                      textAlign: TextAlign.center),
+                ],
+              ),
+            );
+          }
+          final sorted = [...reminders]..sort((a, b) {
+              const order = {'overdue': 0, 'due_soon': 1, 'ok': 2};
+              return (order[_urgencyLabel(a)] ?? 3)
+                  .compareTo(order[_urgencyLabel(b)] ?? 3);
+            });
+          return RefreshIndicator(
+            onRefresh: () async => ref.invalidate(allRemindersProvider),
+            child: ListView.builder(
+              itemCount: sorted.length,
+              itemBuilder: (context, i) {
+                final r = sorted[i];
+                final urgency = _urgencyLabel(r);
+                final fmt = DateFormat.yMMMd();
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 6),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: _urgencyColor(urgency),
+                      child: const Icon(Icons.notifications,
+                          color: Colors.white),
+                    ),
+                    title: Text(r.description),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Vehicle ID: ${r.vehicleId}',
+                            style: const TextStyle(fontSize: 11)),
+                        if (r.dateMetric != null)
+                          Text('Due: ${fmt.format(r.dateMetric!)}'),
+                        if (r.mileageMetric != null)
+                          Text(
+                              'At: ${r.mileageMetric!.toStringAsFixed(0)} mi'),
+                      ],
+                    ),
+                    trailing: Chip(
+                      label: Text(_urgencyText(urgency),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 11)),
+                      backgroundColor: _urgencyColor(urgency),
+                      padding: EdgeInsets.zero,
+                    ),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

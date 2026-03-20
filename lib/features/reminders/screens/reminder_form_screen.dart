@@ -1,0 +1,160 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+
+import '../domain/reminder_record.dart';
+import '../providers/reminders_provider.dart';
+
+class ReminderFormScreen extends ConsumerStatefulWidget {
+  const ReminderFormScreen(
+      {super.key, required this.vehicleId, this.reminderId});
+  final int vehicleId;
+  final int? reminderId;
+
+  @override
+  ConsumerState<ReminderFormScreen> createState() =>
+      _ReminderFormScreenState();
+}
+
+class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _descController = TextEditingController();
+  final _mileageController = TextEditingController();
+  final _notesController = TextEditingController();
+  String _metric = 'date'; // 'date', 'mileage', 'both'
+  DateTime? _dateDue;
+  bool _isRecurring = false;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _descController.dispose();
+    _mileageController.dispose();
+    _notesController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _dateDue ?? DateTime.now().add(const Duration(days: 30)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) setState(() => _dateDue = picked);
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _isLoading = true);
+    try {
+      final record = ReminderRecord(
+        id: widget.reminderId ?? 0,
+        vehicleId: widget.vehicleId,
+        description: _descController.text.trim(),
+        reminderMetric: _metric,
+        dateMetric: (_metric == 'date' || _metric == 'both') ? _dateDue : null,
+        mileageMetric: (_metric == 'mileage' || _metric == 'both')
+            ? double.tryParse(_mileageController.text)
+            : null,
+        isRecurring: _isRecurring,
+        notes: _notesController.text.trim(),
+        updatedAt: DateTime.now(),
+      );
+      await ref.read(remindersNotifierProvider.notifier).save(record);
+      if (mounted) context.pop();
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.reminderId == null ? 'Add Reminder' : 'Edit Reminder'),
+      ),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            TextFormField(
+              controller: _descController,
+              decoration: const InputDecoration(
+                  labelText: 'Description', border: OutlineInputBorder()),
+              validator: (v) =>
+                  v == null || v.trim().isEmpty ? 'Required' : null,
+            ),
+            const SizedBox(height: 16),
+            const Text('Reminder Type',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            RadioListTile(
+              title: const Text('Date-based'),
+              value: 'date',
+              groupValue: _metric,
+              onChanged: (v) => setState(() => _metric = v!),
+            ),
+            RadioListTile(
+              title: const Text('Mileage-based'),
+              value: 'mileage',
+              groupValue: _metric,
+              onChanged: (v) => setState(() => _metric = v!),
+            ),
+            RadioListTile(
+              title: const Text('Both'),
+              value: 'both',
+              groupValue: _metric,
+              onChanged: (v) => setState(() => _metric = v!),
+            ),
+            const SizedBox(height: 8),
+            if (_metric == 'date' || _metric == 'both')
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Due Date'),
+                subtitle: Text(_dateDue != null
+                    ? DateFormat.yMMMd().format(_dateDue!)
+                    : 'Tap to set'),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: _pickDate,
+              ),
+            if (_metric == 'mileage' || _metric == 'both') ...[
+              TextFormField(
+                controller: _mileageController,
+                decoration: const InputDecoration(
+                    labelText: 'Due at Mileage',
+                    border: OutlineInputBorder(),
+                    suffixText: 'mi'),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 12),
+            ],
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Recurring'),
+              value: _isRecurring,
+              onChanged: (v) => setState(() => _isRecurring = v),
+            ),
+            TextFormField(
+              controller: _notesController,
+              decoration: const InputDecoration(
+                  labelText: 'Notes', border: OutlineInputBorder()),
+              maxLines: 2,
+            ),
+            const SizedBox(height: 24),
+            FilledButton(
+              onPressed: _isLoading ? null : _submit,
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

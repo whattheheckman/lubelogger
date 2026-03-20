@@ -1,0 +1,67 @@
+name: lubelogger
+description: "LubeLogger mobile app — local-first vehicle maintenance tracker."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  hooks_riverpod: ^2.6.1
+  flutter_hooks: ^0.21.0
+
+  # Navigation
+  go_router: ^14.0.0
+
+  # Local storage
+  drift: ^2.22.0
+  drift_flutter: ^0.2.2
+  sqlite3_flutter_libs: ^0.5.0
+
+  # HTTP
+  dio: ^5.7.0
+
+  # Domain models
+  freezed_annotation: ^2.4.0
+  json_annotation: ^4.9.0
+
+  # Connectivity
+  connectivity_plus: ^6.0.0
+
+  # Settings
+  shared_preferences: ^2.3.0
+
+  # Markdown
+  flutter_markdown: ^0.7.4
+
+  # Charts
+  fl_chart: ^0.69.0
+
+  # Internationalisation
+  intl: ^0.19.0
+
+  # UUID
+  uuid: ^4.5.0
+
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.0
+  drift_dev: ^2.22.0
+  riverpod_generator: ^2.6.1
+  freezed: ^2.5.0
+  json_serializable: ^6.8.0
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
