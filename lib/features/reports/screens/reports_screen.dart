@@ -22,8 +22,8 @@ class ReportsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tabBarView = TabBarView(
       children: [
-        _CostReport(vehicleId: vehicleId),
-        _FuelEconomyReport(vehicleId: vehicleId),
+        VehicleCostReport(vehicleId: vehicleId),
+        VehicleFuelEconomyReport(vehicleId: vehicleId),
       ],
     );
 
@@ -56,9 +56,14 @@ class ReportsScreen extends ConsumerWidget {
 // Cost Report
 // ─────────────────────────────────────────────────────────────
 
-class _CostReport extends ConsumerWidget {
-  const _CostReport({required this.vehicleId});
+class VehicleCostReport extends ConsumerWidget {
+  const VehicleCostReport(
+      {super.key, required this.vehicleId, this.shrinkWrapped = false});
   final int vehicleId;
+
+  /// When true, the inner ListView uses shrinkWrap so it can be embedded
+  /// inside another scrollable (e.g. the overview screen).
+  final bool shrinkWrapped;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -73,7 +78,10 @@ class _CostReport extends ConsumerWidget {
         asyncUpgrade.isLoading ||
         asyncTax.isLoading ||
         asyncGas.isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      final indicator = const Center(child: CircularProgressIndicator());
+      return shrinkWrapped
+          ? SizedBox(height: 120, child: indicator)
+          : indicator;
     }
 
     final service = asyncService.valueOrNull ?? [];
@@ -82,25 +90,30 @@ class _CostReport extends ConsumerWidget {
     final tax = asyncTax.valueOrNull ?? [];
     final gas = asyncGas.valueOrNull ?? [];
 
-    double totalService =
-        service.fold(0.0, (s, r) => s + r.cost);
-    double totalRepair = repair.fold(0.0, (s, r) => s + r.cost);
-    double totalUpgrade = upgrade.fold(0.0, (s, r) => s + r.cost);
-    double totalTax = tax.fold(0.0, (s, r) => s + r.cost);
-    double totalGas = gas.fold(0.0, (s, r) => s + r.cost);
-    double grandTotal = totalService + totalRepair + totalUpgrade + totalTax + totalGas;
+    final totalService = service.fold(0.0, (s, r) => s + r.cost);
+    final totalRepair = repair.fold(0.0, (s, r) => s + r.cost);
+    final totalUpgrade = upgrade.fold(0.0, (s, r) => s + r.cost);
+    final totalTax = tax.fold(0.0, (s, r) => s + r.cost);
+    final totalGas = gas.fold(0.0, (s, r) => s + r.cost);
+    final grandTotal =
+        totalService + totalRepair + totalUpgrade + totalTax + totalGas;
 
     if (grandTotal == 0) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.bar_chart, size: 64, color: Colors.grey),
-            SizedBox(height: 16),
-            Text('Add records with costs to see the report.'),
-          ],
+      const empty = Padding(
+        padding: EdgeInsets.symmetric(vertical: 32),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.bar_chart, size: 48, color: Colors.grey),
+              SizedBox(height: 12),
+              Text('Add records with costs to see the report.',
+                  textAlign: TextAlign.center),
+            ],
+          ),
         ),
       );
+      return empty;
     }
 
     final data = [
@@ -112,6 +125,9 @@ class _CostReport extends ConsumerWidget {
     ].where((c) => c.amount > 0).toList();
 
     return ListView(
+      shrinkWrap: shrinkWrapped,
+      physics:
+          shrinkWrapped ? const NeverScrollableScrollPhysics() : null,
       padding: const EdgeInsets.all(16),
       children: [
         Text('Total Spend: \$${grandTotal.toStringAsFixed(2)}',
@@ -161,9 +177,11 @@ class _CostCategory {
 // Fuel Economy Report
 // ─────────────────────────────────────────────────────────────
 
-class _FuelEconomyReport extends ConsumerWidget {
-  const _FuelEconomyReport({required this.vehicleId});
+class VehicleFuelEconomyReport extends ConsumerWidget {
+  const VehicleFuelEconomyReport(
+      {super.key, required this.vehicleId, this.shrinkWrapped = false});
   final int vehicleId;
+  final bool shrinkWrapped;
 
   static final _dateFmt = DateFormat.MMMd();
 
@@ -171,26 +189,33 @@ class _FuelEconomyReport extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncGas = ref.watch(gasRecordListProvider(vehicleId));
 
+    Widget bounded(Widget w) =>
+        shrinkWrapped ? SizedBox(height: 120, child: w) : w;
+
     return asyncGas.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('Error: $e')),
+      loading: () => bounded(const Center(child: CircularProgressIndicator())),
+      error: (e, _) => bounded(Center(child: Text('Error: $e'))),
       data: (records) {
         final withMpg =
             records.where((r) => r.mpg != null && r.isFillToFull).toList();
 
         if (withMpg.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.local_gas_station, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                    'Need at least 2 fill-to-full fuel records\nto calculate MPG.',
-                    textAlign: TextAlign.center),
-              ],
+          const empty = Padding(
+            padding: EdgeInsets.symmetric(vertical: 32),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.local_gas_station, size: 48, color: Colors.grey),
+                  SizedBox(height: 12),
+                  Text(
+                      'Need at least 2 fill-to-full fuel records\nto calculate MPG.',
+                      textAlign: TextAlign.center),
+                ],
+              ),
             ),
           );
+          return empty;
         }
 
         final sorted = [...withMpg]
@@ -204,10 +229,15 @@ class _FuelEconomyReport extends ConsumerWidget {
 
         final avgMpg =
             withMpg.fold(0.0, (s, r) => s + r.mpg!) / withMpg.length;
-        final maxMpg = withMpg.map((r) => r.mpg!).reduce((a, b) => a > b ? a : b);
-        final minMpg = withMpg.map((r) => r.mpg!).reduce((a, b) => a < b ? a : b);
+        final maxMpg =
+            withMpg.map((r) => r.mpg!).reduce((a, b) => a > b ? a : b);
+        final minMpg =
+            withMpg.map((r) => r.mpg!).reduce((a, b) => a < b ? a : b);
 
         return ListView(
+          shrinkWrap: shrinkWrapped,
+          physics:
+              shrinkWrapped ? const NeverScrollableScrollPhysics() : null,
           padding: const EdgeInsets.all(16),
           children: [
             Row(
@@ -258,7 +288,6 @@ class _FuelEconomyReport extends ConsumerWidget {
                   ),
                   borderData: FlBorderData(show: true),
                   lineBarsData: [
-                    // MPG line
                     LineChartBarData(
                       spots: spots,
                       isCurved: true,
@@ -266,7 +295,6 @@ class _FuelEconomyReport extends ConsumerWidget {
                       barWidth: 2,
                       dotData: const FlDotData(show: false),
                     ),
-                    // Average line
                     LineChartBarData(
                       spots: [
                         FlSpot(0, avgMpg),
@@ -326,8 +354,7 @@ class _LegendDot extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-            width: 12, height: 12, color: color),
+        Container(width: 12, height: 12, color: color),
         const SizedBox(width: 4),
         Text(label, style: const TextStyle(fontSize: 12)),
       ],

@@ -6,6 +6,7 @@ import '../../../core/routing/route_names.dart';
 import '../providers/vehicles_provider.dart';
 import '../../gas_records/screens/gas_record_list_screen.dart';
 import '../../notes/screens/notes_screen.dart';
+import 'vehicle_overview_screen.dart';
 import '../../odometer/screens/odometer_record_list_screen.dart';
 import '../../planner/screens/kanban_board_screen.dart';
 import '../../reminders/screens/reminders_screen.dart';
@@ -21,6 +22,7 @@ class VehicleDetailScreen extends ConsumerWidget {
   final int vehicleId;
 
   static final _tabs = <(String, Widget Function(int))>[
+    ('Overview', (id) => VehicleOverviewScreen(vehicleId: id, embedded: true)),
     ('Service', (id) => ServiceRecordListScreen(vehicleId: id, embedded: true)),
     ('Repairs', (id) => RepairRecordListScreen(vehicleId: id, embedded: true)),
     ('Upgrades', (id) => UpgradeRecordListScreen(vehicleId: id, embedded: true)),
