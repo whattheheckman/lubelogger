@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../data/local_gas_record_repository.dart';
 import '../domain/gas_record.dart';
 import '../providers/gas_records_provider.dart';
 
@@ -27,6 +28,32 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
   bool _isFillToFull = true;
   bool _missedFuelUp = false;
   bool _isLoading = false;
+  GasRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recordId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localGasRecordRepositoryProvider)
+        .getById(widget.recordId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _mileageController.text = record.mileage.toStringAsFixed(0);
+      _gallonsController.text = record.gallons.toStringAsFixed(3);
+      _costController.text = record.cost.toStringAsFixed(2);
+      _notesController.text = record.notes;
+      _date = record.date;
+      _isFillToFull = record.isFillToFull;
+      _missedFuelUp = record.missedFuelUp;
+    });
+  }
 
   @override
   void dispose() {
@@ -51,18 +78,28 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = GasRecord(
-        id: widget.recordId ?? 0,
-        vehicleId: widget.vehicleId,
-        date: _date,
-        mileage: double.tryParse(_mileageController.text) ?? 0,
-        gallons: double.tryParse(_gallonsController.text) ?? 0,
-        cost: double.tryParse(_costController.text) ?? 0,
-        isFillToFull: _isFillToFull,
-        missedFuelUp: _missedFuelUp,
-        notes: _notesController.text.trim(),
-        updatedAt: DateTime.now(),
-      );
+      final record = _existing?.copyWith(
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            gallons: double.tryParse(_gallonsController.text) ?? 0,
+            cost: double.tryParse(_costController.text) ?? 0,
+            isFillToFull: _isFillToFull,
+            missedFuelUp: _missedFuelUp,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          ) ??
+          GasRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            gallons: double.tryParse(_gallonsController.text) ?? 0,
+            cost: double.tryParse(_costController.text) ?? 0,
+            isFillToFull: _isFillToFull,
+            missedFuelUp: _missedFuelUp,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          );
       await ref.read(gasRecordsNotifierProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {

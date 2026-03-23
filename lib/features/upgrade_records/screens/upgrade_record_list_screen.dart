@@ -9,15 +9,17 @@ import '../providers/upgrade_records_provider.dart';
 import '../domain/upgrade_record.dart';
 
 class UpgradeRecordListScreen extends ConsumerWidget {
-  const UpgradeRecordListScreen({super.key, required this.vehicleId});
+  const UpgradeRecordListScreen(
+      {super.key, required this.vehicleId, this.embedded = false});
   final int vehicleId;
+  final bool embedded;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRecords = ref.watch(upgradeRecordListProvider(vehicleId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Upgrade Records')),
+      appBar: embedded ? null : AppBar(title: const Text('Upgrade Records')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(RouteNames.vehicleUpgradeAddPath(vehicleId)),
         child: const Icon(Icons.add),

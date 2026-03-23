@@ -9,15 +9,17 @@ import '../providers/odometer_records_provider.dart';
 import '../domain/odometer_record.dart';
 
 class OdometerRecordListScreen extends ConsumerWidget {
-  const OdometerRecordListScreen({super.key, required this.vehicleId});
+  const OdometerRecordListScreen(
+      {super.key, required this.vehicleId, this.embedded = false});
   final int vehicleId;
+  final bool embedded;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRecords = ref.watch(odometerRecordListProvider(vehicleId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Odometer Records')),
+      appBar: embedded ? null : AppBar(title: const Text('Odometer Records')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(RouteNames.vehicleOdometerAddPath(vehicleId)),
         child: const Icon(Icons.add),

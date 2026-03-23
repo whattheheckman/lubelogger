@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../data/local_service_record_repository.dart';
 import '../domain/service_record.dart';
 import '../providers/service_records_provider.dart';
 
@@ -26,6 +27,30 @@ class _ServiceRecordFormScreenState
   final _notesController = TextEditingController();
   DateTime _date = DateTime.now();
   bool _isLoading = false;
+  ServiceRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recordId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localServiceRecordRepositoryProvider)
+        .getById(widget.recordId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _descController.text = record.description;
+      _mileageController.text = record.mileage.toStringAsFixed(0);
+      _costController.text = record.cost.toStringAsFixed(2);
+      _notesController.text = record.notes;
+      _date = record.date;
+    });
+  }
 
   @override
   void dispose() {
@@ -50,19 +75,25 @@ class _ServiceRecordFormScreenState
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = ServiceRecord(
-        id: widget.recordId ?? 0,
-        vehicleId: widget.vehicleId,
-        date: _date,
-        mileage: double.tryParse(_mileageController.text) ?? 0,
-        description: _descController.text.trim(),
-        cost: double.tryParse(_costController.text) ?? 0,
-        notes: _notesController.text.trim(),
-        updatedAt: DateTime.now(),
-      );
-      await ref
-          .read(serviceRecordsNotifierProvider.notifier)
-          .save(record);
+      final record = _existing?.copyWith(
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            description: _descController.text.trim(),
+            cost: double.tryParse(_costController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          ) ??
+          ServiceRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            description: _descController.text.trim(),
+            cost: double.tryParse(_costController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          );
+      await ref.read(serviceRecordsNotifierProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isLoading = false);

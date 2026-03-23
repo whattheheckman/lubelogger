@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../data/local_upgrade_record_repository.dart';
 import '../domain/upgrade_record.dart';
 import '../providers/upgrade_records_provider.dart';
 
@@ -26,6 +27,30 @@ class _UpgradeRecordFormScreenState
   final _notesController = TextEditingController();
   DateTime _date = DateTime.now();
   bool _isLoading = false;
+  UpgradeRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recordId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localUpgradeRecordRepositoryProvider)
+        .getById(widget.recordId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _descController.text = record.description;
+      _mileageController.text = record.mileage.toStringAsFixed(0);
+      _costController.text = record.cost.toStringAsFixed(2);
+      _notesController.text = record.notes;
+      _date = record.date;
+    });
+  }
 
   @override
   void dispose() {
@@ -50,16 +75,24 @@ class _UpgradeRecordFormScreenState
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = UpgradeRecord(
-        id: widget.recordId ?? 0,
-        vehicleId: widget.vehicleId,
-        date: _date,
-        mileage: double.tryParse(_mileageController.text) ?? 0,
-        description: _descController.text.trim(),
-        cost: double.tryParse(_costController.text) ?? 0,
-        notes: _notesController.text.trim(),
-        updatedAt: DateTime.now(),
-      );
+      final record = _existing?.copyWith(
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            description: _descController.text.trim(),
+            cost: double.tryParse(_costController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          ) ??
+          UpgradeRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            description: _descController.text.trim(),
+            cost: double.tryParse(_costController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          );
       await ref.read(upgradeRecordsNotifierProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {
@@ -71,8 +104,7 @@ class _UpgradeRecordFormScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(widget.recordId == null ? 'Add Upgrade' : 'Edit Upgrade'),
+        title: Text(widget.recordId == null ? 'Add Upgrade' : 'Edit Upgrade'),
       ),
       body: Form(
         key: _formKey,

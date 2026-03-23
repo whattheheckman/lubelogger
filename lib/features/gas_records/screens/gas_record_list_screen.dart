@@ -9,15 +9,17 @@ import '../providers/gas_records_provider.dart';
 import '../domain/gas_record.dart';
 
 class GasRecordListScreen extends ConsumerWidget {
-  const GasRecordListScreen({super.key, required this.vehicleId});
+  const GasRecordListScreen(
+      {super.key, required this.vehicleId, this.embedded = false});
   final int vehicleId;
+  final bool embedded;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRecords = ref.watch(gasRecordListProvider(vehicleId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Fuel Records')),
+      appBar: embedded ? null : AppBar(title: const Text('Fuel Records')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(RouteNames.vehicleFuelAddPath(vehicleId)),
         child: const Icon(Icons.add),

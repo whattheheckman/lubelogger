@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../data/local_repair_record_repository.dart';
 import '../domain/repair_record.dart';
 import '../providers/repair_records_provider.dart';
 
@@ -26,6 +27,30 @@ class _RepairRecordFormScreenState
   final _notesController = TextEditingController();
   DateTime _date = DateTime.now();
   bool _isLoading = false;
+  RepairRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recordId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localRepairRecordRepositoryProvider)
+        .getById(widget.recordId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _descController.text = record.description;
+      _mileageController.text = record.mileage.toStringAsFixed(0);
+      _costController.text = record.cost.toStringAsFixed(2);
+      _notesController.text = record.notes;
+      _date = record.date;
+    });
+  }
 
   @override
   void dispose() {
@@ -50,16 +75,24 @@ class _RepairRecordFormScreenState
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = RepairRecord(
-        id: widget.recordId ?? 0,
-        vehicleId: widget.vehicleId,
-        date: _date,
-        mileage: double.tryParse(_mileageController.text) ?? 0,
-        description: _descController.text.trim(),
-        cost: double.tryParse(_costController.text) ?? 0,
-        notes: _notesController.text.trim(),
-        updatedAt: DateTime.now(),
-      );
+      final record = _existing?.copyWith(
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            description: _descController.text.trim(),
+            cost: double.tryParse(_costController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          ) ??
+          RepairRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            description: _descController.text.trim(),
+            cost: double.tryParse(_costController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          );
       await ref.read(repairRecordsNotifierProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {
@@ -71,8 +104,7 @@ class _RepairRecordFormScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(widget.recordId == null ? 'Add Repair' : 'Edit Repair'),
+        title: Text(widget.recordId == null ? 'Add Repair' : 'Edit Repair'),
       ),
       body: Form(
         key: _formKey,

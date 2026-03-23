@@ -5,8 +5,10 @@ import '../domain/plan_record.dart';
 import '../providers/plan_records_provider.dart';
 
 class KanbanBoardScreen extends ConsumerWidget {
-  const KanbanBoardScreen({super.key, required this.vehicleId});
+  const KanbanBoardScreen(
+      {super.key, required this.vehicleId, this.embedded = false});
   final int vehicleId;
+  final bool embedded;
 
   static const _columns = ['Backlog', 'InProgress', 'Testing', 'Done'];
 
@@ -15,15 +17,23 @@ class KanbanBoardScreen extends ConsumerWidget {
     final asyncRecords = ref.watch(planRecordListProvider(vehicleId));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Planner'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showAddDialog(context, ref),
-          ),
-        ],
-      ),
+      appBar: embedded
+          ? null
+          : AppBar(
+              title: const Text('Planner'),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () => _showAddDialog(context, ref),
+                ),
+              ],
+            ),
+      floatingActionButton: embedded
+          ? FloatingActionButton(
+              onPressed: () => _showAddDialog(context, ref),
+              child: const Icon(Icons.add),
+            )
+          : null,
       body: asyncRecords.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),

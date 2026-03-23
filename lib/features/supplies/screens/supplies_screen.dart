@@ -8,15 +8,17 @@ import '../providers/supply_records_provider.dart';
 import '../domain/supply_record.dart';
 
 class SuppliesScreen extends ConsumerWidget {
-  const SuppliesScreen({super.key, required this.vehicleId});
+  const SuppliesScreen(
+      {super.key, required this.vehicleId, this.embedded = false});
   final int vehicleId;
+  final bool embedded;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRecords = ref.watch(supplyRecordListProvider(vehicleId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Supplies')),
+      appBar: embedded ? null : AppBar(title: const Text('Supplies')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(RouteNames.vehicleSupplyAddPath(vehicleId)),
         child: const Icon(Icons.add),

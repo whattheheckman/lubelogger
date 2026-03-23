@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../data/local_reminder_record_repository.dart';
 import '../domain/reminder_record.dart';
 import '../providers/reminders_provider.dart';
 
@@ -26,6 +27,32 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   DateTime? _dateDue;
   bool _isRecurring = false;
   bool _isLoading = false;
+  ReminderRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.reminderId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localReminderRecordRepositoryProvider)
+        .getById(widget.reminderId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _descController.text = record.description;
+      _mileageController.text =
+          record.mileageMetric?.toStringAsFixed(0) ?? '';
+      _notesController.text = record.notes;
+      _metric = record.reminderMetric;
+      _dateDue = record.dateMetric;
+      _isRecurring = record.isRecurring;
+    });
+  }
 
   @override
   void dispose() {
@@ -49,19 +76,32 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = ReminderRecord(
-        id: widget.reminderId ?? 0,
-        vehicleId: widget.vehicleId,
-        description: _descController.text.trim(),
-        reminderMetric: _metric,
-        dateMetric: (_metric == 'date' || _metric == 'both') ? _dateDue : null,
-        mileageMetric: (_metric == 'mileage' || _metric == 'both')
-            ? double.tryParse(_mileageController.text)
-            : null,
-        isRecurring: _isRecurring,
-        notes: _notesController.text.trim(),
-        updatedAt: DateTime.now(),
-      );
+      final record = _existing?.copyWith(
+            description: _descController.text.trim(),
+            reminderMetric: _metric,
+            dateMetric:
+                (_metric == 'date' || _metric == 'both') ? _dateDue : null,
+            mileageMetric: (_metric == 'mileage' || _metric == 'both')
+                ? double.tryParse(_mileageController.text)
+                : null,
+            isRecurring: _isRecurring,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          ) ??
+          ReminderRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            description: _descController.text.trim(),
+            reminderMetric: _metric,
+            dateMetric:
+                (_metric == 'date' || _metric == 'both') ? _dateDue : null,
+            mileageMetric: (_metric == 'mileage' || _metric == 'both')
+                ? double.tryParse(_mileageController.text)
+                : null,
+            isRecurring: _isRecurring,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          );
       await ref.read(remindersNotifierProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {

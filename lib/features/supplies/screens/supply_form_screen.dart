@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../data/local_supply_record_repository.dart';
 import '../domain/supply_record.dart';
 import '../providers/supply_records_provider.dart';
 
@@ -22,6 +23,30 @@ class _SupplyFormScreenState extends ConsumerState<SupplyFormScreen> {
   final _costController = TextEditingController(text: '0.00');
   final _notesController = TextEditingController();
   bool _isLoading = false;
+  SupplyRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.supplyId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localSupplyRecordRepositoryProvider)
+        .getById(widget.supplyId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _descController.text = record.description;
+      _partNumberController.text = record.partNumber;
+      _quantityController.text = record.quantity.toString();
+      _costController.text = record.cost.toStringAsFixed(2);
+      _notesController.text = record.notes;
+    });
+  }
 
   @override
   void dispose() {
@@ -37,16 +62,24 @@ class _SupplyFormScreenState extends ConsumerState<SupplyFormScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = SupplyRecord(
-        id: widget.supplyId ?? 0,
-        vehicleId: widget.vehicleId,
-        description: _descController.text.trim(),
-        partNumber: _partNumberController.text.trim(),
-        quantity: double.tryParse(_quantityController.text) ?? 1.0,
-        cost: double.tryParse(_costController.text) ?? 0,
-        notes: _notesController.text.trim(),
-        updatedAt: DateTime.now(),
-      );
+      final record = _existing?.copyWith(
+            description: _descController.text.trim(),
+            partNumber: _partNumberController.text.trim(),
+            quantity: double.tryParse(_quantityController.text) ?? 1.0,
+            cost: double.tryParse(_costController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          ) ??
+          SupplyRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            description: _descController.text.trim(),
+            partNumber: _partNumberController.text.trim(),
+            quantity: double.tryParse(_quantityController.text) ?? 1.0,
+            cost: double.tryParse(_costController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          );
       await ref.read(supplyRecordsNotifierProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {

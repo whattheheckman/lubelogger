@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../data/local_vehicle_repository.dart';
 import '../domain/vehicle.dart';
 import '../providers/vehicles_provider.dart';
 
@@ -22,6 +23,31 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
   bool _isElectric = false;
   bool _isDiesel = false;
   bool _isLoading = false;
+  Vehicle? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.vehicleId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final vehicle = await ref
+        .read(localVehicleRepositoryProvider)
+        .getById(widget.vehicleId!);
+    if (vehicle == null || !mounted) return;
+    setState(() {
+      _existing = vehicle;
+      _yearController.text = vehicle.year;
+      _makeController.text = vehicle.make;
+      _modelController.text = vehicle.model;
+      _plateController.text = vehicle.licensePlate;
+      _isElectric = vehicle.isElectric;
+      _isDiesel = vehicle.isDiesel;
+    });
+  }
 
   @override
   void dispose() {
@@ -37,16 +63,25 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
     setState(() => _isLoading = true);
     try {
       final notifier = ref.read(vehiclesNotifierProvider.notifier);
-      final vehicle = Vehicle(
-        id: widget.vehicleId ?? 0,
-        year: _yearController.text.trim(),
-        make: _makeController.text.trim(),
-        model: _modelController.text.trim(),
-        licensePlate: _plateController.text.trim(),
-        isElectric: _isElectric,
-        isDiesel: _isDiesel,
-        updatedAt: DateTime.now(),
-      );
+      final vehicle = _existing?.copyWith(
+            year: _yearController.text.trim(),
+            make: _makeController.text.trim(),
+            model: _modelController.text.trim(),
+            licensePlate: _plateController.text.trim(),
+            isElectric: _isElectric,
+            isDiesel: _isDiesel,
+            updatedAt: DateTime.now(),
+          ) ??
+          Vehicle(
+            id: 0,
+            year: _yearController.text.trim(),
+            make: _makeController.text.trim(),
+            model: _modelController.text.trim(),
+            licensePlate: _plateController.text.trim(),
+            isElectric: _isElectric,
+            isDiesel: _isDiesel,
+            updatedAt: DateTime.now(),
+          );
       if (widget.vehicleId == null) {
         await notifier.addVehicle(vehicle);
       } else {

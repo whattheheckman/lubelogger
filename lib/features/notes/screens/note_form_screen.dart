@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 
+import '../data/local_note_record_repository.dart';
 import '../domain/note_record.dart';
 import '../providers/notes_provider.dart';
 
@@ -21,6 +22,27 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
   final _bodyController = TextEditingController();
   bool _isLoading = false;
   bool _previewMode = false;
+  NoteRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.noteId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localNoteRecordRepositoryProvider)
+        .getById(widget.noteId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _titleController.text = record.title;
+      _bodyController.text = record.body;
+    });
+  }
 
   @override
   void dispose() {
@@ -33,13 +55,18 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final note = NoteRecord(
-        id: widget.noteId ?? 0,
-        vehicleId: widget.vehicleId,
-        title: _titleController.text.trim(),
-        body: _bodyController.text,
-        updatedAt: DateTime.now(),
-      );
+      final note = _existing?.copyWith(
+            title: _titleController.text.trim(),
+            body: _bodyController.text,
+            updatedAt: DateTime.now(),
+          ) ??
+          NoteRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            title: _titleController.text.trim(),
+            body: _bodyController.text,
+            updatedAt: DateTime.now(),
+          );
       await ref.read(notesNotifierProvider.notifier).save(note);
       if (mounted) context.pop();
     } finally {

@@ -4,25 +4,34 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/routing/route_names.dart';
 import '../providers/vehicles_provider.dart';
+import '../../gas_records/screens/gas_record_list_screen.dart';
+import '../../notes/screens/notes_screen.dart';
+import '../../odometer/screens/odometer_record_list_screen.dart';
+import '../../planner/screens/kanban_board_screen.dart';
+import '../../reminders/screens/reminders_screen.dart';
+import '../../repair_records/screens/repair_record_list_screen.dart';
+import '../../reports/screens/reports_screen.dart';
+import '../../service_records/screens/service_record_list_screen.dart';
+import '../../supplies/screens/supplies_screen.dart';
+import '../../tax_records/screens/tax_record_list_screen.dart';
+import '../../upgrade_records/screens/upgrade_record_list_screen.dart';
 
 class VehicleDetailScreen extends ConsumerWidget {
   const VehicleDetailScreen({super.key, required this.vehicleId});
   final int vehicleId;
 
-  // Tabs: display label + resolver function tied to RouteNames.
-  // Not const because function references aren't const literals.
-  static final _tabs = <(String, String Function(int))>[
-    ('Service', RouteNames.vehicleServiceListPath),
-    ('Repairs', RouteNames.vehicleRepairListPath),
-    ('Upgrades', RouteNames.vehicleUpgradeListPath),
-    ('Fuel', RouteNames.vehicleFuelListPath),
-    ('Odometer', RouteNames.vehicleOdometerListPath),
-    ('Taxes', RouteNames.vehicleTaxListPath),
-    ('Reminders', RouteNames.vehicleReminderListPath),
-    ('Planner', RouteNames.vehiclePlannerPath),
-    ('Supplies', RouteNames.vehicleSupplyListPath),
-    ('Notes', RouteNames.vehicleNoteListPath),
-    ('Reports', RouteNames.vehicleReportsPath),
+  static final _tabs = <(String, Widget Function(int))>[
+    ('Service', (id) => ServiceRecordListScreen(vehicleId: id, embedded: true)),
+    ('Repairs', (id) => RepairRecordListScreen(vehicleId: id, embedded: true)),
+    ('Upgrades', (id) => UpgradeRecordListScreen(vehicleId: id, embedded: true)),
+    ('Fuel', (id) => GasRecordListScreen(vehicleId: id, embedded: true)),
+    ('Odometer', (id) => OdometerRecordListScreen(vehicleId: id, embedded: true)),
+    ('Taxes', (id) => TaxRecordListScreen(vehicleId: id, embedded: true)),
+    ('Reminders', (id) => RemindersScreen(vehicleId: id, embedded: true)),
+    ('Planner', (id) => KanbanBoardScreen(vehicleId: id, embedded: true)),
+    ('Supplies', (id) => SuppliesScreen(vehicleId: id, embedded: true)),
+    ('Notes', (id) => NotesScreen(vehicleId: id, embedded: true)),
+    ('Reports', (id) => ReportsScreen(vehicleId: id, embedded: true)),
   ];
 
   @override
@@ -30,21 +39,25 @@ class VehicleDetailScreen extends ConsumerWidget {
     final asyncVehicle = ref.watch(vehicleByIdProvider(vehicleId));
 
     return asyncVehicle.when(
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (e, _) => Scaffold(body: Center(child: Text('Error: $e'))),
       data: (vehicle) {
         if (vehicle == null) {
-          return const Scaffold(body: Center(child: Text('Vehicle not found')));
+          return const Scaffold(
+              body: Center(child: Text('Vehicle not found')));
         }
         return DefaultTabController(
           length: _tabs.length,
           child: Scaffold(
             appBar: AppBar(
-              title: Text('${vehicle.year} ${vehicle.make} ${vehicle.model}'),
+              title:
+                  Text('${vehicle.year} ${vehicle.make} ${vehicle.model}'),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: () => context.go(RouteNames.vehicleEditPath(vehicleId)),
+                  onPressed: () =>
+                      context.go(RouteNames.vehicleEditPath(vehicleId)),
                 ),
               ],
               bottom: TabBar(
@@ -53,38 +66,11 @@ class VehicleDetailScreen extends ConsumerWidget {
               ),
             ),
             body: TabBarView(
-              children: _tabs
-                  .map((t) => _TabPlaceholder(
-                        vehicleId: vehicleId,
-                        label: t.$1,
-                        route: t.$2,
-                      ))
-                  .toList(),
+              children: _tabs.map((t) => t.$2(vehicleId)).toList(),
             ),
           ),
         );
       },
-    );
-  }
-}
-
-class _TabPlaceholder extends StatelessWidget {
-  const _TabPlaceholder({
-    required this.vehicleId,
-    required this.label,
-    required this.route,
-  });
-  final int vehicleId;
-  final String label;
-  final String Function(int) route;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () => context.go(route(vehicleId)),
-        child: Text('Open $label'),
-      ),
     );
   }
 }

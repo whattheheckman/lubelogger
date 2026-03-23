@@ -9,15 +9,17 @@ import '../providers/repair_records_provider.dart';
 import '../domain/repair_record.dart';
 
 class RepairRecordListScreen extends ConsumerWidget {
-  const RepairRecordListScreen({super.key, required this.vehicleId});
+  const RepairRecordListScreen(
+      {super.key, required this.vehicleId, this.embedded = false});
   final int vehicleId;
+  final bool embedded;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRecords = ref.watch(repairRecordListProvider(vehicleId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Repair Records')),
+      appBar: embedded ? null : AppBar(title: const Text('Repair Records')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(RouteNames.vehicleRepairAddPath(vehicleId)),
         child: const Icon(Icons.add),

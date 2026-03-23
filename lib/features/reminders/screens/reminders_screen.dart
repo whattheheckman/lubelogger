@@ -8,8 +8,10 @@ import '../providers/reminders_provider.dart';
 import '../domain/reminder_record.dart';
 
 class RemindersScreen extends ConsumerWidget {
-  const RemindersScreen({super.key, required this.vehicleId});
+  const RemindersScreen(
+      {super.key, required this.vehicleId, this.embedded = false});
   final int vehicleId;
+  final bool embedded;
 
   static final _dateFmt = DateFormat.yMMMd();
 
@@ -35,7 +37,7 @@ class RemindersScreen extends ConsumerWidget {
     final asyncReminders = ref.watch(reminderListProvider(vehicleId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Reminders')),
+      appBar: embedded ? null : AppBar(title: const Text('Reminders')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(RouteNames.vehicleReminderAddPath(vehicleId)),
         child: const Icon(Icons.add),

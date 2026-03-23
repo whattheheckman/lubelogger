@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../data/local_tax_record_repository.dart';
 import '../domain/tax_record.dart';
 import '../providers/tax_records_provider.dart';
 
@@ -26,6 +27,31 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
   DateTime _date = DateTime.now();
   bool _isRecurring = false;
   bool _isLoading = false;
+  TaxRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recordId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localTaxRecordRepositoryProvider)
+        .getById(widget.recordId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _descController.text = record.description;
+      _costController.text = record.cost.toStringAsFixed(2);
+      _intervalController.text = record.recurringInterval;
+      _notesController.text = record.notes;
+      _date = record.date;
+      _isRecurring = record.isRecurring;
+    });
+  }
 
   @override
   void dispose() {
@@ -50,18 +76,28 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = TaxRecord(
-        id: widget.recordId ?? 0,
-        vehicleId: widget.vehicleId,
-        date: _date,
-        description: _descController.text.trim(),
-        cost: double.tryParse(_costController.text) ?? 0,
-        isRecurring: _isRecurring,
-        recurringInterval:
-            _isRecurring ? _intervalController.text.trim() : '',
-        notes: _notesController.text.trim(),
-        updatedAt: DateTime.now(),
-      );
+      final record = _existing?.copyWith(
+            date: _date,
+            description: _descController.text.trim(),
+            cost: double.tryParse(_costController.text) ?? 0,
+            isRecurring: _isRecurring,
+            recurringInterval:
+                _isRecurring ? _intervalController.text.trim() : '',
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          ) ??
+          TaxRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            date: _date,
+            description: _descController.text.trim(),
+            cost: double.tryParse(_costController.text) ?? 0,
+            isRecurring: _isRecurring,
+            recurringInterval:
+                _isRecurring ? _intervalController.text.trim() : '',
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          );
       await ref.read(taxRecordsNotifierProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {

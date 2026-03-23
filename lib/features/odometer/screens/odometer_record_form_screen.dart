@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../data/local_odometer_record_repository.dart';
 import '../domain/odometer_record.dart';
 import '../providers/odometer_records_provider.dart';
 
@@ -25,6 +26,29 @@ class _OdometerRecordFormScreenState
   final _notesController = TextEditingController();
   DateTime _date = DateTime.now();
   bool _isLoading = false;
+  OdometerRecord? _existing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.recordId != null) {
+      Future.microtask(_loadExisting);
+    }
+  }
+
+  Future<void> _loadExisting() async {
+    final record = await ref
+        .read(localOdometerRecordRepositoryProvider)
+        .getById(widget.recordId!);
+    if (record == null || !mounted) return;
+    setState(() {
+      _existing = record;
+      _mileageController.text = record.mileage.toStringAsFixed(0);
+      _initialMileageController.text = record.initialMileage.toStringAsFixed(0);
+      _notesController.text = record.notes;
+      _date = record.date;
+    });
+  }
 
   @override
   void dispose() {
@@ -48,16 +72,24 @@ class _OdometerRecordFormScreenState
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = OdometerRecord(
-        id: widget.recordId ?? 0,
-        vehicleId: widget.vehicleId,
-        date: _date,
-        mileage: double.tryParse(_mileageController.text) ?? 0,
-        initialMileage:
-            double.tryParse(_initialMileageController.text) ?? 0,
-        notes: _notesController.text.trim(),
-        updatedAt: DateTime.now(),
-      );
+      final record = _existing?.copyWith(
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            initialMileage:
+                double.tryParse(_initialMileageController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          ) ??
+          OdometerRecord(
+            id: 0,
+            vehicleId: widget.vehicleId,
+            date: _date,
+            mileage: double.tryParse(_mileageController.text) ?? 0,
+            initialMileage:
+                double.tryParse(_initialMileageController.text) ?? 0,
+            notes: _notesController.text.trim(),
+            updatedAt: DateTime.now(),
+          );
       await ref.read(odometerRecordsNotifierProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {

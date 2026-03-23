@@ -10,15 +10,17 @@ import '../providers/notes_provider.dart';
 import '../domain/note_record.dart';
 
 class NotesScreen extends ConsumerWidget {
-  const NotesScreen({super.key, required this.vehicleId});
+  const NotesScreen(
+      {super.key, required this.vehicleId, this.embedded = false});
   final int vehicleId;
+  final bool embedded;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncNotes = ref.watch(noteListProvider(vehicleId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Notes')),
+      appBar: embedded ? null : AppBar(title: const Text('Notes')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(RouteNames.vehicleNoteAddPath(vehicleId)),
         child: const Icon(Icons.add),
