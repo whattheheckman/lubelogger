@@ -8,6 +8,8 @@ import '../domain/reminder_record.dart';
 class GlobalRemindersScreen extends ConsumerWidget {
   const GlobalRemindersScreen({super.key});
 
+  static final _dateFmt = DateFormat.yMMMd();
+
   String _urgencyLabel(ReminderRecord r) {
     if (r.reminderMetric == 'date' || r.reminderMetric == 'both') {
       if (r.dateMetric != null) {
@@ -66,7 +68,6 @@ class GlobalRemindersScreen extends ConsumerWidget {
               itemBuilder: (context, i) {
                 final r = sorted[i];
                 final urgency = _urgencyLabel(r);
-                final fmt = DateFormat.yMMMd();
                 return Card(
                   margin: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 6),
@@ -83,7 +84,7 @@ class GlobalRemindersScreen extends ConsumerWidget {
                         Text('Vehicle ID: ${r.vehicleId}',
                             style: const TextStyle(fontSize: 11)),
                         if (r.dateMetric != null)
-                          Text('Due: ${fmt.format(r.dateMetric!)}'),
+                          Text('Due: ${_dateFmt.format(r.dateMetric!)}'),
                         if (r.mileageMetric != null)
                           Text(
                               'At: ${r.mileageMetric!.toStringAsFixed(0)} mi'),

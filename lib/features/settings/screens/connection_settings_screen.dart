@@ -13,6 +13,9 @@ class ConnectionSettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScreen> {
+  // Path used to verify the server is reachable; not a navigation route.
+  static const _pingPath = '/api/vehicles';
+
   final _formKey = GlobalKey<FormState>();
   final _urlController = TextEditingController();
   final _apiKeyController = TextEditingController();
@@ -21,6 +24,7 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
   AuthMode _authMode = AuthMode.none;
   bool _testing = false;
   String? _testResult;
+  bool? _testSuccess;
 
   @override
   void initState() {
@@ -62,13 +66,23 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
 
   Future<void> _testConnection() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() { _testing = true; _testResult = null; });
+    setState(() {
+      _testing = true;
+      _testResult = null;
+      _testSuccess = null;
+    });
     try {
       final dio = ref.read(apiClientProvider);
-      final response = await dio.get('/api/vehicles');
-      setState(() => _testResult = 'Connected! (${response.statusCode})');
+      final response = await dio.get(_pingPath);
+      setState(() {
+        _testSuccess = true;
+        _testResult = 'Connected! (${response.statusCode})';
+      });
     } catch (e) {
-      setState(() => _testResult = 'Failed: $e');
+      setState(() {
+        _testSuccess = false;
+        _testResult = 'Failed: $e';
+      });
     } finally {
       setState(() => _testing = false);
     }
@@ -147,9 +161,7 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
               Text(
                 _testResult!,
                 style: TextStyle(
-                  color: _testResult!.startsWith('Connected')
-                      ? Colors.green
-                      : Colors.red,
+                  color: _testSuccess == true ? Colors.green : Colors.red,
                 ),
               ),
             ],

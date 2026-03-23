@@ -3,12 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/routing/route_names.dart';
 import '../providers/reminders_provider.dart';
 import '../domain/reminder_record.dart';
 
 class RemindersScreen extends ConsumerWidget {
   const RemindersScreen({super.key, required this.vehicleId});
   final int vehicleId;
+
+  static final _dateFmt = DateFormat.yMMMd();
 
   String _urgencyLabel(ReminderRecord r) {
     if (r.reminderMetric == 'date' || r.reminderMetric == 'both') {
@@ -34,7 +37,7 @@ class RemindersScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Reminders')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/vehicles/$vehicleId/reminders/add'),
+        onPressed: () => context.push(RouteNames.vehicleReminderAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),
       body: asyncReminders.when(
@@ -68,7 +71,6 @@ class RemindersScreen extends ConsumerWidget {
               itemBuilder: (context, i) {
                 final r = sorted[i];
                 final urgency = _urgencyLabel(r);
-                final fmt = DateFormat.yMMMd();
                 return Card(
                   margin: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 6),
@@ -83,7 +85,7 @@ class RemindersScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (r.dateMetric != null)
-                          Text('Due: ${fmt.format(r.dateMetric!)}'),
+                          Text('Due: ${_dateFmt.format(r.dateMetric!)}'),
                         if (r.mileageMetric != null)
                           Text(
                               'At: ${r.mileageMetric!.toStringAsFixed(0)} mi'),

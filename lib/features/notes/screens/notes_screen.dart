@@ -4,6 +4,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/routing/route_names.dart';
+import '../../../core/widgets/delete_confirm_dialog.dart';
 import '../providers/notes_provider.dart';
 import '../domain/note_record.dart';
 
@@ -18,7 +20,7 @@ class NotesScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Notes')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/vehicles/$vehicleId/notes/add'),
+        onPressed: () => context.push(RouteNames.vehicleNoteAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),
       body: asyncNotes.when(
@@ -43,7 +45,7 @@ class NotesScreen extends ConsumerWidget {
             child: ListView.builder(
               itemCount: notes.length,
               itemBuilder: (context, i) =>
-                  _NoteCard(note: notes[i], vehicleId: vehicleId, ref: ref),
+                  _NoteCard(note: notes[i], vehicleId: vehicleId),
             ),
           );
         },
@@ -52,16 +54,15 @@ class NotesScreen extends ConsumerWidget {
   }
 }
 
-class _NoteCard extends StatelessWidget {
-  const _NoteCard(
-      {required this.note, required this.vehicleId, required this.ref});
+class _NoteCard extends ConsumerWidget {
+  const _NoteCard({required this.note, required this.vehicleId});
   final NoteRecord note;
   final int vehicleId;
-  final WidgetRef ref;
+
+  static final _dateFmt = DateFormat.yMMMd();
 
   @override
-  Widget build(BuildContext context) {
-    final fmt = DateFormat.yMMMd();
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: Key('note_${note.id}'),
       direction: DismissDirection.endToStart,
@@ -71,21 +72,7 @@ class _NoteCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: const Icon(Icons.delete, color: Colors.white),
       ),
-      confirmDismiss: (_) async => await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Delete Note'),
-          content: const Text('Are you sure?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Delete')),
-          ],
-        ),
-      ),
+      confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
           ref.read(notesNotifierProvider.notifier).delete(note.id),
       child: Card(
@@ -93,14 +80,14 @@ class _NoteCard extends StatelessWidget {
         child: ExpansionTile(
           title: Text(note.title,
               style: const TextStyle(fontWeight: FontWeight.w500)),
-          subtitle: Text(fmt.format(note.updatedAt)),
+          subtitle: Text(_dateFmt.format(note.updatedAt)),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
                 icon: const Icon(Icons.edit, size: 18),
-                onPressed: () => context
-                    .push('/vehicles/$vehicleId/notes/${note.id}/edit'),
+                onPressed: () => context.push(
+                    RouteNames.vehicleNoteEditPath(vehicleId, note.id)),
               ),
               const Icon(Icons.expand_more),
             ],

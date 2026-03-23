@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/routing/route_names.dart';
+import '../../../core/widgets/delete_confirm_dialog.dart';
 import '../providers/tax_records_provider.dart';
 import '../domain/tax_record.dart';
 
@@ -17,7 +19,7 @@ class TaxRecordListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Tax Records')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/vehicles/$vehicleId/taxes/add'),
+        onPressed: () => context.push(RouteNames.vehicleTaxAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),
       body: asyncRecords.when(
@@ -43,7 +45,7 @@ class TaxRecordListScreen extends ConsumerWidget {
             child: ListView.builder(
               itemCount: records.length,
               itemBuilder: (context, i) =>
-                  _TaxCard(record: records[i], vehicleId: vehicleId, ref: ref),
+                  _TaxCard(record: records[i]),
             ),
           );
         },
@@ -52,16 +54,14 @@ class TaxRecordListScreen extends ConsumerWidget {
   }
 }
 
-class _TaxCard extends StatelessWidget {
-  const _TaxCard(
-      {required this.record, required this.vehicleId, required this.ref});
+class _TaxCard extends ConsumerWidget {
+  const _TaxCard({required this.record});
   final TaxRecord record;
-  final int vehicleId;
-  final WidgetRef ref;
+
+  static final _dateFmt = DateFormat.yMMMd();
 
   @override
-  Widget build(BuildContext context) {
-    final fmt = DateFormat.yMMMd();
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: Key('tax_${record.id}'),
       direction: DismissDirection.endToStart,
@@ -71,21 +71,7 @@ class _TaxCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: const Icon(Icons.delete, color: Colors.white),
       ),
-      confirmDismiss: (_) async => await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Delete Record'),
-          content: const Text('Are you sure?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Delete')),
-          ],
-        ),
-      ),
+      confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
           ref.read(taxRecordsNotifierProvider.notifier).delete(record.id),
       child: Card(
@@ -94,7 +80,7 @@ class _TaxCard extends StatelessWidget {
           leading: const CircleAvatar(child: Icon(Icons.receipt_long)),
           title: Text(record.description),
           subtitle: Text(
-            '${fmt.format(record.date)}${record.isRecurring ? '  •  Recurring' : ''}',
+            '${_dateFmt.format(record.date)}${record.isRecurring ? '  •  Recurring' : ''}',
           ),
           trailing: Text('\$${record.cost.toStringAsFixed(2)}',
               style: const TextStyle(fontWeight: FontWeight.bold)),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/routing/route_names.dart';
+import '../../../core/widgets/delete_confirm_dialog.dart';
 import '../providers/supply_records_provider.dart';
 import '../domain/supply_record.dart';
 
@@ -16,7 +18,7 @@ class SuppliesScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Supplies')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/vehicles/$vehicleId/supplies/add'),
+        onPressed: () => context.push(RouteNames.vehicleSupplyAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),
       body: asyncRecords.when(
@@ -42,7 +44,7 @@ class SuppliesScreen extends ConsumerWidget {
             child: ListView.builder(
               itemCount: records.length,
               itemBuilder: (context, i) =>
-                  _SupplyCard(record: records[i], vehicleId: vehicleId, ref: ref),
+                  _SupplyCard(record: records[i]),
             ),
           );
         },
@@ -51,15 +53,12 @@ class SuppliesScreen extends ConsumerWidget {
   }
 }
 
-class _SupplyCard extends StatelessWidget {
-  const _SupplyCard(
-      {required this.record, required this.vehicleId, required this.ref});
+class _SupplyCard extends ConsumerWidget {
+  const _SupplyCard({required this.record});
   final SupplyRecord record;
-  final int vehicleId;
-  final WidgetRef ref;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: Key('supply_${record.id}'),
       direction: DismissDirection.endToStart,
@@ -69,21 +68,7 @@ class _SupplyCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: const Icon(Icons.delete, color: Colors.white),
       ),
-      confirmDismiss: (_) async => await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Delete Supply'),
-          content: const Text('Are you sure?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Delete')),
-          ],
-        ),
-      ),
+      confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
           ref.read(supplyRecordsNotifierProvider.notifier).delete(record.id),
       child: Card(

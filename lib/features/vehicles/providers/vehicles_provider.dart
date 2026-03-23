@@ -1,8 +1,17 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/local_vehicle_repository.dart';
 import '../domain/vehicle.dart';
 
 part 'vehicles_provider.g.dart';
+
+/// Watches a single vehicle by ID. Only rebuilds when that vehicle changes.
+final vehicleByIdProvider = StreamProvider.family<Vehicle?, int>((ref, vehicleId) {
+  final repo = ref.watch(localVehicleRepositoryProvider);
+  return repo.watchAll().map(
+    (list) => list.where((v) => v.id == vehicleId).firstOrNull,
+  );
+});
 
 @riverpod
 Stream<List<Vehicle>> vehicleList(VehicleListRef ref) {

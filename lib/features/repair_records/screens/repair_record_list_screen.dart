@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/routing/route_names.dart';
+import '../../../core/widgets/delete_confirm_dialog.dart';
 import '../providers/repair_records_provider.dart';
 import '../domain/repair_record.dart';
 
@@ -17,7 +19,7 @@ class RepairRecordListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Repair Records')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/vehicles/$vehicleId/repairs/add'),
+        onPressed: () => context.push(RouteNames.vehicleRepairAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),
       body: asyncRecords.when(
@@ -43,7 +45,7 @@ class RepairRecordListScreen extends ConsumerWidget {
             child: ListView.builder(
               itemCount: records.length,
               itemBuilder: (context, i) =>
-                  _RecordCard(record: records[i], vehicleId: vehicleId, ref: ref),
+                  _RecordCard(record: records[i], vehicleId: vehicleId),
             ),
           );
         },
@@ -52,16 +54,15 @@ class RepairRecordListScreen extends ConsumerWidget {
   }
 }
 
-class _RecordCard extends StatelessWidget {
-  const _RecordCard(
-      {required this.record, required this.vehicleId, required this.ref});
+class _RecordCard extends ConsumerWidget {
+  const _RecordCard({required this.record, required this.vehicleId});
   final RepairRecord record;
   final int vehicleId;
-  final WidgetRef ref;
+
+  static final _dateFmt = DateFormat.yMMMd();
 
   @override
-  Widget build(BuildContext context) {
-    final fmt = DateFormat.yMMMd();
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: Key('repair_${record.id}'),
       direction: DismissDirection.endToStart,
@@ -71,21 +72,7 @@ class _RecordCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: const Icon(Icons.delete, color: Colors.white),
       ),
-      confirmDismiss: (_) async => await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Delete Record'),
-          content: const Text('Are you sure?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Delete')),
-          ],
-        ),
-      ),
+      confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
           ref.read(repairRecordsNotifierProvider.notifier).delete(record.id),
       child: Card(
@@ -94,11 +81,11 @@ class _RecordCard extends StatelessWidget {
           leading: const CircleAvatar(child: Icon(Icons.car_repair)),
           title: Text(record.description),
           subtitle: Text(
-              '${fmt.format(record.date)}  •  ${record.mileage.toStringAsFixed(0)} mi'),
+              '${_dateFmt.format(record.date)}  •  ${record.mileage.toStringAsFixed(0)} mi'),
           trailing: Text('\$${record.cost.toStringAsFixed(2)}',
               style: const TextStyle(fontWeight: FontWeight.bold)),
-          onTap: () =>
-              context.push('/vehicles/$vehicleId/repairs/${record.id}/edit'),
+          onTap: () => context.push(
+              RouteNames.vehicleRepairEditPath(vehicleId, record.id)),
         ),
       ),
     );

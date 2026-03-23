@@ -2,31 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/routing/route_names.dart';
 import '../providers/vehicles_provider.dart';
 
 class VehicleDetailScreen extends ConsumerWidget {
   const VehicleDetailScreen({super.key, required this.vehicleId});
   final int vehicleId;
 
-  static const _tabs = [
-    ('Service', 'service'),
-    ('Repairs', 'repairs'),
-    ('Upgrades', 'upgrades'),
-    ('Fuel', 'fuel'),
-    ('Odometer', 'odometer'),
-    ('Taxes', 'taxes'),
-    ('Reminders', 'reminders'),
-    ('Planner', 'planner'),
-    ('Supplies', 'supplies'),
-    ('Notes', 'notes'),
-    ('Reports', 'reports'),
+  // Tabs: display label + resolver function tied to RouteNames.
+  // Not const because function references aren't const literals.
+  static final _tabs = <(String, String Function(int))>[
+    ('Service', RouteNames.vehicleServiceListPath),
+    ('Repairs', RouteNames.vehicleRepairListPath),
+    ('Upgrades', RouteNames.vehicleUpgradeListPath),
+    ('Fuel', RouteNames.vehicleFuelListPath),
+    ('Odometer', RouteNames.vehicleOdometerListPath),
+    ('Taxes', RouteNames.vehicleTaxListPath),
+    ('Reminders', RouteNames.vehicleReminderListPath),
+    ('Planner', RouteNames.vehiclePlannerPath),
+    ('Supplies', RouteNames.vehicleSupplyListPath),
+    ('Notes', RouteNames.vehicleNoteListPath),
+    ('Reports', RouteNames.vehicleReportsPath),
   ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncVehicle = ref.watch(vehicleListProvider).whenData(
-          (list) => list.where((v) => v.id == vehicleId).firstOrNull,
-        );
+    final asyncVehicle = ref.watch(vehicleByIdProvider(vehicleId));
 
     return asyncVehicle.when(
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -43,7 +44,7 @@ class VehicleDetailScreen extends ConsumerWidget {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: () => context.go('/vehicles/$vehicleId/edit'),
+                  onPressed: () => context.go(RouteNames.vehicleEditPath(vehicleId)),
                 ),
               ],
               bottom: TabBar(
@@ -53,7 +54,11 @@ class VehicleDetailScreen extends ConsumerWidget {
             ),
             body: TabBarView(
               children: _tabs
-                  .map((t) => _TabPlaceholder(vehicleId: vehicleId, tab: t.$2))
+                  .map((t) => _TabPlaceholder(
+                        vehicleId: vehicleId,
+                        label: t.$1,
+                        route: t.$2,
+                      ))
                   .toList(),
             ),
           ),
@@ -64,16 +69,21 @@ class VehicleDetailScreen extends ConsumerWidget {
 }
 
 class _TabPlaceholder extends StatelessWidget {
-  const _TabPlaceholder({required this.vehicleId, required this.tab});
+  const _TabPlaceholder({
+    required this.vehicleId,
+    required this.label,
+    required this.route,
+  });
   final int vehicleId;
-  final String tab;
+  final String label;
+  final String Function(int) route;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ElevatedButton(
-        onPressed: () => context.go('/vehicles/$vehicleId/$tab'),
-        child: Text('Open $tab'),
+        onPressed: () => context.go(route(vehicleId)),
+        child: Text('Open $label'),
       ),
     );
   }

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/routing/route_names.dart';
+import '../../../core/widgets/delete_confirm_dialog.dart';
 import '../providers/odometer_records_provider.dart';
 import '../domain/odometer_record.dart';
 
@@ -17,7 +19,7 @@ class OdometerRecordListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Odometer Records')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/vehicles/$vehicleId/odometer/add'),
+        onPressed: () => context.push(RouteNames.vehicleOdometerAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),
       body: asyncRecords.when(
@@ -43,7 +45,7 @@ class OdometerRecordListScreen extends ConsumerWidget {
             child: ListView.builder(
               itemCount: records.length,
               itemBuilder: (context, i) =>
-                  _OdomCard(record: records[i], vehicleId: vehicleId, ref: ref),
+                  _OdomCard(record: records[i]),
             ),
           );
         },
@@ -52,16 +54,14 @@ class OdometerRecordListScreen extends ConsumerWidget {
   }
 }
 
-class _OdomCard extends StatelessWidget {
-  const _OdomCard(
-      {required this.record, required this.vehicleId, required this.ref});
+class _OdomCard extends ConsumerWidget {
+  const _OdomCard({required this.record});
   final OdometerRecord record;
-  final int vehicleId;
-  final WidgetRef ref;
+
+  static final _dateFmt = DateFormat.yMMMd();
 
   @override
-  Widget build(BuildContext context) {
-    final fmt = DateFormat.yMMMd();
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: Key('odom_${record.id}'),
       direction: DismissDirection.endToStart,
@@ -71,21 +71,7 @@ class _OdomCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: const Icon(Icons.delete, color: Colors.white),
       ),
-      confirmDismiss: (_) async => await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Delete Record'),
-          content: const Text('Are you sure?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Cancel')),
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Delete')),
-          ],
-        ),
-      ),
+      confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
           ref.read(odometerRecordsNotifierProvider.notifier).delete(record.id),
       child: Card(
@@ -93,7 +79,7 @@ class _OdomCard extends StatelessWidget {
         child: ListTile(
           leading: const CircleAvatar(child: Icon(Icons.speed)),
           title: Text('${record.mileage.toStringAsFixed(0)} mi'),
-          subtitle: Text(fmt.format(record.date)),
+          subtitle: Text(_dateFmt.format(record.date)),
           trailing: record.notes.isNotEmpty
               ? const Icon(Icons.notes, color: Colors.grey)
               : null,

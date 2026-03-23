@@ -38,6 +38,12 @@ final _vehiclesShellKey = GlobalKey<NavigatorState>();
 final _remindersShellKey = GlobalKey<NavigatorState>();
 final _settingsShellKey = GlobalKey<NavigatorState>();
 
+int _requireId(GoRouterState state, String key) =>
+    int.parse(state.pathParameters[key]!);
+
+int? _optionalId(GoRouterState state, String key) =>
+    int.tryParse(state.pathParameters[key] ?? '');
+
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
   return GoRouter(
@@ -65,32 +71,32 @@ GoRouter appRouter(AppRouterRef ref) {
                   GoRoute(
                     path: ':vehicleId',
                     builder: (context, state) => VehicleDetailScreen(
-                      vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                      vehicleId: _requireId(state, 'vehicleId'),
                     ),
                     routes: [
                       GoRoute(
                         path: 'edit',
                         builder: (context, state) => VehicleFormScreen(
-                          vehicleId: int.tryParse(state.pathParameters['vehicleId'] ?? ''),
+                          vehicleId: _optionalId(state, 'vehicleId'),
                         ),
                       ),
                       GoRoute(
                         path: 'service',
                         builder: (context, state) => ServiceRecordListScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => ServiceRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                           GoRoute(
                             path: ':recordId/edit',
                             builder: (context, state) => ServiceRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
-                              recordId: int.tryParse(state.pathParameters['recordId'] ?? ''),
+                              vehicleId: _requireId(state, 'vehicleId'),
+                              recordId: _optionalId(state, 'recordId'),
                             ),
                           ),
                         ],
@@ -98,20 +104,20 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'repairs',
                         builder: (context, state) => RepairRecordListScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => RepairRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                           GoRoute(
                             path: ':recordId/edit',
                             builder: (context, state) => RepairRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
-                              recordId: int.tryParse(state.pathParameters['recordId'] ?? ''),
+                              vehicleId: _requireId(state, 'vehicleId'),
+                              recordId: _optionalId(state, 'recordId'),
                             ),
                           ),
                         ],
@@ -119,20 +125,20 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'upgrades',
                         builder: (context, state) => UpgradeRecordListScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => UpgradeRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                           GoRoute(
                             path: ':recordId/edit',
                             builder: (context, state) => UpgradeRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
-                              recordId: int.tryParse(state.pathParameters['recordId'] ?? ''),
+                              vehicleId: _requireId(state, 'vehicleId'),
+                              recordId: _optionalId(state, 'recordId'),
                             ),
                           ),
                         ],
@@ -140,20 +146,20 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'fuel',
                         builder: (context, state) => GasRecordListScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => GasRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                           GoRoute(
                             path: ':recordId/edit',
                             builder: (context, state) => GasRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
-                              recordId: int.tryParse(state.pathParameters['recordId'] ?? ''),
+                              vehicleId: _requireId(state, 'vehicleId'),
+                              recordId: _optionalId(state, 'recordId'),
                             ),
                           ),
                         ],
@@ -161,13 +167,13 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'odometer',
                         builder: (context, state) => OdometerRecordListScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => OdometerRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                         ],
@@ -175,13 +181,13 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'taxes',
                         builder: (context, state) => TaxRecordListScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => TaxRecordFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                         ],
@@ -189,13 +195,13 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'reminders',
                         builder: (context, state) => RemindersScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => ReminderFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                         ],
@@ -203,19 +209,19 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'planner',
                         builder: (context, state) => KanbanBoardScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                       ),
                       GoRoute(
                         path: 'supplies',
                         builder: (context, state) => SuppliesScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => SupplyFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                         ],
@@ -223,20 +229,20 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'notes',
                         builder: (context, state) => NotesScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                         routes: [
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => NoteFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                              vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
                           GoRoute(
                             path: ':noteId/edit',
                             builder: (context, state) => NoteFormScreen(
-                              vehicleId: int.parse(state.pathParameters['vehicleId']!),
-                              noteId: int.tryParse(state.pathParameters['noteId'] ?? ''),
+                              vehicleId: _requireId(state, 'vehicleId'),
+                              noteId: _optionalId(state, 'noteId'),
                             ),
                           ),
                         ],
@@ -244,7 +250,7 @@ GoRouter appRouter(AppRouterRef ref) {
                       GoRoute(
                         path: 'reports',
                         builder: (context, state) => ReportsScreen(
-                          vehicleId: int.parse(state.pathParameters['vehicleId']!),
+                          vehicleId: _requireId(state, 'vehicleId'),
                         ),
                       ),
                     ],

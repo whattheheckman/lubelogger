@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/routing/route_names.dart';
 import '../../../core/settings/app_settings.dart';
 import '../../../core/settings/settings_repository.dart';
 
@@ -17,7 +18,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
     final repo = ref.read(settingsRepositoryProvider);
     final current = repo.current;
     await repo.save(current.copyWith(appMode: mode, setupComplete: true));
-    if (mounted) context.go('/vehicles');
+    if (mounted) context.go(RouteNames.vehicles);
   }
 
   @override

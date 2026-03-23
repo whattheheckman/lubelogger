@@ -38,7 +38,6 @@ class KanbanBoardScreen extends ConsumerWidget {
                         .where((r) => r.progress == col)
                         .toList(),
                     allColumns: _columns,
-                    ref: ref,
                   ))
               .toList(),
         ),
@@ -80,19 +79,17 @@ class KanbanBoardScreen extends ConsumerWidget {
   }
 }
 
-class _KanbanColumn extends StatelessWidget {
+class _KanbanColumn extends ConsumerWidget {
   const _KanbanColumn({
     required this.title,
     required this.vehicleId,
     required this.cards,
     required this.allColumns,
-    required this.ref,
   });
   final String title;
   final int vehicleId;
   final List<PlanRecord> cards;
   final List<String> allColumns;
-  final WidgetRef ref;
 
   Color _columnColor(BuildContext context) => switch (title) {
         'Backlog' => Colors.grey.shade200,
@@ -103,7 +100,7 @@ class _KanbanColumn extends StatelessWidget {
       };
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       width: 240,
       margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -154,7 +151,7 @@ class _KanbanColumn extends StatelessWidget {
                     : ListView(
                         padding: const EdgeInsets.all(4),
                         children:
-                            cards.map((r) => _KanbanCard(record: r, ref: ref, allColumns: allColumns)).toList(),
+                            cards.map((r) => _KanbanCard(record: r, allColumns: allColumns)).toList(),
                       ),
               ),
               onAcceptWithDetails: (details) {
@@ -173,11 +170,9 @@ class _KanbanColumn extends StatelessWidget {
   }
 }
 
-class _KanbanCard extends StatelessWidget {
-  const _KanbanCard(
-      {required this.record, required this.ref, required this.allColumns});
+class _KanbanCard extends ConsumerWidget {
+  const _KanbanCard({required this.record, required this.allColumns});
   final PlanRecord record;
-  final WidgetRef ref;
   final List<String> allColumns;
 
   Color _priorityColor() => switch (record.priority) {
@@ -188,7 +183,7 @@ class _KanbanCard extends StatelessWidget {
       };
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return LongPressDraggable<PlanRecord>(
       data: record,
       feedback: Material(
@@ -204,12 +199,12 @@ class _KanbanCard extends StatelessWidget {
           child: Text(record.description),
         ),
       ),
-      childWhenDragging: Opacity(opacity: 0.4, child: _buildCard(context)),
-      child: _buildCard(context),
+      childWhenDragging: Opacity(opacity: 0.4, child: _buildCard(context, ref)),
+      child: _buildCard(context, ref),
     );
   }
 
-  Widget _buildCard(BuildContext context) {
+  Widget _buildCard(BuildContext context, WidgetRef ref) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 3),
       child: Padding(

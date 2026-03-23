@@ -152,6 +152,8 @@ class _FuelEconomyReport extends ConsumerWidget {
   const _FuelEconomyReport({required this.vehicleId});
   final int vehicleId;
 
+  static final _dateFmt = DateFormat.MMMd();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncGas = ref.watch(gasRecordListProvider(vehicleId));
@@ -191,7 +193,6 @@ class _FuelEconomyReport extends ConsumerWidget {
             withMpg.fold(0.0, (s, r) => s + r.mpg!) / withMpg.length;
         final maxMpg = withMpg.map((r) => r.mpg!).reduce((a, b) => a > b ? a : b);
         final minMpg = withMpg.map((r) => r.mpg!).reduce((a, b) => a < b ? a : b);
-        final fmt = DateFormat.MMMd();
 
         return ListView(
           padding: const EdgeInsets.all(16),
@@ -221,7 +222,7 @@ class _FuelEconomyReport extends ConsumerWidget {
                             return const SizedBox.shrink();
                           }
                           return Text(
-                            fmt.format(sorted[idx].date),
+                            _dateFmt.format(sorted[idx].date),
                             style: const TextStyle(fontSize: 10),
                           );
                         },

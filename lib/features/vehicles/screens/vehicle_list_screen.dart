@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/routing/route_names.dart';
+import '../../../core/sync/sync_status.dart';
 import '../domain/vehicle.dart';
 import '../providers/vehicles_provider.dart';
 
@@ -18,7 +20,7 @@ class VehicleListScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => context.go('/vehicles/add'),
+            onPressed: () => context.go(RouteNames.vehicleAdd),
           ),
         ],
       ),
@@ -68,12 +70,12 @@ class _VehicleCard extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (vehicle.syncStatus != 'synced')
+            if (vehicle.syncStatus != SyncStatus.synced)
               const Icon(Icons.sync, size: 16, color: Colors.orange),
             const Icon(Icons.chevron_right),
           ],
         ),
-        onTap: () => context.go('/vehicles/${vehicle.id}'),
+        onTap: () => context.go(RouteNames.vehicleDetailPath(vehicle.id)),
       ),
     );
   }

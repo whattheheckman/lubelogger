@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/routing/route_names.dart';
 import '../../../core/settings/settings_repository.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -20,7 +21,7 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('Connection Settings'),
             subtitle: Text(settings.serverUrl.isEmpty ? 'Not configured' : settings.serverUrl),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.go('/settings/connection'),
+            onTap: () => context.go(RouteNames.settingsConnection),
           ),
           ListTile(
             leading: const Icon(Icons.info_outline),
