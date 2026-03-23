@@ -19,6 +19,7 @@ class AppSettings with _$AppSettings {
     @Default(5) int syncIntervalMinutes,
     @Default(ConflictStrategy.lastWriteWins) ConflictStrategy conflictStrategy,
     @Default(false) bool setupComplete,
+    @Default(true) bool autoAddOdometerRecords,
   }) = _AppSettings;
 
   factory AppSettings.fromJson(Map<String, dynamic> json) =>

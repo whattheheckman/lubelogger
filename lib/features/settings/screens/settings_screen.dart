@@ -33,6 +33,17 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('Sync Interval'),
             subtitle: Text('${settings.syncIntervalMinutes} minutes'),
           ),
+          const Divider(),
+          SwitchListTile(
+            secondary: const Icon(Icons.speed),
+            title: const Text('Auto-add Odometer Records'),
+            subtitle: const Text(
+                'Automatically create an odometer entry when saving gas, service, repair, or upgrade records'),
+            value: settings.autoAddOdometerRecords,
+            onChanged: (v) => ref
+                .read(settingsRepositoryProvider)
+                .save(settings.copyWith(autoAddOdometerRecords: v)),
+          ),
         ],
       ),
     );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +11,7 @@ import '../../reports/screens/reports_screen.dart';
 import '../../service_records/providers/service_records_provider.dart';
 import '../../tax_records/providers/tax_records_provider.dart';
 import '../../upgrade_records/providers/upgrade_records_provider.dart';
+import '../providers/vehicles_provider.dart';
 
 class VehicleOverviewScreen extends ConsumerWidget {
   const VehicleOverviewScreen(
@@ -16,9 +19,9 @@ class VehicleOverviewScreen extends ConsumerWidget {
   final int vehicleId;
   final bool embedded;
 
-  static final _numFmt = NumberFormat('#,###');
+  static final _numFmt = NumberFormat('######');
   static final _costFmt =
-      NumberFormat.currency(symbol: '\$', decimalDigits: 0);
+      NumberFormat.currency(symbol: '\$', decimalDigits: 2);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,9 +72,19 @@ class VehicleOverviewScreen extends ConsumerWidget {
     final costStr = _costFmt.format(totalCost);
     final mpgStr = avgMpg != null ? '${avgMpg.toStringAsFixed(1)} mpg' : '—';
 
+    final vehicle = ref.watch(vehicleByIdProvider(vehicleId)).valueOrNull;
+
     final body = ListView(
       padding: EdgeInsets.zero,
       children: [
+        // ── Vehicle header ────────────────────────────────────
+        _VehicleHeader(
+          imagePath: vehicle?.imagePath,
+          year: vehicle?.year ?? '',
+          make: vehicle?.make ?? '',
+          model: vehicle?.model ?? '',
+        ),
+
         // ── Summary metrics ───────────────────────────────────
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -89,7 +102,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                   Expanded(
                     child: _MetricCard(
                       icon: Icons.speed,
-                      label: 'Last Odometer',
+                      label: 'Odometer',
                       value: odomStr,
                     ),
                   ),
@@ -97,7 +110,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                   Expanded(
                     child: _MetricCard(
                       icon: Icons.route,
-                      label: 'Distance Tracked',
+                      label: 'Distance Travelled',
                       value: distStr,
                     ),
                   ),
@@ -144,6 +157,119 @@ class VehicleOverviewScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Overview')),
       body: body,
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Vehicle header
+// ─────────────────────────────────────────────────────────────
+
+class _VehicleHeader extends StatelessWidget {
+  const _VehicleHeader({
+    required this.imagePath,
+    required this.year,
+    required this.make,
+    required this.model,
+  });
+  final String? imagePath;
+  final String year;
+  final String make;
+  final String model;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final shadow = [
+      const Shadow(blurRadius: 6, color: Colors.black54),
+    ];
+
+    Widget image;
+    if (imagePath != null) {
+      image = Image.file(
+        File(imagePath!),
+        fit: BoxFit.cover,
+        width: double.infinity,
+        errorBuilder: (context, e, s) => const _Placeholder(),
+      );
+    } else {
+      image = const _Placeholder();
+    }
+
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          image,
+          // gradient
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.transparent, Colors.black54],
+                stops: [0.35, 1.0],
+              ),
+            ),
+          ),
+          // text overlay
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 16,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (year.isNotEmpty)
+                  Text(
+                    year,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white70,
+                      fontWeight: FontWeight.w400,
+                      shadows: shadow,
+                    ),
+                  ),
+                Text(
+                  make,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    shadows: shadow,
+                  ),
+                ),
+                Text(
+                  model,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    shadows: shadow,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Placeholder extends StatelessWidget {
+  const _Placeholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: Center(
+        child: Icon(
+          Icons.directions_car,
+          size: 64,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+      ),
     );
   }
 }
@@ -212,7 +338,7 @@ class _SectionHeader extends StatelessWidget {
             title,
             style: Theme.of(context)
                 .textTheme
-                .titleMedium
+                .titleLarge
                 ?.copyWith(fontWeight: FontWeight.w600),
           ),
           const Divider(height: 16),

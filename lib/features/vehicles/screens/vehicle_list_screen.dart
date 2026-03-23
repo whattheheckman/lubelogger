@@ -65,7 +65,7 @@ class _VehicleCard extends ConsumerWidget {
   const _VehicleCard({required this.vehicle});
   final Vehicle vehicle;
 
-  static final _odomFmt = NumberFormat('#,###');
+  static final _odomFmt = NumberFormat('####');
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -122,8 +122,8 @@ class _VehicleCard extends ConsumerWidget {
                             vehicle.year,
                             style: const TextStyle(
                               color: Colors.white70,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
                               shadows: [Shadow(blurRadius: 10, color: Colors.black87)],
                             ),
                           ),
@@ -162,8 +162,8 @@ class _VehicleCard extends ConsumerWidget {
                               '${_odomFmt.format(latestMileage)} mi',
                               style: const TextStyle(
                                 color: Colors.white60,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w200,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                         ],

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/settings/settings_repository.dart';
+import '../../../features/odometer/data/local_odometer_record_repository.dart';
+import '../../../features/odometer/domain/odometer_record.dart' as odom;
 import '../data/local_upgrade_record_repository.dart';
 import '../domain/upgrade_record.dart';
 import '../providers/upgrade_records_provider.dart';
@@ -94,6 +97,20 @@ class _UpgradeRecordFormScreenState
             updatedAt: DateTime.now(),
           );
       await ref.read(upgradeRecordsNotifierProvider.notifier).save(record);
+      final mileage = double.tryParse(_mileageController.text) ?? 0;
+      final autoAdd = ref.read(settingsRepositoryProvider).current.autoAddOdometerRecords;
+      if (autoAdd && mileage > 0) {
+        await ref.read(localOdometerRecordRepositoryProvider).create(
+              odom.OdometerRecord(
+                id: 0,
+                vehicleId: widget.vehicleId,
+                date: _date,
+                mileage: mileage,
+                notes: 'automatically added from upgrade records',
+                updatedAt: DateTime.now(),
+              ),
+            );
+      }
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isLoading = false);

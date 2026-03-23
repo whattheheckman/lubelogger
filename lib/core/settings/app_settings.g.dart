@@ -25,6 +25,7 @@ _$AppSettingsImpl _$$AppSettingsImplFromJson(
       ) ??
       ConflictStrategy.lastWriteWins,
   setupComplete: json['setupComplete'] as bool? ?? false,
+  autoAddOdometerRecords: json['autoAddOdometerRecords'] as bool? ?? true,
 );
 
 Map<String, dynamic> _$$AppSettingsImplToJson(_$AppSettingsImpl instance) =>
@@ -38,6 +39,7 @@ Map<String, dynamic> _$$AppSettingsImplToJson(_$AppSettingsImpl instance) =>
       'syncIntervalMinutes': instance.syncIntervalMinutes,
       'conflictStrategy': _$ConflictStrategyEnumMap[instance.conflictStrategy]!,
       'setupComplete': instance.setupComplete,
+      'autoAddOdometerRecords': instance.autoAddOdometerRecords,
     };
 
 const _$AppModeEnumMap = {

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/settings/settings_repository.dart';
+import '../../../features/odometer/data/local_odometer_record_repository.dart';
+import '../../../features/odometer/domain/odometer_record.dart' as odom;
 import '../data/local_gas_record_repository.dart';
 import '../domain/gas_record.dart';
 import '../providers/gas_records_provider.dart';
@@ -101,6 +104,20 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
             updatedAt: DateTime.now(),
           );
       await ref.read(gasRecordsNotifierProvider.notifier).save(record);
+      final mileage = double.tryParse(_mileageController.text) ?? 0;
+      final autoAdd = ref.read(settingsRepositoryProvider).current.autoAddOdometerRecords;
+      if (autoAdd && mileage > 0) {
+        await ref.read(localOdometerRecordRepositoryProvider).create(
+              odom.OdometerRecord(
+                id: 0,
+                vehicleId: widget.vehicleId,
+                date: _date,
+                mileage: mileage,
+                notes: 'automatically added from gas records',
+                updatedAt: DateTime.now(),
+              ),
+            );
+      }
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isLoading = false);

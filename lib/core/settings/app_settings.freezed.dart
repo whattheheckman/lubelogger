@@ -30,6 +30,7 @@ mixin _$AppSettings {
   int get syncIntervalMinutes => throw _privateConstructorUsedError;
   ConflictStrategy get conflictStrategy => throw _privateConstructorUsedError;
   bool get setupComplete => throw _privateConstructorUsedError;
+  bool get autoAddOdometerRecords => throw _privateConstructorUsedError;
 
   /// Serializes this AppSettings to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,6 +59,7 @@ abstract class $AppSettingsCopyWith<$Res> {
     int syncIntervalMinutes,
     ConflictStrategy conflictStrategy,
     bool setupComplete,
+    bool autoAddOdometerRecords,
   });
 }
 
@@ -85,6 +87,7 @@ class _$AppSettingsCopyWithImpl<$Res, $Val extends AppSettings>
     Object? syncIntervalMinutes = null,
     Object? conflictStrategy = null,
     Object? setupComplete = null,
+    Object? autoAddOdometerRecords = null,
   }) {
     return _then(
       _value.copyWith(
@@ -124,6 +127,10 @@ class _$AppSettingsCopyWithImpl<$Res, $Val extends AppSettings>
                 ? _value.setupComplete
                 : setupComplete // ignore: cast_nullable_to_non_nullable
                       as bool,
+            autoAddOdometerRecords: null == autoAddOdometerRecords
+                ? _value.autoAddOdometerRecords
+                : autoAddOdometerRecords // ignore: cast_nullable_to_non_nullable
+                      as bool,
           )
           as $Val,
     );
@@ -149,6 +156,7 @@ abstract class _$$AppSettingsImplCopyWith<$Res>
     int syncIntervalMinutes,
     ConflictStrategy conflictStrategy,
     bool setupComplete,
+    bool autoAddOdometerRecords,
   });
 }
 
@@ -175,6 +183,7 @@ class __$$AppSettingsImplCopyWithImpl<$Res>
     Object? syncIntervalMinutes = null,
     Object? conflictStrategy = null,
     Object? setupComplete = null,
+    Object? autoAddOdometerRecords = null,
   }) {
     return _then(
       _$AppSettingsImpl(
@@ -214,6 +223,10 @@ class __$$AppSettingsImplCopyWithImpl<$Res>
             ? _value.setupComplete
             : setupComplete // ignore: cast_nullable_to_non_nullable
                   as bool,
+        autoAddOdometerRecords: null == autoAddOdometerRecords
+            ? _value.autoAddOdometerRecords
+            : autoAddOdometerRecords // ignore: cast_nullable_to_non_nullable
+                  as bool,
       ),
     );
   }
@@ -232,6 +245,7 @@ class _$AppSettingsImpl implements _AppSettings {
     this.syncIntervalMinutes = 5,
     this.conflictStrategy = ConflictStrategy.lastWriteWins,
     this.setupComplete = false,
+    this.autoAddOdometerRecords = true,
   });
 
   factory _$AppSettingsImpl.fromJson(Map<String, dynamic> json) =>
@@ -264,10 +278,13 @@ class _$AppSettingsImpl implements _AppSettings {
   @override
   @JsonKey()
   final bool setupComplete;
+  @override
+  @JsonKey()
+  final bool autoAddOdometerRecords;
 
   @override
   String toString() {
-    return 'AppSettings(appMode: $appMode, serverUrl: $serverUrl, authMode: $authMode, apiKey: $apiKey, username: $username, password: $password, syncIntervalMinutes: $syncIntervalMinutes, conflictStrategy: $conflictStrategy, setupComplete: $setupComplete)';
+    return 'AppSettings(appMode: $appMode, serverUrl: $serverUrl, authMode: $authMode, apiKey: $apiKey, username: $username, password: $password, syncIntervalMinutes: $syncIntervalMinutes, conflictStrategy: $conflictStrategy, setupComplete: $setupComplete, autoAddOdometerRecords: $autoAddOdometerRecords)';
   }
 
   @override
@@ -290,7 +307,9 @@ class _$AppSettingsImpl implements _AppSettings {
             (identical(other.conflictStrategy, conflictStrategy) ||
                 other.conflictStrategy == conflictStrategy) &&
             (identical(other.setupComplete, setupComplete) ||
-                other.setupComplete == setupComplete));
+                other.setupComplete == setupComplete) &&
+            (identical(other.autoAddOdometerRecords, autoAddOdometerRecords) ||
+                other.autoAddOdometerRecords == autoAddOdometerRecords));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -306,6 +325,7 @@ class _$AppSettingsImpl implements _AppSettings {
     syncIntervalMinutes,
     conflictStrategy,
     setupComplete,
+    autoAddOdometerRecords,
   );
 
   /// Create a copy of AppSettings
@@ -333,6 +353,7 @@ abstract class _AppSettings implements AppSettings {
     final int syncIntervalMinutes,
     final ConflictStrategy conflictStrategy,
     final bool setupComplete,
+    final bool autoAddOdometerRecords,
   }) = _$AppSettingsImpl;
 
   factory _AppSettings.fromJson(Map<String, dynamic> json) =
@@ -356,6 +377,8 @@ abstract class _AppSettings implements AppSettings {
   ConflictStrategy get conflictStrategy;
   @override
   bool get setupComplete;
+  @override
+  bool get autoAddOdometerRecords;
 
   /// Create a copy of AppSettings
   /// with the given fields replaced by the non-null parameter values.
