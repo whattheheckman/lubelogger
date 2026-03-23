@@ -7,7 +7,7 @@ part of 'local_gas_record_repository.dart';
 // **************************************************************************
 
 String _$localGasRecordRepositoryHash() =>
-    r'5a30cf5ac447fd073041366c8ff1108e62b2b9f4';
+    r'4010c7533b525892143190c437421e3a2d849d4f';
 
 /// See also [localGasRecordRepository].
 @ProviderFor(localGasRecordRepository)

@@ -6,7 +6,7 @@ part of 'local_vehicle_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appDatabaseHash() => r'4c20f914a3c547001c20f44f1138a1d70037da2d';
+String _$appDatabaseHash() => r'4db1c5efe1a73afafa926c6e91d12e49a68b1abc';
 
 /// See also [appDatabase].
 @ProviderFor(appDatabase)
@@ -24,7 +24,7 @@ final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
 // ignore: unused_element
 typedef AppDatabaseRef = AutoDisposeProviderRef<AppDatabase>;
 String _$localVehicleRepositoryHash() =>
-    r'de2004fd585f014adcb457a3883fe928cf6ee1f5';
+    r'866f93e5e585f907cceb1e2a2783bc6f1231699e';
 
 /// See also [localVehicleRepository].
 @ProviderFor(localVehicleRepository)

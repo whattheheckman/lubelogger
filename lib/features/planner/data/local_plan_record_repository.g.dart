@@ -7,7 +7,7 @@ part of 'local_plan_record_repository.dart';
 // **************************************************************************
 
 String _$localPlanRecordRepositoryHash() =>
-    r'f31fc297820beb1ae15565ecff5557cb16a20127';
+    r'8c855bf7ef3bf251640dde6a3f2f99f35b3ef360';
 
 /// See also [localPlanRecordRepository].
 @ProviderFor(localPlanRecordRepository)

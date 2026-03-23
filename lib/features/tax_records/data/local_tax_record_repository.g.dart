@@ -7,7 +7,7 @@ part of 'local_tax_record_repository.dart';
 // **************************************************************************
 
 String _$localTaxRecordRepositoryHash() =>
-    r'4a0f3c493cba6d81dec8bdbb9c43a39ed169930f';
+    r'7202e395f772920cc90f922bc1bc414fcb300e50';
 
 /// See also [localTaxRecordRepository].
 @ProviderFor(localTaxRecordRepository)

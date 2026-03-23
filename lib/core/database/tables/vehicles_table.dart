@@ -10,6 +10,7 @@ class Vehicles extends Table {
   BoolColumn get isElectric => boolean().withDefault(const Constant(false))();
   BoolColumn get isDiesel => boolean().withDefault(const Constant(false))();
   BoolColumn get useHours => boolean().withDefault(const Constant(false))();
+  TextColumn get imagePath => text().nullable()();
   TextColumn get tags => text().withDefault(const Constant('[]'))(); // JSON array
   TextColumn get extraFields => text().withDefault(const Constant('{}'))(); // JSON object
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();

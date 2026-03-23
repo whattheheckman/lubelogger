@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../data/local_vehicle_repository.dart';
 import '../domain/vehicle.dart';
@@ -23,6 +26,7 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
   bool _isElectric = false;
   bool _isDiesel = false;
   bool _isLoading = false;
+  String? _imagePath;
   Vehicle? _existing;
 
   @override
@@ -46,6 +50,7 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
       _plateController.text = vehicle.licensePlate;
       _isElectric = vehicle.isElectric;
       _isDiesel = vehicle.isDiesel;
+      _imagePath = vehicle.imagePath;
     });
   }
 
@@ -70,6 +75,7 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
             licensePlate: _plateController.text.trim(),
             isElectric: _isElectric,
             isDiesel: _isDiesel,
+            imagePath: _imagePath,
             updatedAt: DateTime.now(),
           ) ??
           Vehicle(
@@ -80,6 +86,7 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
             licensePlate: _plateController.text.trim(),
             isElectric: _isElectric,
             isDiesel: _isDiesel,
+            imagePath: _imagePath,
             updatedAt: DateTime.now(),
           );
       if (widget.vehicleId == null) {
@@ -104,6 +111,18 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            _ImagePickerTile(
+              imagePath: _imagePath,
+              onPick: () async {
+                final picked = await ImagePicker()
+                    .pickImage(source: ImageSource.gallery);
+                if (picked != null) {
+                  setState(() => _imagePath = picked.path);
+                }
+              },
+              onRemove: () => setState(() => _imagePath = null),
+            ),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _yearController,
               decoration: const InputDecoration(labelText: 'Year'),
@@ -147,6 +166,61 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ImagePickerTile extends StatelessWidget {
+  const _ImagePickerTile({
+    required this.imagePath,
+    required this.onPick,
+    required this.onRemove,
+  });
+  final String? imagePath;
+  final VoidCallback onPick;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPick,
+      child: Container(
+        height: 180,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: imagePath != null
+            ? Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.file(File(imagePath!), fit: BoxFit.cover),
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: IconButton.filled(
+                      icon: const Icon(Icons.close),
+                      onPressed: onRemove,
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.black54,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add_photo_alternate_outlined,
+                      size: 48, color: Colors.grey),
+                  SizedBox(height: 8),
+                  Text('Tap to add photo',
+                      style: TextStyle(color: Colors.grey)),
+                ],
+              ),
       ),
     );
   }

@@ -7,7 +7,7 @@ part of 'local_reminder_record_repository.dart';
 // **************************************************************************
 
 String _$localReminderRecordRepositoryHash() =>
-    r'ce7960403caa9afe1665ab5c43e077d40a5bddd4';
+    r'e8f7e03cba164c54248a72f40961efbd2c097e22';
 
 /// See also [localReminderRecordRepository].
 @ProviderFor(localReminderRecordRepository)

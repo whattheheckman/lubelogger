@@ -7,7 +7,7 @@ part of 'local_supply_record_repository.dart';
 // **************************************************************************
 
 String _$localSupplyRecordRepositoryHash() =>
-    r'9647e7aeb53e421929e3f20e4e007ee1cd91d724';
+    r'65436a6812971fceb8c12f17d335476e8bd6f26c';
 
 /// See also [localSupplyRecordRepository].
 @ProviderFor(localSupplyRecordRepository)

@@ -7,7 +7,7 @@ part of 'local_upgrade_record_repository.dart';
 // **************************************************************************
 
 String _$localUpgradeRecordRepositoryHash() =>
-    r'ddfc26f0a32c32b4a256300aac20827760c3bddb';
+    r'67131238c11e84089dad9f8ce6a967b909003db0';
 
 /// See also [localUpgradeRecordRepository].
 @ProviderFor(localUpgradeRecordRepository)

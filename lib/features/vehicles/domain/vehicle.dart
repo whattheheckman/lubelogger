@@ -12,6 +12,7 @@ class Vehicle with _$Vehicle {
     required String make,
     required String model,
     @Default('') String licensePlate,
+    String? imagePath,
     @Default(false) bool isElectric,
     @Default(false) bool isDiesel,
     @Default(false) bool useHours,

@@ -7,7 +7,7 @@ part of 'local_odometer_record_repository.dart';
 // **************************************************************************
 
 String _$localOdometerRecordRepositoryHash() =>
-    r'46703236ab858a95feaa67ee3fbee7b64aaa9683';
+    r'dc8d236ec83c00d60e0c8d4a44d2618a35f1be34';
 
 /// See also [localOdometerRecordRepository].
 @ProviderFor(localOdometerRecordRepository)

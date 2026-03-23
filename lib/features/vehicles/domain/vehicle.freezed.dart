@@ -27,6 +27,7 @@ mixin _$Vehicle {
   String get make => throw _privateConstructorUsedError;
   String get model => throw _privateConstructorUsedError;
   String get licensePlate => throw _privateConstructorUsedError;
+  String? get imagePath => throw _privateConstructorUsedError;
   bool get isElectric => throw _privateConstructorUsedError;
   bool get isDiesel => throw _privateConstructorUsedError;
   bool get useHours => throw _privateConstructorUsedError;
@@ -56,6 +57,7 @@ abstract class $VehicleCopyWith<$Res> {
     String make,
     String model,
     String licensePlate,
+    String? imagePath,
     bool isElectric,
     bool isDiesel,
     bool useHours,
@@ -87,6 +89,7 @@ class _$VehicleCopyWithImpl<$Res, $Val extends Vehicle>
     Object? make = null,
     Object? model = null,
     Object? licensePlate = null,
+    Object? imagePath = freezed,
     Object? isElectric = null,
     Object? isDiesel = null,
     Object? useHours = null,
@@ -121,6 +124,10 @@ class _$VehicleCopyWithImpl<$Res, $Val extends Vehicle>
                 ? _value.licensePlate
                 : licensePlate // ignore: cast_nullable_to_non_nullable
                       as String,
+            imagePath: freezed == imagePath
+                ? _value.imagePath
+                : imagePath // ignore: cast_nullable_to_non_nullable
+                      as String?,
             isElectric: null == isElectric
                 ? _value.isElectric
                 : isElectric // ignore: cast_nullable_to_non_nullable
@@ -170,6 +177,7 @@ abstract class _$$VehicleImplCopyWith<$Res> implements $VehicleCopyWith<$Res> {
     String make,
     String model,
     String licensePlate,
+    String? imagePath,
     bool isElectric,
     bool isDiesel,
     bool useHours,
@@ -200,6 +208,7 @@ class __$$VehicleImplCopyWithImpl<$Res>
     Object? make = null,
     Object? model = null,
     Object? licensePlate = null,
+    Object? imagePath = freezed,
     Object? isElectric = null,
     Object? isDiesel = null,
     Object? useHours = null,
@@ -234,6 +243,10 @@ class __$$VehicleImplCopyWithImpl<$Res>
             ? _value.licensePlate
             : licensePlate // ignore: cast_nullable_to_non_nullable
                   as String,
+        imagePath: freezed == imagePath
+            ? _value.imagePath
+            : imagePath // ignore: cast_nullable_to_non_nullable
+                  as String?,
         isElectric: null == isElectric
             ? _value.isElectric
             : isElectric // ignore: cast_nullable_to_non_nullable
@@ -277,6 +290,7 @@ class _$VehicleImpl implements _Vehicle {
     required this.make,
     required this.model,
     this.licensePlate = '',
+    this.imagePath,
     this.isElectric = false,
     this.isDiesel = false,
     this.useHours = false,
@@ -303,6 +317,8 @@ class _$VehicleImpl implements _Vehicle {
   @override
   @JsonKey()
   final String licensePlate;
+  @override
+  final String? imagePath;
   @override
   @JsonKey()
   final bool isElectric;
@@ -338,7 +354,7 @@ class _$VehicleImpl implements _Vehicle {
 
   @override
   String toString() {
-    return 'Vehicle(id: $id, remoteId: $remoteId, year: $year, make: $make, model: $model, licensePlate: $licensePlate, isElectric: $isElectric, isDiesel: $isDiesel, useHours: $useHours, tags: $tags, extraFields: $extraFields, updatedAt: $updatedAt, syncStatus: $syncStatus)';
+    return 'Vehicle(id: $id, remoteId: $remoteId, year: $year, make: $make, model: $model, licensePlate: $licensePlate, imagePath: $imagePath, isElectric: $isElectric, isDiesel: $isDiesel, useHours: $useHours, tags: $tags, extraFields: $extraFields, updatedAt: $updatedAt, syncStatus: $syncStatus)';
   }
 
   @override
@@ -354,6 +370,8 @@ class _$VehicleImpl implements _Vehicle {
             (identical(other.model, model) || other.model == model) &&
             (identical(other.licensePlate, licensePlate) ||
                 other.licensePlate == licensePlate) &&
+            (identical(other.imagePath, imagePath) ||
+                other.imagePath == imagePath) &&
             (identical(other.isElectric, isElectric) ||
                 other.isElectric == isElectric) &&
             (identical(other.isDiesel, isDiesel) ||
@@ -381,6 +399,7 @@ class _$VehicleImpl implements _Vehicle {
     make,
     model,
     licensePlate,
+    imagePath,
     isElectric,
     isDiesel,
     useHours,
@@ -412,6 +431,7 @@ abstract class _Vehicle implements Vehicle {
     required final String make,
     required final String model,
     final String licensePlate,
+    final String? imagePath,
     final bool isElectric,
     final bool isDiesel,
     final bool useHours,
@@ -435,6 +455,8 @@ abstract class _Vehicle implements Vehicle {
   String get model;
   @override
   String get licensePlate;
+  @override
+  String? get imagePath;
   @override
   bool get isElectric;
   @override

@@ -116,6 +116,17 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _imagePathMeta = const VerificationMeta(
+    'imagePath',
+  );
+  @override
+  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
+    'image_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _tagsMeta = const VerificationMeta('tags');
   @override
   late final GeneratedColumn<String> tags = GeneratedColumn<String>(
@@ -173,6 +184,7 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
     isElectric,
     isDiesel,
     useHours,
+    imagePath,
     tags,
     extraFields,
     updatedAt,
@@ -250,6 +262,12 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
         useHours.isAcceptableOrUnknown(data['use_hours']!, _useHoursMeta),
       );
     }
+    if (data.containsKey('image_path')) {
+      context.handle(
+        _imagePathMeta,
+        imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta),
+      );
+    }
     if (data.containsKey('tags')) {
       context.handle(
         _tagsMeta,
@@ -322,6 +340,10 @@ class $VehiclesTable extends Vehicles with TableInfo<$VehiclesTable, Vehicle> {
         DriftSqlType.bool,
         data['${effectivePrefix}use_hours'],
       )!,
+      imagePath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_path'],
+      ),
       tags: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}tags'],
@@ -357,6 +379,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
   final bool isElectric;
   final bool isDiesel;
   final bool useHours;
+  final String? imagePath;
   final String tags;
   final String extraFields;
   final DateTime updatedAt;
@@ -371,6 +394,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     required this.isElectric,
     required this.isDiesel,
     required this.useHours,
+    this.imagePath,
     required this.tags,
     required this.extraFields,
     required this.updatedAt,
@@ -390,6 +414,9 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     map['is_electric'] = Variable<bool>(isElectric);
     map['is_diesel'] = Variable<bool>(isDiesel);
     map['use_hours'] = Variable<bool>(useHours);
+    if (!nullToAbsent || imagePath != null) {
+      map['image_path'] = Variable<String>(imagePath);
+    }
     map['tags'] = Variable<String>(tags);
     map['extra_fields'] = Variable<String>(extraFields);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -410,6 +437,9 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
       isElectric: Value(isElectric),
       isDiesel: Value(isDiesel),
       useHours: Value(useHours),
+      imagePath: imagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(imagePath),
       tags: Value(tags),
       extraFields: Value(extraFields),
       updatedAt: Value(updatedAt),
@@ -432,6 +462,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
       isElectric: serializer.fromJson<bool>(json['isElectric']),
       isDiesel: serializer.fromJson<bool>(json['isDiesel']),
       useHours: serializer.fromJson<bool>(json['useHours']),
+      imagePath: serializer.fromJson<String?>(json['imagePath']),
       tags: serializer.fromJson<String>(json['tags']),
       extraFields: serializer.fromJson<String>(json['extraFields']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -451,6 +482,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
       'isElectric': serializer.toJson<bool>(isElectric),
       'isDiesel': serializer.toJson<bool>(isDiesel),
       'useHours': serializer.toJson<bool>(useHours),
+      'imagePath': serializer.toJson<String?>(imagePath),
       'tags': serializer.toJson<String>(tags),
       'extraFields': serializer.toJson<String>(extraFields),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -468,6 +500,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     bool? isElectric,
     bool? isDiesel,
     bool? useHours,
+    Value<String?> imagePath = const Value.absent(),
     String? tags,
     String? extraFields,
     DateTime? updatedAt,
@@ -482,6 +515,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     isElectric: isElectric ?? this.isElectric,
     isDiesel: isDiesel ?? this.isDiesel,
     useHours: useHours ?? this.useHours,
+    imagePath: imagePath.present ? imagePath.value : this.imagePath,
     tags: tags ?? this.tags,
     extraFields: extraFields ?? this.extraFields,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -502,6 +536,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
           : this.isElectric,
       isDiesel: data.isDiesel.present ? data.isDiesel.value : this.isDiesel,
       useHours: data.useHours.present ? data.useHours.value : this.useHours,
+      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
       tags: data.tags.present ? data.tags.value : this.tags,
       extraFields: data.extraFields.present
           ? data.extraFields.value
@@ -525,6 +560,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
           ..write('isElectric: $isElectric, ')
           ..write('isDiesel: $isDiesel, ')
           ..write('useHours: $useHours, ')
+          ..write('imagePath: $imagePath, ')
           ..write('tags: $tags, ')
           ..write('extraFields: $extraFields, ')
           ..write('updatedAt: $updatedAt, ')
@@ -544,6 +580,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
     isElectric,
     isDiesel,
     useHours,
+    imagePath,
     tags,
     extraFields,
     updatedAt,
@@ -562,6 +599,7 @@ class Vehicle extends DataClass implements Insertable<Vehicle> {
           other.isElectric == this.isElectric &&
           other.isDiesel == this.isDiesel &&
           other.useHours == this.useHours &&
+          other.imagePath == this.imagePath &&
           other.tags == this.tags &&
           other.extraFields == this.extraFields &&
           other.updatedAt == this.updatedAt &&
@@ -578,6 +616,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
   final Value<bool> isElectric;
   final Value<bool> isDiesel;
   final Value<bool> useHours;
+  final Value<String?> imagePath;
   final Value<String> tags;
   final Value<String> extraFields;
   final Value<DateTime> updatedAt;
@@ -592,6 +631,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     this.isElectric = const Value.absent(),
     this.isDiesel = const Value.absent(),
     this.useHours = const Value.absent(),
+    this.imagePath = const Value.absent(),
     this.tags = const Value.absent(),
     this.extraFields = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -607,6 +647,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     this.isElectric = const Value.absent(),
     this.isDiesel = const Value.absent(),
     this.useHours = const Value.absent(),
+    this.imagePath = const Value.absent(),
     this.tags = const Value.absent(),
     this.extraFields = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -624,6 +665,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     Expression<bool>? isElectric,
     Expression<bool>? isDiesel,
     Expression<bool>? useHours,
+    Expression<String>? imagePath,
     Expression<String>? tags,
     Expression<String>? extraFields,
     Expression<DateTime>? updatedAt,
@@ -639,6 +681,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
       if (isElectric != null) 'is_electric': isElectric,
       if (isDiesel != null) 'is_diesel': isDiesel,
       if (useHours != null) 'use_hours': useHours,
+      if (imagePath != null) 'image_path': imagePath,
       if (tags != null) 'tags': tags,
       if (extraFields != null) 'extra_fields': extraFields,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -656,6 +699,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     Value<bool>? isElectric,
     Value<bool>? isDiesel,
     Value<bool>? useHours,
+    Value<String?>? imagePath,
     Value<String>? tags,
     Value<String>? extraFields,
     Value<DateTime>? updatedAt,
@@ -671,6 +715,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
       isElectric: isElectric ?? this.isElectric,
       isDiesel: isDiesel ?? this.isDiesel,
       useHours: useHours ?? this.useHours,
+      imagePath: imagePath ?? this.imagePath,
       tags: tags ?? this.tags,
       extraFields: extraFields ?? this.extraFields,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -708,6 +753,9 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
     if (useHours.present) {
       map['use_hours'] = Variable<bool>(useHours.value);
     }
+    if (imagePath.present) {
+      map['image_path'] = Variable<String>(imagePath.value);
+    }
     if (tags.present) {
       map['tags'] = Variable<String>(tags.value);
     }
@@ -735,6 +783,7 @@ class VehiclesCompanion extends UpdateCompanion<Vehicle> {
           ..write('isElectric: $isElectric, ')
           ..write('isDiesel: $isDiesel, ')
           ..write('useHours: $useHours, ')
+          ..write('imagePath: $imagePath, ')
           ..write('tags: $tags, ')
           ..write('extraFields: $extraFields, ')
           ..write('updatedAt: $updatedAt, ')
@@ -7493,6 +7542,7 @@ typedef $$VehiclesTableCreateCompanionBuilder =
       Value<bool> isElectric,
       Value<bool> isDiesel,
       Value<bool> useHours,
+      Value<String?> imagePath,
       Value<String> tags,
       Value<String> extraFields,
       Value<DateTime> updatedAt,
@@ -7509,6 +7559,7 @@ typedef $$VehiclesTableUpdateCompanionBuilder =
       Value<bool> isElectric,
       Value<bool> isDiesel,
       Value<bool> useHours,
+      Value<String?> imagePath,
       Value<String> tags,
       Value<String> extraFields,
       Value<DateTime> updatedAt,
@@ -7566,6 +7617,11 @@ class $$VehiclesTableFilterComposer
 
   ColumnFilters<bool> get useHours => $composableBuilder(
     column: $table.useHours,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imagePath => $composableBuilder(
+    column: $table.imagePath,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7644,6 +7700,11 @@ class $$VehiclesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get imagePath => $composableBuilder(
+    column: $table.imagePath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get tags => $composableBuilder(
     column: $table.tags,
     builder: (column) => ColumnOrderings(column),
@@ -7705,6 +7766,9 @@ class $$VehiclesTableAnnotationComposer
   GeneratedColumn<bool> get useHours =>
       $composableBuilder(column: $table.useHours, builder: (column) => column);
 
+  GeneratedColumn<String> get imagePath =>
+      $composableBuilder(column: $table.imagePath, builder: (column) => column);
+
   GeneratedColumn<String> get tags =>
       $composableBuilder(column: $table.tags, builder: (column) => column);
 
@@ -7759,6 +7823,7 @@ class $$VehiclesTableTableManager
                 Value<bool> isElectric = const Value.absent(),
                 Value<bool> isDiesel = const Value.absent(),
                 Value<bool> useHours = const Value.absent(),
+                Value<String?> imagePath = const Value.absent(),
                 Value<String> tags = const Value.absent(),
                 Value<String> extraFields = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -7773,6 +7838,7 @@ class $$VehiclesTableTableManager
                 isElectric: isElectric,
                 isDiesel: isDiesel,
                 useHours: useHours,
+                imagePath: imagePath,
                 tags: tags,
                 extraFields: extraFields,
                 updatedAt: updatedAt,
@@ -7789,6 +7855,7 @@ class $$VehiclesTableTableManager
                 Value<bool> isElectric = const Value.absent(),
                 Value<bool> isDiesel = const Value.absent(),
                 Value<bool> useHours = const Value.absent(),
+                Value<String?> imagePath = const Value.absent(),
                 Value<String> tags = const Value.absent(),
                 Value<String> extraFields = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -7803,6 +7870,7 @@ class $$VehiclesTableTableManager
                 isElectric: isElectric,
                 isDiesel: isDiesel,
                 useHours: useHours,
+                imagePath: imagePath,
                 tags: tags,
                 extraFields: extraFields,
                 updatedAt: updatedAt,

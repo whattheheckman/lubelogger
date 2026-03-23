@@ -7,7 +7,7 @@ part of 'local_note_record_repository.dart';
 // **************************************************************************
 
 String _$localNoteRecordRepositoryHash() =>
-    r'1fb946c81995b0da68e9c403c21c8dc661a38012';
+    r'1c631089dc91942928baa87bac336a58018295e5';
 
 /// See also [localNoteRecordRepository].
 @ProviderFor(localNoteRecordRepository)

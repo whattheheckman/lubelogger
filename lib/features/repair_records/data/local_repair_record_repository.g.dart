@@ -7,7 +7,7 @@ part of 'local_repair_record_repository.dart';
 // **************************************************************************
 
 String _$localRepairRecordRepositoryHash() =>
-    r'0a746b8316a0dc8f90b4ecfe31675f1ce7719382';
+    r'e04539c06db1ed819dfbdd5eba06c943a307c7cc';
 
 /// See also [localRepairRecordRepository].
 @ProviderFor(localRepairRecordRepository)

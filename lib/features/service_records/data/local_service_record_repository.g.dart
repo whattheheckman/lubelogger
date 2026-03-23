@@ -7,7 +7,7 @@ part of 'local_service_record_repository.dart';
 // **************************************************************************
 
 String _$localServiceRecordRepositoryHash() =>
-    r'6aaf35e5325433d48ebc593b1344930d869868c7';
+    r'b7c191f86265927134a68165b35611cf12ded98e';
 
 /// See also [localServiceRecordRepository].
 @ProviderFor(localServiceRecordRepository)
