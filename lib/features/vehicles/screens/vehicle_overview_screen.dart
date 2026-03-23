@@ -181,7 +181,7 @@ class _VehicleHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final shadow = [
-      const Shadow(blurRadius: 6, color: Colors.black54),
+      const Shadow(blurRadius: 10, color: Colors.black87),
     ];
 
     Widget image;
@@ -226,8 +226,8 @@ class _VehicleHeader extends StatelessWidget {
                   Text(
                     year,
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
                       shadows: shadow,
                     ),
                   ),

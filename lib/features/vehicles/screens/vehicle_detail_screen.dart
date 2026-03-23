@@ -54,7 +54,7 @@ class VehicleDetailScreen extends ConsumerWidget {
           child: Scaffold(
             appBar: AppBar(
               title:
-                  Text('${vehicle.year} ${vehicle.make} ${vehicle.model}'),
+                  Text('${vehicle.model}'),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.edit),

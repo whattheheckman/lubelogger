@@ -62,6 +62,7 @@ class _GasCard extends ConsumerWidget {
   final int vehicleId;
 
   static final _dateFmt = DateFormat.yMMMd();
+  static final _timeFmt = DateFormat.jm();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,7 +89,7 @@ class _GasCard extends ConsumerWidget {
           title: Text(
               '${record.gallons.toStringAsFixed(3)} gal  •  ${record.mileage.toStringAsFixed(0)} mi'),
           subtitle: Text(
-              '${_dateFmt.format(record.date)}${record.missedFuelUp ? '  •  ⚠ Missed fill-up' : ''}'),
+              '${_dateFmt.format(record.date)}  •  ${_timeFmt.format(record.date)}${record.missedFuelUp ? '  •  ⚠ Missed fill-up' : ''}'),
           trailing: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,

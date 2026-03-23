@@ -28,6 +28,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
   final _costController = TextEditingController(text: '0.00');
   final _notesController = TextEditingController();
   DateTime _date = DateTime.now();
+  TimeOfDay _time = TimeOfDay.now();
   bool _isFillToFull = true;
   bool _missedFuelUp = false;
   bool _isLoading = false;
@@ -53,6 +54,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
       _costController.text = record.cost.toStringAsFixed(2);
       _notesController.text = record.notes;
       _date = record.date;
+      _time = TimeOfDay.fromDateTime(record.date);
       _isFillToFull = record.isFillToFull;
       _missedFuelUp = record.missedFuelUp;
     });
@@ -77,12 +79,25 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
     if (picked != null) setState(() => _date = picked);
   }
 
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _time,
+    );
+    if (picked != null) setState(() => _time = picked);
+  }
+
+  DateTime get _dateTime => DateTime(
+        _date.year, _date.month, _date.day,
+        _time.hour, _time.minute,
+      );
+
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
       final record = _existing?.copyWith(
-            date: _date,
+            date: _dateTime,
             mileage: double.tryParse(_mileageController.text) ?? 0,
             gallons: double.tryParse(_gallonsController.text) ?? 0,
             cost: double.tryParse(_costController.text) ?? 0,
@@ -94,7 +109,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
           GasRecord(
             id: 0,
             vehicleId: widget.vehicleId,
-            date: _date,
+            date: _dateTime,
             mileage: double.tryParse(_mileageController.text) ?? 0,
             gallons: double.tryParse(_gallonsController.text) ?? 0,
             cost: double.tryParse(_costController.text) ?? 0,
@@ -111,7 +126,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
               odom.OdometerRecord(
                 id: 0,
                 vehicleId: widget.vehicleId,
-                date: _date,
+                date: _dateTime,
                 mileage: mileage,
                 notes: 'automatically added from gas records',
                 updatedAt: DateTime.now(),
@@ -142,6 +157,13 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
               subtitle: Text(DateFormat.yMMMd().format(_date)),
               trailing: const Icon(Icons.calendar_today),
               onTap: _pickDate,
+            ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Time'),
+              subtitle: Text(_time.format(context)),
+              trailing: const Icon(Icons.access_time),
+              onTap: _pickTime,
             ),
             const Divider(),
             const SizedBox(height: 8),
