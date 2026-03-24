@@ -189,9 +189,8 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
                   labelText: 'Gallons',
                   border: OutlineInputBorder(),
                   suffixText: 'gal'),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [decimalOnlyFormatter],
+              keyboardType: TextInputType.number,
+              inputFormatters: [CurrencyInputFormatter(decimalPlaces: 3)],
               validator: (v) {
                 final n = double.tryParse(v ?? '');
                 if (n == null || n <= 0) return 'Enter a valid quantity';
