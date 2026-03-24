@@ -136,14 +136,21 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
                   v == null || v.trim().isEmpty ? 'Required' : null,
             ),
             const SizedBox(height: 12),
-            TextFormField(
-              controller: _costController,
-              decoration: const InputDecoration(
-                  labelText: 'Cost',
-                  border: OutlineInputBorder(),
-                  prefixText: '\$'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [CurrencyInputFormatter()],
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('\$', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextFormField(
+                    controller: _costController,
+                    decoration: const InputDecoration(
+                        labelText: 'Cost', border: OutlineInputBorder()),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [CurrencyInputFormatter()],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             SwitchListTile(

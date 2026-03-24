@@ -40,9 +40,12 @@ class SettingsScreen extends ConsumerWidget {
             subtitle: const Text(
                 'Automatically create an odometer entry when saving gas, service, repair, or upgrade records'),
             value: settings.autoAddOdometerRecords,
-            onChanged: (v) => ref
-                .read(settingsRepositoryProvider)
-                .save(settings.copyWith(autoAddOdometerRecords: v)),
+            onChanged: (v) async {
+              await ref
+                  .read(settingsRepositoryProvider)
+                  .save(settings.copyWith(autoAddOdometerRecords: v));
+              ref.invalidate(settingsRepositoryProvider);
+            },
           ),
         ],
       ),

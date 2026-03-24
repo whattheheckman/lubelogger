@@ -129,16 +129,21 @@ class _SupplyFormScreenState extends ConsumerState<SupplyFormScreen> {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Expanded(
-                  child: TextFormField(
-                    controller: _costController,
-                    decoration: const InputDecoration(
-                        labelText: 'Cost',
-                        border: OutlineInputBorder(),
-                        prefixText: '\$'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [CurrencyInputFormatter()],
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text('\$', style: TextStyle(fontSize: 16)),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _costController,
+                        decoration: const InputDecoration(
+                            labelText: 'Cost', border: OutlineInputBorder()),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [CurrencyInputFormatter()],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -24,9 +24,9 @@ class GasRecordFormScreen extends ConsumerStatefulWidget {
 
 class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _mileageController = TextEditingController(text: '0');
-  final _gallonsController = TextEditingController(text: '0.000');
-  final _costController = TextEditingController(text: '0.00');
+  final _mileageController = TextEditingController();
+  final _gallonsController = TextEditingController();
+  final _costController = TextEditingController();
   final _notesController = TextEditingController();
   DateTime _date = DateTime.now();
   TimeOfDay _time = TimeOfDay.now();
@@ -198,14 +198,22 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
               },
             ),
             const SizedBox(height: 12),
-            TextFormField(
-              controller: _costController,
-              decoration: const InputDecoration(
-                  labelText: 'Total Cost',
-                  border: OutlineInputBorder(),
-                  prefixText: '\$'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [CurrencyInputFormatter()],
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text('\$', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextFormField(
+                    controller: _costController,
+                    decoration: const InputDecoration(
+                        labelText: 'Total Cost',
+                        border: OutlineInputBorder()),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [CurrencyInputFormatter()],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             SwitchListTile(
