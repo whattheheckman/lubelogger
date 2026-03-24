@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/routing/route_names.dart';
 import '../../../core/sync/sync_status.dart';
+import 'vehicle_overview_screen.dart';
 import '../../odometer/providers/odometer_records_provider.dart';
 import '../domain/vehicle.dart';
 import '../providers/vehicles_provider.dart';
@@ -171,7 +171,7 @@ class _VehicleCard extends ConsumerWidget {
                     ),
                     // License plate badge
                     if (vehicle.licensePlate.isNotEmpty)
-                      _LicensePlateBadge(plate: vehicle.licensePlate),
+                      LicensePlateBadge(plate: vehicle.licensePlate),
                   ],
                 ),
               ),
@@ -197,28 +197,3 @@ class _Placeholder extends StatelessWidget {
   }
 }
 
-class _LicensePlateBadge extends StatelessWidget {
-  const _LicensePlateBadge({required this.plate});
-  final String plate;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.black38,
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.white24),
-      ),
-      child: Text(
-        plate,
-        style: GoogleFonts.notoSans(
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-          fontSize: 13,
-          letterSpacing: 2,
-        ),
-      ),
-    );
-  }
-}

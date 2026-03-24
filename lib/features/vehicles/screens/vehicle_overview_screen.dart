@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../gas_records/providers/gas_records_provider.dart';
@@ -83,6 +84,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
           year: vehicle?.year ?? '',
           make: vehicle?.make ?? '',
           model: vehicle?.model ?? '',
+          licensePlate: vehicle?.licensePlate ?? '',
         ),
 
         // ── Summary metrics ───────────────────────────────────
@@ -171,11 +173,13 @@ class _VehicleHeader extends StatelessWidget {
     required this.year,
     required this.make,
     required this.model,
+    required this.licensePlate,
   });
   final String? imagePath;
   final String year;
   final String make;
   final String model;
+  final String licensePlate;
 
   @override
   Widget build(BuildContext context) {
@@ -218,35 +222,44 @@ class _VehicleHeader extends StatelessWidget {
             left: 16,
             right: 16,
             bottom: 16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                if (year.isNotEmpty)
-                  Text(
-                    year,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      shadows: shadow,
-                    ),
-                  ),
-                Text(
-                  make,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    shadows: shadow,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (year.isNotEmpty)
+                        Text(
+                          year,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            shadows: shadow,
+                          ),
+                        ),
+                      Text(
+                        make,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          shadows: shadow,
+                        ),
+                      ),
+                      Text(
+                        model,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          shadows: shadow,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Text(
-                  model,
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
-                    shadows: shadow,
-                  ),
-                ),
+                if (licensePlate.isNotEmpty)
+                  LicensePlateBadge(plate: licensePlate),
               ],
             ),
           ),
@@ -268,6 +281,36 @@ class _Placeholder extends StatelessWidget {
           Icons.directions_car,
           size: 64,
           color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// License plate badge
+// ─────────────────────────────────────────────────────────────
+
+class LicensePlateBadge extends StatelessWidget {
+  const LicensePlateBadge({super.key, required this.plate});
+  final String plate;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.black38,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.white24),
+      ),
+      child: Text(
+        plate,
+        style: GoogleFonts.notoSans(
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+          fontSize: 13,
+          letterSpacing: 2,
         ),
       ),
     );
