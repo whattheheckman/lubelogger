@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/utils/input_formatters.dart';
+
 import '../data/local_odometer_record_repository.dart';
 import '../domain/odometer_record.dart';
 import '../providers/odometer_records_provider.dart';
@@ -126,6 +128,7 @@ class _OdometerRecordFormScreenState
                   border: OutlineInputBorder(),
                   suffixText: 'mi'),
               keyboardType: TextInputType.number,
+              inputFormatters: [digitsOnlyFormatter],
               validator: (v) {
                 final n = double.tryParse(v ?? '');
                 if (n == null) return 'Enter a valid number';
@@ -140,6 +143,7 @@ class _OdometerRecordFormScreenState
                   border: OutlineInputBorder(),
                   suffixText: 'mi'),
               keyboardType: TextInputType.number,
+              inputFormatters: [digitsOnlyFormatter],
             ),
             const SizedBox(height: 12),
             TextFormField(

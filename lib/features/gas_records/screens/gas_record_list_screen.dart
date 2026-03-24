@@ -68,7 +68,7 @@ class _GasCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mpgText = record.mpg != null
         ? '${record.mpg!.toStringAsFixed(1)} MPG'
-        : record.isFillToFull ? 'Calculating…' : 'Partial fill';
+        : record.isFillToFull ? '' : 'Partial fill';
 
     return Dismissible(
       key: Key('gas_${record.id}'),

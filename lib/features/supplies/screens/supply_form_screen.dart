@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/utils/input_formatters.dart';
+
 import '../data/local_supply_record_repository.dart';
 import '../domain/supply_record.dart';
 import '../providers/supply_records_provider.dart';
@@ -123,6 +125,7 @@ class _SupplyFormScreenState extends ConsumerState<SupplyFormScreen> {
                         labelText: 'Quantity', border: OutlineInputBorder()),
                     keyboardType:
                         const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [decimalOnlyFormatter],
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -133,8 +136,8 @@ class _SupplyFormScreenState extends ConsumerState<SupplyFormScreen> {
                         labelText: 'Cost',
                         border: OutlineInputBorder(),
                         prefixText: '\$'),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [CurrencyInputFormatter()],
                   ),
                 ),
               ],

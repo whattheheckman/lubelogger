@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../core/utils/input_formatters.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -151,14 +153,15 @@ class _ServiceRecordFormScreenState
               decoration: const InputDecoration(
                   labelText: 'Mileage', border: OutlineInputBorder(), suffixText: 'mi'),
               keyboardType: TextInputType.number,
+              inputFormatters: [digitsOnlyFormatter],
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _costController,
               decoration: const InputDecoration(
                   labelText: 'Cost', border: OutlineInputBorder(), prefixText: '\$'),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: TextInputType.number,
+              inputFormatters: [CurrencyInputFormatter()],
             ),
             const SizedBox(height: 12),
             TextFormField(

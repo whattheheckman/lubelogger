@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/settings/settings_repository.dart';
+import '../../../core/utils/input_formatters.dart';
 import '../../../features/odometer/data/local_odometer_record_repository.dart';
 import '../../../features/odometer/domain/odometer_record.dart' as odom;
 import '../data/local_gas_record_repository.dart';
@@ -174,6 +175,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
                   border: OutlineInputBorder(),
                   suffixText: 'mi'),
               keyboardType: TextInputType.number,
+              inputFormatters: [digitsOnlyFormatter],
               validator: (v) {
                 final n = double.tryParse(v ?? '');
                 if (n == null || n <= 0) return 'Enter a valid mileage';
@@ -189,6 +191,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
                   suffixText: 'gal'),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [decimalOnlyFormatter],
               validator: (v) {
                 final n = double.tryParse(v ?? '');
                 if (n == null || n <= 0) return 'Enter a valid quantity';
@@ -202,8 +205,8 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
                   labelText: 'Total Cost',
                   border: OutlineInputBorder(),
                   prefixText: '\$'),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: TextInputType.number,
+              inputFormatters: [CurrencyInputFormatter()],
             ),
             const SizedBox(height: 8),
             SwitchListTile(

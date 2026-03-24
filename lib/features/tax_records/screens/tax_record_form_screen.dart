@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/utils/input_formatters.dart';
+
 import '../data/local_tax_record_repository.dart';
 import '../domain/tax_record.dart';
 import '../providers/tax_records_provider.dart';
@@ -140,8 +142,8 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
                   labelText: 'Cost',
                   border: OutlineInputBorder(),
                   prefixText: '\$'),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: TextInputType.number,
+              inputFormatters: [CurrencyInputFormatter()],
             ),
             const SizedBox(height: 8),
             SwitchListTile(
