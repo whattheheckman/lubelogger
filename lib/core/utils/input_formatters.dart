@@ -30,11 +30,10 @@ class CurrencyInputFormatter extends TextInputFormatter {
   ) {
     final digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
     final scale = _pow10(decimalPlaces);
-    final empty = '0.${'0' * decimalPlaces}';
     if (digits.isEmpty) {
       return newValue.copyWith(
-        text: empty,
-        selection: TextSelection.collapsed(offset: empty.length),
+        text: '',
+        selection: const TextSelection.collapsed(offset: 0),
       );
     }
     final value = int.tryParse(digits) ?? 0;

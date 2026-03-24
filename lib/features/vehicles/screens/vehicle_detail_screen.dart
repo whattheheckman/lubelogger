@@ -39,7 +39,6 @@ class VehicleDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncVehicle = ref.watch(vehicleByIdProvider(vehicleId));
-
     return asyncVehicle.when(
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),

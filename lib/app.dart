@@ -21,6 +21,11 @@ class LubeLoggerApp extends ConsumerWidget {
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
+        inputDecorationTheme: const InputDecorationTheme(
+          labelStyle: TextStyle(color: Colors.grey),
+          hintStyle: TextStyle(color: Colors.grey),
+          floatingLabelStyle: TextStyle(color: Color(0xFF90CAF9)),
+        ),
       ),
       themeMode: ThemeMode.system,
       routerConfig: router,

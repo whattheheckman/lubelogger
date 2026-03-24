@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../core/settings/settings_repository.dart';
 import '../../../core/utils/input_formatters.dart';
@@ -12,8 +13,12 @@ import '../domain/gas_record.dart';
 import '../providers/gas_records_provider.dart';
 
 class GasRecordFormScreen extends ConsumerStatefulWidget {
-  const GasRecordFormScreen(
-      {super.key, required this.vehicleId, this.recordId});
+  const GasRecordFormScreen({
+    super.key,
+    required this.vehicleId,
+    this.recordId,
+  });
+
   final int vehicleId;
   final int? recordId;
 
@@ -81,23 +86,19 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
   }
 
   Future<void> _pickTime() async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: _time,
-    );
+    final picked = await showTimePicker(context: context, initialTime: _time);
     if (picked != null) setState(() => _time = picked);
   }
 
-  DateTime get _dateTime => DateTime(
-        _date.year, _date.month, _date.day,
-        _time.hour, _time.minute,
-      );
+  DateTime get _dateTime =>
+      DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute);
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final record = _existing?.copyWith(
+      final record =
+          _existing?.copyWith(
             date: _dateTime,
             mileage: double.tryParse(_mileageController.text) ?? 0,
             gallons: double.tryParse(_gallonsController.text) ?? 0,
@@ -121,9 +122,14 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
           );
       await ref.read(gasRecordsNotifierProvider.notifier).save(record);
       final mileage = double.tryParse(_mileageController.text) ?? 0;
-      final autoAdd = ref.read(settingsRepositoryProvider).current.autoAddOdometerRecords;
+      final autoAdd = ref
+          .read(settingsRepositoryProvider)
+          .current
+          .autoAddOdometerRecords;
       if (autoAdd && mileage > 0) {
-        await ref.read(localOdometerRecordRepositoryProvider).create(
+        await ref
+            .read(localOdometerRecordRepositoryProvider)
+            .create(
               odom.OdometerRecord(
                 id: 0,
                 vehicleId: widget.vehicleId,
@@ -145,7 +151,8 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.recordId == null ? 'Add Fuel Record' : 'Edit Fuel Record'),
+          widget.recordId == null ? 'Add Fuel Record' : 'Edit Fuel Record',
+        ),
       ),
       body: Form(
         key: _formKey,
@@ -171,9 +178,12 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
             TextFormField(
               controller: _mileageController,
               decoration: const InputDecoration(
-                  labelText: 'Odometer Reading',
-                  border: OutlineInputBorder(),
-                  suffixText: 'mi'),
+                labelText: 'Odometer',
+                border: OutlineInputBorder(),
+                suffixText: 'mi',
+                icon: Icon(Symbols.speed),
+              ),
+
               keyboardType: TextInputType.number,
               inputFormatters: [digitsOnlyFormatter],
               validator: (v) {
@@ -186,9 +196,11 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
             TextFormField(
               controller: _gallonsController,
               decoration: const InputDecoration(
-                  labelText: 'Gallons',
-                  border: OutlineInputBorder(),
-                  suffixText: 'gal'),
+                labelText: 'Gallons',
+                border: OutlineInputBorder(),
+                suffixText: 'gal',
+                icon: Icon(Icons.local_gas_station_outlined),
+              ),
               keyboardType: TextInputType.number,
               inputFormatters: [CurrencyInputFormatter(decimalPlaces: 3)],
               validator: (v) {
@@ -198,22 +210,22 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
               },
             ),
             const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text('\$', style: TextStyle(fontSize: 16)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextFormField(
-                    controller: _costController,
-                    decoration: const InputDecoration(
-                        labelText: 'Total Cost',
-                        border: OutlineInputBorder()),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [CurrencyInputFormatter()],
+
+            Expanded(
+              child: TextFormField(
+                controller: _costController,
+                decoration: const InputDecoration(
+                  labelText: 'Cost',
+                  border: OutlineInputBorder(),
+                  icon: Icon(
+                    Symbols.universal_currency_alt_rounded,
+                    size: 24,
+                    color: Colors.grey,
                   ),
                 ),
-              ],
+                keyboardType: TextInputType.number,
+                inputFormatters: [CurrencyInputFormatter()],
+              ),
             ),
             const SizedBox(height: 8),
             SwitchListTile(
@@ -238,7 +250,9 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
             TextFormField(
               controller: _notesController,
               decoration: const InputDecoration(
-                  labelText: 'Notes', border: OutlineInputBorder()),
+                labelText: 'Notes',
+                border: OutlineInputBorder(),
+              ),
               maxLines: 2,
             ),
             const SizedBox(height: 24),
@@ -248,7 +262,8 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2))
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Text('Save'),
             ),
           ],
