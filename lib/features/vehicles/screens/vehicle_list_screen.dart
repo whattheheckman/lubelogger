@@ -76,40 +76,38 @@ class _VehicleCard extends ConsumerWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.go(RouteNames.vehicleDetailPath(vehicle.id)),
-        child: AspectRatio(
-          aspectRatio: 16 / 9,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // ── Layer 1: image / placeholder ─────────────────────
-              imagePath != null && imagePath.isNotEmpty
-                  ? Image.file(
-                      File(imagePath),
-                      fit: BoxFit.cover,
-                      errorBuilder: (ctx, e, s) => const _Placeholder(),
-                    )
-                  : const _Placeholder(),
+      child: AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // ── Layer 1: image / placeholder ─────────────────────
+            imagePath != null && imagePath.isNotEmpty
+                ? Image.file(
+                    File(imagePath),
+                    fit: BoxFit.cover,
+                    errorBuilder: (ctx, e, s) => const _Placeholder(),
+                  )
+                : const _Placeholder(),
 
-              // ── Layer 2: dark gradient fade ───────────────────────
-              const DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black54],
-                    stops: [0.25, 1.0],
-                  ),
+            // ── Layer 2: dark gradient fade ───────────────────────
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, Colors.black54],
+                  stops: [0.25, 1.0],
                 ),
               ),
+            ),
 
-              // ── Layer 3: text overlay ─────────────────────────────
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: 14,
-                child: Row(
+            // ── Layer 3: text overlay ─────────────────────────────
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 14,
+              child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     // Year / Make / Model / Odometer
@@ -175,8 +173,18 @@ class _VehicleCard extends ConsumerWidget {
                   ],
                 ),
               ),
-            ],
-          ),
+
+            // ── Layer 4: InkWell tap target ───────────────────────
+            Positioned.fill(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () =>
+                      context.go(RouteNames.vehicleDetailPath(vehicle.id)),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
