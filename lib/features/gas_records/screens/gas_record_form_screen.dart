@@ -8,7 +8,6 @@ import '../../../core/settings/settings_repository.dart';
 import '../../../core/utils/input_formatters.dart';
 import '../../../features/odometer/data/local_odometer_record_repository.dart';
 import '../../../features/odometer/domain/odometer_record.dart' as odom;
-import '../../../features/odometer/providers/odometer_records_provider.dart';
 import '../data/local_gas_record_repository.dart';
 import '../domain/gas_record.dart';
 import '../providers/gas_records_provider.dart';
@@ -95,18 +94,22 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
-    if (picked != null) setState(() {
+    if (picked != null) {
+      setState(() {
       _date = picked;
       _dateController.text = _formatDate(_date);
     });
+    }
   }
 
   Future<void> _pickTime() async {
     final picked = await showTimePicker(context: context, initialTime: _time);
-    if (picked != null) setState(() {
+    if (picked != null) {
+      setState(() {
       _time = picked;
       _timeController.text = _formatTime(_time);
     });
+    }
   }
 
   DateTime get _dateTime =>
@@ -219,6 +222,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
                 border: const OutlineInputBorder(),
                 suffixText: 'mi',
                 icon: const Icon(Symbols.speed),
+                hintText: 'e.g. 170237...'
               ),
 
               keyboardType: TextInputType.number,

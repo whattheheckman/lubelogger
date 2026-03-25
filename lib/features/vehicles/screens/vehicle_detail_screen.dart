@@ -52,8 +52,16 @@ class VehicleDetailScreen extends ConsumerWidget {
           length: _tabs.length,
           child: Scaffold(
             appBar: AppBar(
-              title:
-                  Text('${vehicle.model}'),
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(vehicle.model),
+                  if (vehicle.licensePlate.isNotEmpty) ...[
+                    const SizedBox(width: 10),
+                    LicensePlateBadge(plate: vehicle.licensePlate),
+                  ],
+                ],
+              ),
               actions: [
                 IconButton(
                   icon: const Icon(Icons.edit),

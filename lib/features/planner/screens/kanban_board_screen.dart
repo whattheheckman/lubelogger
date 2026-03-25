@@ -146,7 +146,7 @@ class _KanbanColumn extends ConsumerWidget {
                       ? Theme.of(context)
                           .colorScheme
                           .primaryContainer
-                          .withOpacity(0.3)
+                          .withValues(alpha: 0.3)
                       : _columnColor(context),
                   borderRadius:
                       const BorderRadius.vertical(bottom: Radius.circular(8)),
