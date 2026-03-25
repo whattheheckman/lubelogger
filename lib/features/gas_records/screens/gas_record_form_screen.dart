@@ -8,6 +8,7 @@ import '../../../core/settings/settings_repository.dart';
 import '../../../core/utils/input_formatters.dart';
 import '../../../features/odometer/data/local_odometer_record_repository.dart';
 import '../../../features/odometer/domain/odometer_record.dart' as odom;
+import '../../../features/odometer/providers/odometer_records_provider.dart';
 import '../data/local_gas_record_repository.dart';
 import '../domain/gas_record.dart';
 import '../providers/gas_records_provider.dart';
@@ -33,6 +34,8 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
   final _gallonsController = TextEditingController();
   final _costController = TextEditingController();
   final _notesController = TextEditingController();
+  final _dateController = TextEditingController();
+  final _timeController = TextEditingController();
   DateTime _date = DateTime.now();
   TimeOfDay _time = TimeOfDay.now();
   bool _isFillToFull = true;
@@ -40,9 +43,15 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
   bool _isLoading = false;
   GasRecord? _existing;
 
+  String _formatDate(DateTime d) => DateFormat.yMMMd().format(d);
+  String _formatTime(TimeOfDay t) =>
+      DateFormat('h:mm a').format(DateTime(2000, 1, 1, t.hour, t.minute));
+
   @override
   void initState() {
     super.initState();
+    _dateController.text = _formatDate(_date);
+    _timeController.text = _formatTime(_time);
     if (widget.recordId != null) {
       Future.microtask(_loadExisting);
     }
@@ -61,6 +70,8 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
       _notesController.text = record.notes;
       _date = record.date;
       _time = TimeOfDay.fromDateTime(record.date);
+      _dateController.text = _formatDate(_date);
+      _timeController.text = _formatTime(_time);
       _isFillToFull = record.isFillToFull;
       _missedFuelUp = record.missedFuelUp;
     });
@@ -72,6 +83,8 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
     _gallonsController.dispose();
     _costController.dispose();
     _notesController.dispose();
+    _dateController.dispose();
+    _timeController.dispose();
     super.dispose();
   }
 
@@ -82,12 +95,18 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
-    if (picked != null) setState(() => _date = picked);
+    if (picked != null) setState(() {
+      _date = picked;
+      _dateController.text = _formatDate(_date);
+    });
   }
 
   Future<void> _pickTime() async {
     final picked = await showTimePicker(context: context, initialTime: _time);
-    if (picked != null) setState(() => _time = picked);
+    if (picked != null) setState(() {
+      _time = picked;
+      _timeController.text = _formatTime(_time);
+    });
   }
 
   DateTime get _dateTime =>
@@ -148,6 +167,9 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final latestMileage = ref
+        .watch(latestOdometerProvider(widget.vehicleId))
+        .valueOrNull;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -159,29 +181,48 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Date'),
-              subtitle: Text(DateFormat.yMMMd().format(_date)),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: _pickDate,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              spacing: 10,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _dateController,
+                    readOnly: true,
+                    onTap: _pickDate,
+                    decoration: const InputDecoration(
+                      labelText: 'Date',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.calendar_today),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: TextFormField(
+                    controller: _timeController,
+                    readOnly: true,
+                    onTap: _pickTime,
+                    decoration: const InputDecoration(
+                      labelText: 'Time',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.access_time),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Time'),
-              subtitle: Text(_time.format(context)),
-              trailing: const Icon(Icons.access_time),
-              onTap: _pickTime,
-            ),
-            const Divider(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _mileageController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Odometer',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 suffixText: 'mi',
-                icon: Icon(Symbols.speed),
+                icon: const Icon(Symbols.speed),
+                hintText: latestMileage != null
+                    ? 'Last: ${latestMileage.toStringAsFixed(0)} mi'
+                    : null,
               ),
 
               keyboardType: TextInputType.number,
