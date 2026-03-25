@@ -167,9 +167,6 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final latestMileage = ref
-        .watch(latestOdometerProvider(widget.vehicleId))
-        .valueOrNull;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -179,7 +176,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +209,9 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 6),
+            const Divider(),
+            const SizedBox(height: 6),
             TextFormField(
               controller: _mileageController,
               decoration: InputDecoration(
@@ -220,9 +219,6 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
                 border: const OutlineInputBorder(),
                 suffixText: 'mi',
                 icon: const Icon(Symbols.speed),
-                hintText: latestMileage != null
-                    ? 'Last: ${latestMileage.toStringAsFixed(0)} mi'
-                    : null,
               ),
 
               keyboardType: TextInputType.number,
