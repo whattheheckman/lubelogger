@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../core/utils/input_formatters.dart';
 
@@ -23,6 +24,7 @@ class ReminderFormScreen extends ConsumerStatefulWidget {
 class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   final _formKey = GlobalKey<FormState>();
   final _descController = TextEditingController();
+  final _dateController = TextEditingController();
   final _mileageController = TextEditingController();
   final _notesController = TextEditingController();
   String _metric = 'date'; // 'date', 'mileage', 'both'
@@ -30,6 +32,8 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   bool _isRecurring = false;
   bool _isLoading = false;
   ReminderRecord? _existing;
+
+  String _formatDate(DateTime d) => DateFormat.yMMMd().format(d);
 
   @override
   void initState() {
@@ -52,6 +56,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       _notesController.text = record.notes;
       _metric = record.reminderMetric;
       _dateDue = record.dateMetric;
+      _dateController.text = _dateDue != null ? _formatDate(_dateDue!) : '';
       _isRecurring = record.isRecurring;
     });
   }
@@ -59,6 +64,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
   @override
   void dispose() {
     _descController.dispose();
+    _dateController.dispose();
     _mileageController.dispose();
     _notesController.dispose();
     super.dispose();
@@ -71,7 +77,12 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
-    if (picked != null) setState(() => _dateDue = picked);
+    if (picked != null) {
+      setState(() {
+        _dateDue = picked;
+        _dateController.text = _formatDate(_dateDue!);
+      });
+    }
   }
 
   Future<void> _submit() async {
@@ -120,12 +131,15 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           children: [
             TextFormField(
               controller: _descController,
               decoration: const InputDecoration(
-                  labelText: 'Description', border: OutlineInputBorder()),
+                labelText: 'Description',
+                border: OutlineInputBorder(),
+                icon: Icon(Icons.description_outlined),
+              ),
               validator: (v) =>
                   v == null || v.trim().isEmpty ? 'Required' : null,
             ),
@@ -151,23 +165,29 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
               onChanged: (v) => setState(() => _metric = v!),
             ),
             const SizedBox(height: 8),
-            if (_metric == 'date' || _metric == 'both')
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: const Text('Due Date'),
-                subtitle: Text(_dateDue != null
-                    ? DateFormat.yMMMd().format(_dateDue!)
-                    : 'Tap to set'),
-                trailing: const Icon(Icons.calendar_today),
+            if (_metric == 'date' || _metric == 'both') ...[
+              TextFormField(
+                controller: _dateController,
+                readOnly: true,
                 onTap: _pickDate,
+                decoration: const InputDecoration(
+                  labelText: 'Due Date',
+                  hintText: 'Tap to select',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.calendar_today),
+                ),
               ),
+              const SizedBox(height: 12),
+            ],
             if (_metric == 'mileage' || _metric == 'both') ...[
               TextFormField(
                 controller: _mileageController,
                 decoration: const InputDecoration(
-                    labelText: 'Due at Mileage',
-                    border: OutlineInputBorder(),
-                    suffixText: 'mi'),
+                  labelText: 'Due at Mileage',
+                  border: OutlineInputBorder(),
+                  suffixText: 'mi',
+                  icon: Icon(Symbols.speed),
+                ),
                 keyboardType: TextInputType.number,
                 inputFormatters: [digitsOnlyFormatter],
               ),
@@ -182,7 +202,9 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
             TextFormField(
               controller: _notesController,
               decoration: const InputDecoration(
-                  labelText: 'Notes', border: OutlineInputBorder()),
+                labelText: 'Notes',
+                border: OutlineInputBorder(),
+              ),
               maxLines: 2,
             ),
             const SizedBox(height: 24),

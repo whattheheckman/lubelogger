@@ -47,7 +47,7 @@ class OdometerRecordListScreen extends ConsumerWidget {
             child: ListView.builder(
               itemCount: records.length,
               itemBuilder: (context, i) =>
-                  _OdomCard(record: records[i]),
+                  _OdomCard(record: records[i], vehicleId: vehicleId),
             ),
           );
         },
@@ -57,8 +57,9 @@ class OdometerRecordListScreen extends ConsumerWidget {
 }
 
 class _OdomCard extends ConsumerWidget {
-  const _OdomCard({required this.record});
+  const _OdomCard({required this.record, required this.vehicleId});
   final OdometerRecord record;
+  final int vehicleId;
 
   static final _dateFmt = DateFormat.yMMMd();
 
@@ -85,6 +86,8 @@ class _OdomCard extends ConsumerWidget {
           trailing: record.notes.isNotEmpty
               ? const Icon(Icons.notes, color: Colors.grey)
               : null,
+          onTap: () => context.push(
+              RouteNames.vehicleOdometerEditPath(vehicleId, record.id)),
         ),
       ),
     );

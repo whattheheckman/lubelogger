@@ -39,8 +39,8 @@ class LocalOdometerRecordRepository implements OdometerRecordRepository {
 
   @override
   Future<domain.OdometerRecord?> getById(int id) async {
-    // OdometerRecordsDao has no getById — form screens load from list
-    return null;
+    final row = await _db.odometerRecordsDao.getById(id);
+    return row == null ? null : _fromRow(row);
   }
 
   @override

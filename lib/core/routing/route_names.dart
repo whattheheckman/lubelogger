@@ -35,6 +35,8 @@ abstract class RouteNames {
 
   static String vehicleOdometerListPath(int vehicleId) => '/vehicles/$vehicleId/odometer';
   static String vehicleOdometerAddPath(int vehicleId) => '/vehicles/$vehicleId/odometer/add';
+  static String vehicleOdometerEditPath(int vehicleId, int recordId) =>
+      '/vehicles/$vehicleId/odometer/$recordId/edit';
 
   static String vehicleTaxListPath(int vehicleId) => '/vehicles/$vehicleId/taxes';
   static String vehicleTaxAddPath(int vehicleId) => '/vehicles/$vehicleId/taxes/add';

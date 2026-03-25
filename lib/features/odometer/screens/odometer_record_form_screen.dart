@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../core/utils/input_formatters.dart';
 
@@ -23,19 +24,44 @@ class OdometerRecordFormScreen extends ConsumerStatefulWidget {
 class _OdometerRecordFormScreenState
     extends ConsumerState<OdometerRecordFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _dateController = TextEditingController();
+  final _timeController = TextEditingController();
   final _mileageController = TextEditingController(text: '0');
   final _initialMileageController = TextEditingController(text: '0');
   final _notesController = TextEditingController();
   DateTime _date = DateTime.now();
+  TimeOfDay _time = TimeOfDay.now();
   bool _isLoading = false;
+  bool _hasExistingRecords = false;
   OdometerRecord? _existing;
+
+  String _formatDate(DateTime d) => DateFormat.yMMMd().format(d);
+  String _formatTime(TimeOfDay t) => t.format(context);
 
   @override
   void initState() {
     super.initState();
+    _time = TimeOfDay.fromDateTime(_date);
+    _dateController.text = _formatDate(_date);
     if (widget.recordId != null) {
       Future.microtask(_loadExisting);
+    } else {
+      Future.microtask(_checkExistingRecords);
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _timeController.text = _formatTime(_time);
+  }
+
+  Future<void> _checkExistingRecords() async {
+    final records = await ref
+        .read(localOdometerRecordRepositoryProvider)
+        .getByVehicle(widget.vehicleId);
+    if (!mounted) return;
+    setState(() => _hasExistingRecords = records.isNotEmpty);
   }
 
   Future<void> _loadExisting() async {
@@ -49,11 +75,17 @@ class _OdometerRecordFormScreenState
       _initialMileageController.text = record.initialMileage.toStringAsFixed(0);
       _notesController.text = record.notes;
       _date = record.date;
+      _time = TimeOfDay.fromDateTime(record.date);
+      _dateController.text = _formatDate(_date);
+      _timeController.text = _formatTime(_time);
+      _hasExistingRecords = true;
     });
   }
 
   @override
   void dispose() {
+    _dateController.dispose();
+    _timeController.dispose();
     _mileageController.dispose();
     _initialMileageController.dispose();
     _notesController.dispose();
@@ -67,15 +99,35 @@ class _OdometerRecordFormScreenState
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
-    if (picked != null) setState(() => _date = picked);
+    if (picked != null) {
+      setState(() {
+        _date = picked;
+        _dateController.text = _formatDate(_date);
+      });
+    }
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: _time,
+    );
+    if (picked != null) {
+      setState(() {
+        _time = picked;
+        _timeController.text = _formatTime(_time);
+      });
+    }
   }
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
+      final combined = DateTime(
+        _date.year, _date.month, _date.day, _time.hour, _time.minute);
       final record = _existing?.copyWith(
-            date: _date,
+            date: combined,
             mileage: double.tryParse(_mileageController.text) ?? 0,
             initialMileage:
                 double.tryParse(_initialMileageController.text) ?? 0,
@@ -85,7 +137,7 @@ class _OdometerRecordFormScreenState
           OdometerRecord(
             id: 0,
             vehicleId: widget.vehicleId,
-            date: _date,
+            date: combined,
             mileage: double.tryParse(_mileageController.text) ?? 0,
             initialMileage:
                 double.tryParse(_initialMileageController.text) ?? 0,
@@ -110,23 +162,40 @@ class _OdometerRecordFormScreenState
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           children: [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Date'),
-              subtitle: Text(DateFormat.yMMMd().format(_date)),
-              trailing: const Icon(Icons.calendar_today),
+            TextFormField(
+              controller: _dateController,
+              readOnly: true,
               onTap: _pickDate,
+              decoration: const InputDecoration(
+                labelText: 'Date',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.calendar_today),
+              ),
             ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _timeController,
+              readOnly: true,
+              onTap: _pickTime,
+              decoration: const InputDecoration(
+                labelText: 'Time',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.access_time),
+              ),
+            ),
+            const SizedBox(height: 6),
             const Divider(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             TextFormField(
               controller: _mileageController,
               decoration: const InputDecoration(
-                  labelText: 'Current Mileage',
-                  border: OutlineInputBorder(),
-                  suffixText: 'mi'),
+                labelText: 'Current Mileage',
+                border: OutlineInputBorder(),
+                suffixText: 'mi',
+                icon: Icon(Symbols.speed),
+              ),
               keyboardType: TextInputType.number,
               inputFormatters: [digitsOnlyFormatter],
               validator: (v) {
@@ -136,20 +205,35 @@ class _OdometerRecordFormScreenState
               },
             ),
             const SizedBox(height: 12),
-            TextFormField(
-              controller: _initialMileageController,
-              decoration: const InputDecoration(
+            if (_hasExistingRecords)
+              Padding(
+                padding: const EdgeInsets.only(left: 40),
+                child: Text(
+                  'Initial Mileage: ${_initialMileageController.text} mi',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              )
+            else
+              TextFormField(
+                controller: _initialMileageController,
+                decoration: const InputDecoration(
                   labelText: 'Initial Mileage (if new vehicle)',
                   border: OutlineInputBorder(),
-                  suffixText: 'mi'),
-              keyboardType: TextInputType.number,
-              inputFormatters: [digitsOnlyFormatter],
-            ),
+                  suffixText: 'mi',
+                  icon: Icon(Symbols.speed),
+                ),
+                keyboardType: TextInputType.number,
+                inputFormatters: [digitsOnlyFormatter],
+              ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _notesController,
               decoration: const InputDecoration(
-                  labelText: 'Notes', border: OutlineInputBorder()),
+                labelText: 'Notes',
+                border: OutlineInputBorder(),
+              ),
               maxLines: 2,
             ),
             const SizedBox(height: 24),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../core/utils/input_formatters.dart';
 
@@ -93,18 +94,20 @@ class _SupplyFormScreenState extends ConsumerState<SupplyFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(widget.supplyId == null ? 'Add Supply' : 'Edit Supply'),
+        title: Text(widget.supplyId == null ? 'Add Supply' : 'Edit Supply'),
       ),
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           children: [
             TextFormField(
               controller: _descController,
               decoration: const InputDecoration(
-                  labelText: 'Description', border: OutlineInputBorder()),
+                labelText: 'Description',
+                border: OutlineInputBorder(),
+                icon: Icon(Icons.description_outlined),
+              ),
               validator: (v) =>
                   v == null || v.trim().isEmpty ? 'Required' : null,
             ),
@@ -112,46 +115,41 @@ class _SupplyFormScreenState extends ConsumerState<SupplyFormScreen> {
             TextFormField(
               controller: _partNumberController,
               decoration: const InputDecoration(
-                  labelText: 'Part Number (optional)',
-                  border: OutlineInputBorder()),
+                labelText: 'Part Number (optional)',
+                border: OutlineInputBorder(),
+                icon: Icon(Icons.tag),
+              ),
             ),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    controller: _quantityController,
-                    decoration: const InputDecoration(
-                        labelText: 'Quantity', border: OutlineInputBorder()),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [decimalOnlyFormatter],
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text('\$', style: TextStyle(fontSize: 16)),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _costController,
-                        decoration: const InputDecoration(
-                            labelText: 'Cost', border: OutlineInputBorder()),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [CurrencyInputFormatter()],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            TextFormField(
+              controller: _quantityController,
+              decoration: const InputDecoration(
+                labelText: 'Quantity',
+                border: OutlineInputBorder(),
+                icon: Icon(Icons.numbers),
+              ),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [decimalOnlyFormatter],
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _costController,
+              decoration: const InputDecoration(
+                labelText: 'Cost',
+                border: OutlineInputBorder(),
+                icon: Icon(Symbols.universal_currency_alt_rounded, size: 24, color: Colors.grey),
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [CurrencyInputFormatter()],
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _notesController,
               decoration: const InputDecoration(
-                  labelText: 'Notes', border: OutlineInputBorder()),
+                labelText: 'Notes',
+                border: OutlineInputBorder(),
+              ),
               maxLines: 2,
             ),
             const SizedBox(height: 24),

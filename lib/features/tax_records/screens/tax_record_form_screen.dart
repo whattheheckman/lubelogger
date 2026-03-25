@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../core/utils/input_formatters.dart';
 
@@ -22,6 +23,7 @@ class TaxRecordFormScreen extends ConsumerStatefulWidget {
 
 class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _dateController = TextEditingController();
   final _descController = TextEditingController();
   final _costController = TextEditingController(text: '0.00');
   final _intervalController = TextEditingController();
@@ -31,9 +33,12 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
   bool _isLoading = false;
   TaxRecord? _existing;
 
+  String _formatDate(DateTime d) => DateFormat.yMMMd().format(d);
+
   @override
   void initState() {
     super.initState();
+    _dateController.text = _formatDate(_date);
     if (widget.recordId != null) {
       Future.microtask(_loadExisting);
     }
@@ -51,12 +56,14 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
       _intervalController.text = record.recurringInterval;
       _notesController.text = record.notes;
       _date = record.date;
+      _dateController.text = _formatDate(_date);
       _isRecurring = record.isRecurring;
     });
   }
 
   @override
   void dispose() {
+    _dateController.dispose();
     _descController.dispose();
     _costController.dispose();
     _intervalController.dispose();
@@ -71,7 +78,12 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     );
-    if (picked != null) setState(() => _date = picked);
+    if (picked != null) {
+      setState(() {
+        _date = picked;
+        _dateController.text = _formatDate(_date);
+      });
+    }
   }
 
   Future<void> _submit() async {
@@ -117,40 +129,41 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           children: [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Date'),
-              subtitle: Text(DateFormat.yMMMd().format(_date)),
-              trailing: const Icon(Icons.calendar_today),
+            TextFormField(
+              controller: _dateController,
+              readOnly: true,
               onTap: _pickDate,
+              decoration: const InputDecoration(
+                labelText: 'Date',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.calendar_today),
+              ),
             ),
+            const SizedBox(height: 6),
             const Divider(),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
             TextFormField(
               controller: _descController,
               decoration: const InputDecoration(
-                  labelText: 'Description', border: OutlineInputBorder()),
+                labelText: 'Description',
+                border: OutlineInputBorder(),
+                icon: Icon(Icons.description_outlined),
+              ),
               validator: (v) =>
                   v == null || v.trim().isEmpty ? 'Required' : null,
             ),
             const SizedBox(height: 12),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text('\$', style: TextStyle(fontSize: 16)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextFormField(
-                    controller: _costController,
-                    decoration: const InputDecoration(
-                        labelText: 'Cost', border: OutlineInputBorder()),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [CurrencyInputFormatter()],
-                  ),
-                ),
-              ],
+            TextFormField(
+              controller: _costController,
+              decoration: const InputDecoration(
+                labelText: 'Cost',
+                border: OutlineInputBorder(),
+                icon: Icon(Symbols.universal_currency_alt_rounded, size: 24, color: Colors.grey),
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [CurrencyInputFormatter()],
             ),
             const SizedBox(height: 8),
             SwitchListTile(
@@ -171,7 +184,9 @@ class _TaxRecordFormScreenState extends ConsumerState<TaxRecordFormScreen> {
             TextFormField(
               controller: _notesController,
               decoration: const InputDecoration(
-                  labelText: 'Notes', border: OutlineInputBorder()),
+                labelText: 'Notes',
+                border: OutlineInputBorder(),
+              ),
               maxLines: 2,
             ),
             const SizedBox(height: 24),

@@ -24,6 +24,9 @@ class OdometerRecordsDao extends DatabaseAccessor<AppDatabase> with _$OdometerRe
         ..limit(1))
           .getSingleOrNull();
 
+  Future<OdometerRecord?> getById(int id) =>
+      (select(odometerRecords)..where((t) => t.id.equals(id))).getSingleOrNull();
+
   Future<int> insertRecord(OdometerRecordsCompanion r) =>
       into(odometerRecords).insert(r);
 

@@ -176,6 +176,13 @@ GoRouter appRouter(AppRouterRef ref) {
                               vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
+                          GoRoute(
+                            path: ':recordId/edit',
+                            builder: (context, state) => OdometerRecordFormScreen(
+                              vehicleId: _requireId(state, 'vehicleId'),
+                              recordId: _optionalId(state, 'recordId'),
+                            ),
+                          ),
                         ],
                       ),
                       GoRoute(
