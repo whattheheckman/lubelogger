@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -45,19 +46,34 @@ class LocalSupplyRecordRepository implements SupplyRecordRepository {
   }
 
   @override
-  Future<int> create(domain.SupplyRecord r) =>
-      _db.supplyRecordsDao.insertRecord(
-        SupplyRecordsCompanion.insert(
-          vehicleId: r.vehicleId,
-          description: r.description,
-          partNumber: Value(r.partNumber),
-          quantity: Value(r.quantity),
-          cost: Value(r.cost),
-          notes: Value(r.notes),
-          syncStatus: const Value('pending_create'),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+  Future<int> create(domain.SupplyRecord r) async {
+    final id = await _db.supplyRecordsDao.insertRecord(
+      SupplyRecordsCompanion.insert(
+        vehicleId: r.vehicleId,
+        description: r.description,
+        partNumber: Value(r.partNumber),
+        quantity: Value(r.quantity),
+        cost: Value(r.cost),
+        notes: Value(r.notes),
+        syncStatus: const Value('pending_create'),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'supply',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'vehicleId': r.vehicleId,
+        'description': r.description,
+        'partNumber': r.partNumber,
+        'quantity': r.quantity,
+        'cost': r.cost,
+        'notes': r.notes,
+      }),
+    ));
+    return id;
+  }
 
   @override
   Future<void> update(domain.SupplyRecord r) async {
@@ -74,10 +90,37 @@ class LocalSupplyRecordRepository implements SupplyRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'supply',
+      localId: r.id,
+      remoteId: Value(r.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': r.remoteId,
+        'vehicleId': r.vehicleId,
+        'description': r.description,
+        'partNumber': r.partNumber,
+        'quantity': r.quantity,
+        'cost': r.cost,
+        'notes': r.notes,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.supplyRecordsDao.deleteRecord(id);
+  Future<void> delete(int id) async {
+    final row = await (_db.select(_db.supplyRecords)..where((t) => t.id.equals(id))).getSingleOrNull();
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'supply',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.supplyRecordsDao.deleteRecord(id);
+  }
 }
 
 @riverpod

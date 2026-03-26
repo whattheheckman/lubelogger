@@ -54,8 +54,8 @@ class LocalVehicleRepository implements VehicleRepository {
   }
 
   @override
-  Future<int> create(domain.Vehicle v) {
-    return _db.vehiclesDao.insertVehicle(
+  Future<int> create(domain.Vehicle v) async {
+    final id = await _db.vehiclesDao.insertVehicle(
       VehiclesCompanion.insert(
         year: v.year,
         make: v.make,
@@ -71,6 +71,23 @@ class LocalVehicleRepository implements VehicleRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'vehicle',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'year': v.year,
+        'make': v.make,
+        'model': v.model,
+        'licensePlate': v.licensePlate,
+        'isElectric': v.isElectric,
+        'isDiesel': v.isDiesel,
+        'useHours': v.useHours,
+        'tags': v.tags,
+        'extraFields': v.extraFields,
+      }),
+    ));
+    return id;
   }
 
   @override
@@ -92,10 +109,40 @@ class LocalVehicleRepository implements VehicleRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'vehicle',
+      localId: v.id,
+      remoteId: Value(v.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': v.remoteId,
+        'year': v.year,
+        'make': v.make,
+        'model': v.model,
+        'licensePlate': v.licensePlate,
+        'isElectric': v.isElectric,
+        'isDiesel': v.isDiesel,
+        'useHours': v.useHours,
+        'tags': v.tags,
+        'extraFields': v.extraFields,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.vehiclesDao.deleteVehicle(id);
+  Future<void> delete(int id) async {
+    final row = await _db.vehiclesDao.getById(id);
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'vehicle',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.vehiclesDao.deleteVehicle(id);
+  }
 }
 
 @riverpod

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -57,20 +58,36 @@ class LocalReminderRecordRepository implements ReminderRecordRepository {
   }
 
   @override
-  Future<int> create(domain.ReminderRecord r) =>
-      _db.reminderRecordsDao.insertRecord(
-        ReminderRecordsCompanion.insert(
-          vehicleId: r.vehicleId,
-          description: r.description,
-          reminderMetric: Value(r.reminderMetric),
-          dateMetric: Value(r.dateMetric),
-          mileageMetric: Value(r.mileageMetric),
-          isRecurring: Value(r.isRecurring),
-          notes: Value(r.notes),
-          syncStatus: const Value('pending_create'),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+  Future<int> create(domain.ReminderRecord r) async {
+    final id = await _db.reminderRecordsDao.insertRecord(
+      ReminderRecordsCompanion.insert(
+        vehicleId: r.vehicleId,
+        description: r.description,
+        reminderMetric: Value(r.reminderMetric),
+        dateMetric: Value(r.dateMetric),
+        mileageMetric: Value(r.mileageMetric),
+        isRecurring: Value(r.isRecurring),
+        notes: Value(r.notes),
+        syncStatus: const Value('pending_create'),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'reminder',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'vehicleId': r.vehicleId,
+        'description': r.description,
+        'reminderMetric': r.reminderMetric,
+        'dateMetric': r.dateMetric?.toIso8601String(),
+        'mileageMetric': r.mileageMetric,
+        'isRecurring': r.isRecurring,
+        'notes': r.notes,
+      }),
+    ));
+    return id;
+  }
 
   @override
   Future<void> update(domain.ReminderRecord r) async {
@@ -88,10 +105,38 @@ class LocalReminderRecordRepository implements ReminderRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'reminder',
+      localId: r.id,
+      remoteId: Value(r.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': r.remoteId,
+        'vehicleId': r.vehicleId,
+        'description': r.description,
+        'reminderMetric': r.reminderMetric,
+        'dateMetric': r.dateMetric?.toIso8601String(),
+        'mileageMetric': r.mileageMetric,
+        'isRecurring': r.isRecurring,
+        'notes': r.notes,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.reminderRecordsDao.deleteRecord(id);
+  Future<void> delete(int id) async {
+    final row = await (_db.select(_db.reminderRecords)..where((t) => t.id.equals(id))).getSingleOrNull();
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'reminder',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.reminderRecordsDao.deleteRecord(id);
+  }
 }
 
 @riverpod

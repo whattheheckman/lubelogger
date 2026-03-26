@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -46,20 +47,36 @@ class LocalTaxRecordRepository implements TaxRecordRepository {
   }
 
   @override
-  Future<int> create(domain.TaxRecord r) =>
-      _db.taxRecordsDao.insertRecord(
-        TaxRecordsCompanion.insert(
-          vehicleId: r.vehicleId,
-          date: r.date,
-          description: r.description,
-          cost: Value(r.cost),
-          isRecurring: Value(r.isRecurring),
-          recurringInterval: Value(r.recurringInterval),
-          notes: Value(r.notes),
-          syncStatus: const Value('pending_create'),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+  Future<int> create(domain.TaxRecord r) async {
+    final id = await _db.taxRecordsDao.insertRecord(
+      TaxRecordsCompanion.insert(
+        vehicleId: r.vehicleId,
+        date: r.date,
+        description: r.description,
+        cost: Value(r.cost),
+        isRecurring: Value(r.isRecurring),
+        recurringInterval: Value(r.recurringInterval),
+        notes: Value(r.notes),
+        syncStatus: const Value('pending_create'),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'tax_record',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'vehicleId': r.vehicleId,
+        'date': r.date.toIso8601String(),
+        'description': r.description,
+        'cost': r.cost,
+        'isRecurring': r.isRecurring,
+        'recurringInterval': r.recurringInterval,
+        'notes': r.notes,
+      }),
+    ));
+    return id;
+  }
 
   @override
   Future<void> update(domain.TaxRecord r) async {
@@ -77,10 +94,38 @@ class LocalTaxRecordRepository implements TaxRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'tax_record',
+      localId: r.id,
+      remoteId: Value(r.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': r.remoteId,
+        'vehicleId': r.vehicleId,
+        'date': r.date.toIso8601String(),
+        'description': r.description,
+        'cost': r.cost,
+        'isRecurring': r.isRecurring,
+        'recurringInterval': r.recurringInterval,
+        'notes': r.notes,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.taxRecordsDao.deleteRecord(id);
+  Future<void> delete(int id) async {
+    final row = await (_db.select(_db.taxRecords)..where((t) => t.id.equals(id))).getSingleOrNull();
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'tax_record',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.taxRecordsDao.deleteRecord(id);
+  }
 }
 
 @riverpod

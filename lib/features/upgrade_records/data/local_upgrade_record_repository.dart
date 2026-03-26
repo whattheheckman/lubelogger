@@ -47,20 +47,36 @@ class LocalUpgradeRecordRepository implements UpgradeRecordRepository {
   }
 
   @override
-  Future<int> create(domain.UpgradeRecord r) =>
-      _db.upgradeRecordsDao.insertRecord(
-        UpgradeRecordsCompanion.insert(
-          vehicleId: r.vehicleId,
-          date: r.date,
-          mileage: Value(r.mileage),
-          description: r.description,
-          cost: Value(r.cost),
-          notes: Value(r.notes),
-          tags: Value(jsonEncode(r.tags)),
-          syncStatus: const Value('pending_create'),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+  Future<int> create(domain.UpgradeRecord r) async {
+    final id = await _db.upgradeRecordsDao.insertRecord(
+      UpgradeRecordsCompanion.insert(
+        vehicleId: r.vehicleId,
+        date: r.date,
+        mileage: Value(r.mileage),
+        description: r.description,
+        cost: Value(r.cost),
+        notes: Value(r.notes),
+        tags: Value(jsonEncode(r.tags)),
+        syncStatus: const Value('pending_create'),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'upgrade_record',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'vehicleId': r.vehicleId,
+        'date': r.date.toIso8601String(),
+        'mileage': r.mileage,
+        'description': r.description,
+        'cost': r.cost,
+        'notes': r.notes,
+        'tags': r.tags,
+      }),
+    ));
+    return id;
+  }
 
   @override
   Future<void> update(domain.UpgradeRecord r) async {
@@ -78,10 +94,38 @@ class LocalUpgradeRecordRepository implements UpgradeRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'upgrade_record',
+      localId: r.id,
+      remoteId: Value(r.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': r.remoteId,
+        'vehicleId': r.vehicleId,
+        'date': r.date.toIso8601String(),
+        'mileage': r.mileage,
+        'description': r.description,
+        'cost': r.cost,
+        'notes': r.notes,
+        'tags': r.tags,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.upgradeRecordsDao.deleteRecord(id);
+  Future<void> delete(int id) async {
+    final row = await _db.upgradeRecordsDao.getById(id);
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'upgrade_record',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.upgradeRecordsDao.deleteRecord(id);
+  }
 }
 
 @riverpod

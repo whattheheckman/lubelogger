@@ -47,20 +47,36 @@ class LocalRepairRecordRepository implements RepairRecordRepository {
   }
 
   @override
-  Future<int> create(domain.RepairRecord r) =>
-      _db.repairRecordsDao.insertRecord(
-        RepairRecordsCompanion.insert(
-          vehicleId: r.vehicleId,
-          date: r.date,
-          mileage: Value(r.mileage),
-          description: r.description,
-          cost: Value(r.cost),
-          notes: Value(r.notes),
-          tags: Value(jsonEncode(r.tags)),
-          syncStatus: const Value('pending_create'),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+  Future<int> create(domain.RepairRecord r) async {
+    final id = await _db.repairRecordsDao.insertRecord(
+      RepairRecordsCompanion.insert(
+        vehicleId: r.vehicleId,
+        date: r.date,
+        mileage: Value(r.mileage),
+        description: r.description,
+        cost: Value(r.cost),
+        notes: Value(r.notes),
+        tags: Value(jsonEncode(r.tags)),
+        syncStatus: const Value('pending_create'),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'repair_record',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'vehicleId': r.vehicleId,
+        'date': r.date.toIso8601String(),
+        'mileage': r.mileage,
+        'description': r.description,
+        'cost': r.cost,
+        'notes': r.notes,
+        'tags': r.tags,
+      }),
+    ));
+    return id;
+  }
 
   @override
   Future<void> update(domain.RepairRecord r) async {
@@ -78,10 +94,38 @@ class LocalRepairRecordRepository implements RepairRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'repair_record',
+      localId: r.id,
+      remoteId: Value(r.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': r.remoteId,
+        'vehicleId': r.vehicleId,
+        'date': r.date.toIso8601String(),
+        'mileage': r.mileage,
+        'description': r.description,
+        'cost': r.cost,
+        'notes': r.notes,
+        'tags': r.tags,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.repairRecordsDao.deleteRecord(id);
+  Future<void> delete(int id) async {
+    final row = await _db.repairRecordsDao.getById(id);
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'repair_record',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.repairRecordsDao.deleteRecord(id);
+  }
 }
 
 @riverpod

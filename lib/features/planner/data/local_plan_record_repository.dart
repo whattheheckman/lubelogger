@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -44,18 +45,32 @@ class LocalPlanRecordRepository implements PlanRecordRepository {
   }
 
   @override
-  Future<int> create(domain.PlanRecord r) =>
-      _db.planRecordsDao.insertRecord(
-        PlanRecordsCompanion.insert(
-          vehicleId: r.vehicleId,
-          description: r.description,
-          priority: Value(r.priority),
-          progress: Value(r.progress),
-          notes: Value(r.notes),
-          syncStatus: const Value('pending_create'),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+  Future<int> create(domain.PlanRecord r) async {
+    final id = await _db.planRecordsDao.insertRecord(
+      PlanRecordsCompanion.insert(
+        vehicleId: r.vehicleId,
+        description: r.description,
+        priority: Value(r.priority),
+        progress: Value(r.progress),
+        notes: Value(r.notes),
+        syncStatus: const Value('pending_create'),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'plan_record',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'vehicleId': r.vehicleId,
+        'description': r.description,
+        'priority': r.priority,
+        'progress': r.progress,
+        'notes': r.notes,
+      }),
+    ));
+    return id;
+  }
 
   @override
   Future<void> update(domain.PlanRecord r) async {
@@ -71,10 +86,36 @@ class LocalPlanRecordRepository implements PlanRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'plan_record',
+      localId: r.id,
+      remoteId: Value(r.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': r.remoteId,
+        'vehicleId': r.vehicleId,
+        'description': r.description,
+        'priority': r.priority,
+        'progress': r.progress,
+        'notes': r.notes,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.planRecordsDao.deleteRecord(id);
+  Future<void> delete(int id) async {
+    final row = await (_db.select(_db.planRecords)..where((t) => t.id.equals(id))).getSingleOrNull();
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'plan_record',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.planRecordsDao.deleteRecord(id);
+  }
 }
 
 @riverpod

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -72,7 +73,7 @@ class LocalGasRecordRepository implements GasRecordRepository {
   @override
   Future<int> create(domain.GasRecord r) async {
     final mpg = await _calculateMpg(r);
-    return _db.gasRecordsDao.insertRecord(
+    final id = await _db.gasRecordsDao.insertRecord(
       GasRecordsCompanion.insert(
         vehicleId: r.vehicleId,
         date: r.date,
@@ -87,6 +88,22 @@ class LocalGasRecordRepository implements GasRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'gas_record',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'vehicleId': r.vehicleId,
+        'date': r.date.toIso8601String(),
+        'mileage': r.mileage,
+        'gallons': r.gallons,
+        'cost': r.cost,
+        'isFillToFull': r.isFillToFull,
+        'missedFuelUp': r.missedFuelUp,
+        'notes': r.notes,
+      }),
+    ));
+    return id;
   }
 
   @override
@@ -108,10 +125,39 @@ class LocalGasRecordRepository implements GasRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'gas_record',
+      localId: r.id,
+      remoteId: Value(r.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': r.remoteId,
+        'vehicleId': r.vehicleId,
+        'date': r.date.toIso8601String(),
+        'mileage': r.mileage,
+        'gallons': r.gallons,
+        'cost': r.cost,
+        'isFillToFull': r.isFillToFull,
+        'missedFuelUp': r.missedFuelUp,
+        'notes': r.notes,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.gasRecordsDao.deleteRecord(id);
+  Future<void> delete(int id) async {
+    final row = await _db.gasRecordsDao.getById(id);
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'gas_record',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.gasRecordsDao.deleteRecord(id);
+  }
 }
 
 @riverpod

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -42,16 +43,28 @@ class LocalNoteRecordRepository implements NoteRecordRepository {
   }
 
   @override
-  Future<int> create(NoteRecord r) =>
-      _db.notesDao.insertNote(
-        NotesCompanion.insert(
-          vehicleId: r.vehicleId,
-          title: r.title,
-          body: Value(r.body),
-          syncStatus: const Value('pending_create'),
-          updatedAt: Value(DateTime.now()),
-        ),
-      );
+  Future<int> create(NoteRecord r) async {
+    final id = await _db.notesDao.insertNote(
+      NotesCompanion.insert(
+        vehicleId: r.vehicleId,
+        title: r.title,
+        body: Value(r.body),
+        syncStatus: const Value('pending_create'),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'note',
+      localId: id,
+      operation: 'create',
+      payload: jsonEncode({
+        'vehicleId': r.vehicleId,
+        'title': r.title,
+        'body': r.body,
+      }),
+    ));
+    return id;
+  }
 
   @override
   Future<void> update(NoteRecord r) async {
@@ -65,10 +78,34 @@ class LocalNoteRecordRepository implements NoteRecordRepository {
         updatedAt: Value(DateTime.now()),
       ),
     );
+    await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+      entityType: 'note',
+      localId: r.id,
+      remoteId: Value(r.remoteId),
+      operation: 'update',
+      payload: jsonEncode({
+        'id': r.remoteId,
+        'vehicleId': r.vehicleId,
+        'title': r.title,
+        'body': r.body,
+      }),
+    ));
   }
 
   @override
-  Future<void> delete(int id) => _db.notesDao.deleteNote(id);
+  Future<void> delete(int id) async {
+    final row = await _db.notesDao.getById(id);
+    if (row != null && row.remoteId != null) {
+      await _db.syncQueueDao.enqueue(SyncQueueCompanion.insert(
+        entityType: 'note',
+        localId: id,
+        remoteId: Value(row.remoteId),
+        operation: 'delete',
+        payload: '{}',
+      ));
+    }
+    await _db.notesDao.deleteNote(id);
+  }
 }
 
 @riverpod
