@@ -184,6 +184,25 @@ class _VehicleCard extends ConsumerWidget {
                 ),
               ),
             ),
+
+            // ── Layer 5: Edit button ──────────────────────────────
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Material(
+                color: Colors.black45,
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () =>
+                      context.go(RouteNames.vehicleEditPath(vehicle.id)),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: Icon(Icons.edit, color: Colors.white, size: 18),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -4,12 +4,78 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/routing/route_names.dart';
 import '../../../core/settings/settings_repository.dart';
+import '../../../core/sync/sync_service.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _syncing = false;
+
+  static const _intervalOptions = [1, 5, 120, 480, 1440];
+
+  String _formatInterval(int minutes) => switch (minutes) {
+        1 => '1 minute',
+        5 => '5 minutes',
+        120 => '2 hours',
+        480 => '8 hours',
+        1440 => '1 day',
+        _ => '$minutes minutes',
+      };
+
+  Future<void> _syncNow() async {
+    setState(() => _syncing = true);
+    try {
+      await ref.read(syncServiceProvider).pushPending();
+    } finally {
+      if (mounted) setState(() => _syncing = false);
+    }
+  }
+
+  Future<void> _pickSyncInterval(int current) async {
+    int selected = current;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Sync Interval'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: _intervalOptions
+                .map((m) => RadioListTile<int>(
+                      title: Text(_formatInterval(m)),
+                      value: m,
+                      groupValue: selected,
+                      onChanged: (v) => setState(() => selected = v!),
+                    ))
+                .toList(),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (confirmed == true) {
+      final repo = ref.read(settingsRepositoryProvider);
+      await repo.save(repo.current.copyWith(syncIntervalMinutes: selected));
+      ref.invalidate(settingsRepositoryProvider);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final settings = ref.watch(settingsRepositoryProvider).current;
 
     return Scaffold(
@@ -19,7 +85,9 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.cloud_outlined),
             title: const Text('Connection Settings'),
-            subtitle: Text(settings.serverUrl.isEmpty ? 'Not configured' : settings.serverUrl),
+            subtitle: Text(settings.serverUrl.isEmpty
+                ? 'Not configured'
+                : settings.serverUrl),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.go(RouteNames.settingsConnection),
           ),
@@ -37,15 +105,40 @@ class SettingsScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.go(RouteNames.settingsNotifications),
           ),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('Mode'),
             subtitle: Text(settings.appMode.name),
           ),
           ListTile(
-            leading: const Icon(Icons.sync),
+            leading: const Icon(Icons.schedule_outlined),
             title: const Text('Sync Interval'),
-            subtitle: Text('${settings.syncIntervalMinutes} minutes'),
+            subtitle: Text(_formatInterval(settings.syncIntervalMinutes)),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _pickSyncInterval(settings.syncIntervalMinutes),
+          ),
+          ListTile(
+            leading: const Icon(Icons.sync_outlined),
+            title: const Text('Sync Log'),
+            subtitle: const Text('View sync activity'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(RouteNames.settingsSyncLog),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: FilledButton.icon(
+              onPressed: _syncing ? null : _syncNow,
+              icon: _syncing
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2, color: Colors.white),
+                    )
+                  : const Icon(Icons.sync),
+              label: Text(_syncing ? 'Syncing…' : 'Sync Now'),
+            ),
           ),
           const Divider(),
           SwitchListTile(

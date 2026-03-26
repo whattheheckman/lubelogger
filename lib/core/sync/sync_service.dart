@@ -6,6 +6,7 @@ import '../database/app_database.dart';
 import '../network/api_client.dart';
 import '../settings/settings_repository.dart';
 import '../settings/app_settings.dart';
+import 'sync_logger.dart';
 import '../../features/vehicles/data/local_vehicle_repository.dart';
 
 part 'sync_service.g.dart';
@@ -16,36 +17,67 @@ class SyncService {
     required this.db,
     required this.dio,
     required this.settings,
+    required this.logger,
   });
 
   final AppDatabase db;
   final Dio dio;
   final AppSettings settings;
+  final SyncLogger logger;
 
   /// Push all pending entries in the sync queue.
   Future<void> pushPending() async {
     if (settings.appMode != AppMode.connected) return;
+    logger.log('Connecting to server');
+
+    final connected = await _pingServer();
+    if (!connected) {
+      logger.log('Connection failed — server unreachable');
+      return;
+    }
+    logger.log('Connection successful. Detecting changes...');
+
     final pending = await db.syncQueueDao.getPending();
+    if (pending.isEmpty) {
+      logger.log('Nothing to sync');
+      return;
+    }
     for (final entry in pending) {
       await _processEntry(entry);
+    }
+    logger.log('Fully synced');
+  }
+
+  Future<bool> _pingServer() async {
+    try {
+      await dio.get('/api/vehicles');
+      return true;
+    } catch (_) {
+      return false;
     }
   }
 
   Future<void> _processEntry(SyncQueueData entry) async {
+    final label = '[${entry.entityType}]';
+    logger.log('Pushing $label (${entry.operation})');
     await db.syncQueueDao.markProcessing(entry.id);
     try {
       await _dispatchOperation(entry);
       await db.syncQueueDao.markDone(entry.id);
+      logger.log('Accepted $label');
     } catch (e) {
       final newRetry = entry.retryCount + 1;
       if (newRetry >= 3) {
         await db.syncQueueDao.markPermanentlyFailed(entry.id);
+        logger.log('Failed $label — giving up after 3 retries');
         return;
       }
       // Exponential backoff: 30s, 2m, 8m
-      final delay = Duration(seconds: 30 * (1 << newRetry));
+      final delaySeconds = 30 * (1 << newRetry);
+      final delay = Duration(seconds: delaySeconds);
       final nextRetry = DateTime.now().add(delay);
       await db.syncQueueDao.markFailed(entry.id, newRetry, nextRetry);
+      logger.log('Retrying $label in ${delaySeconds}s');
     }
   }
 
@@ -98,13 +130,14 @@ class SyncService {
   /// Pull all vehicle records for a given vehicleId from the remote.
   Future<void> pullVehicle(int vehicleId) async {
     if (settings.appMode != AppMode.connected) return;
+    logger.log('Checking for server changes...');
     try {
       final resp = await dio.get('/api/vehicles');
       if (resp.statusCode == 200) {
         // TODO: parse and upsert vehicles into local DB
       }
     } catch (_) {
-      // Silently ignore pull failures; local data remains
+      logger.log('Sync failed — could not reach server');
     }
   }
 }
@@ -114,5 +147,6 @@ SyncService syncService(SyncServiceRef ref) {
   final db = ref.watch(appDatabaseProvider);
   final dio = ref.watch(apiClientProvider);
   final settings = ref.watch(settingsRepositoryProvider).current;
-  return SyncService(db: db, dio: dio, settings: settings);
+  final logger = ref.watch(syncLoggerProvider);
+  return SyncService(db: db, dio: dio, settings: settings, logger: logger);
 }
