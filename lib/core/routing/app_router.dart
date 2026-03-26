@@ -14,6 +14,7 @@ import '../../features/upgrade_records/screens/upgrade_record_list_screen.dart';
 import '../../features/upgrade_records/screens/upgrade_record_form_screen.dart';
 import '../../features/gas_records/screens/gas_record_list_screen.dart';
 import '../../features/gas_records/screens/gas_record_form_screen.dart';
+import '../../features/gas_records/screens/quick_add_fuel_screen.dart';
 import '../../features/odometer/screens/odometer_record_list_screen.dart';
 import '../../features/odometer/screens/odometer_record_form_screen.dart';
 import '../../features/tax_records/screens/tax_record_list_screen.dart';
@@ -29,6 +30,7 @@ import '../../features/notes/screens/note_form_screen.dart';
 import '../../features/reports/screens/reports_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import '../../features/settings/screens/connection_settings_screen.dart';
+import '../../features/settings/screens/tab_layout_settings_screen.dart';
 import 'route_names.dart';
 
 part 'app_router.g.dart';
@@ -37,6 +39,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _vehiclesShellKey = GlobalKey<NavigatorState>();
 final _remindersShellKey = GlobalKey<NavigatorState>();
 final _settingsShellKey = GlobalKey<NavigatorState>();
+final _quickFuelShellKey = GlobalKey<NavigatorState>();
 
 int _requireId(GoRouterState state, String key) =>
     int.parse(state.pathParameters[key]!);
@@ -152,6 +155,12 @@ GoRouter appRouter(AppRouterRef ref) {
                           GoRoute(
                             path: 'add',
                             builder: (context, state) => GasRecordFormScreen(
+                              vehicleId: _requireId(state, 'vehicleId'),
+                            ),
+                          ),
+                          GoRoute(
+                            path: 'quick-add',
+                            builder: (context, state) => QuickAddFuelScreen(
                               vehicleId: _requireId(state, 'vehicleId'),
                             ),
                           ),
@@ -286,7 +295,20 @@ GoRouter appRouter(AppRouterRef ref) {
                     path: 'connection',
                     builder: (context, state) => const ConnectionSettingsScreen(),
                   ),
+                  GoRoute(
+                    path: 'tab-layout',
+                    builder: (context, state) => const TabLayoutSettingsScreen(),
+                  ),
                 ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: _quickFuelShellKey,
+            routes: [
+              GoRoute(
+                path: RouteNames.quickFuel,
+                builder: (context, state) => const QuickAddFuelScreen(),
               ),
             ],
           ),
@@ -310,6 +332,7 @@ class ScaffoldWithNavBar extends StatelessWidget {
             shell.goBranch(index, initialLocation: index == shell.currentIndex),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.directions_car), label: 'Vehicles'),
+          NavigationDestination(icon: Icon(Icons.bolt), label: 'Quick Fuel'),
           NavigationDestination(icon: Icon(Icons.notifications), label: 'Reminders'),
           NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
         ],

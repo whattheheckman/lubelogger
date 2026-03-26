@@ -21,9 +21,24 @@ class GasRecordListScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Fuel Records')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push(RouteNames.vehicleFuelAddPath(vehicleId)),
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'fuel_quick_add',
+            onPressed: () =>
+                context.push(RouteNames.vehicleFuelQuickAddPath(vehicleId)),
+            tooltip: 'Quick Add',
+            child: const Icon(Icons.bolt),
+          ),
+          const SizedBox(height: 8),
+          FloatingActionButton(
+            heroTag: 'fuel_add',
+            onPressed: () =>
+                context.push(RouteNames.vehicleFuelAddPath(vehicleId)),
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
       body: asyncRecords.when(
         loading: () => const Center(child: CircularProgressIndicator()),

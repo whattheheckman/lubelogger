@@ -8,6 +8,7 @@ abstract class RouteNames {
   // ── Param-free navigation targets ────────────────────────────────────────
   static const vehicleAdd = '/vehicles/add';
   static const settingsConnection = '/settings/connection';
+  static const settingsTabLayout = '/settings/tab-layout';
 
   // ── Resolved location helpers (for context.go / context.push) ────────────
   static String vehicleDetailPath(int vehicleId) => '/vehicles/$vehicleId';
@@ -30,6 +31,7 @@ abstract class RouteNames {
 
   static String vehicleFuelListPath(int vehicleId) => '/vehicles/$vehicleId/fuel';
   static String vehicleFuelAddPath(int vehicleId) => '/vehicles/$vehicleId/fuel/add';
+  static String vehicleFuelQuickAddPath(int vehicleId) => '/vehicles/$vehicleId/fuel/quick-add';
   static String vehicleFuelEditPath(int vehicleId, int recordId) =>
       '/vehicles/$vehicleId/fuel/$recordId/edit';
 
@@ -55,4 +57,7 @@ abstract class RouteNames {
       '/vehicles/$vehicleId/notes/$noteId/edit';
 
   static String vehicleReportsPath(int vehicleId) => '/vehicles/$vehicleId/reports';
+
+  // ── Quick fuel (nav bar entry point) ─────────────────────────────────────
+  static const quickFuel = '/quick-fuel';
 }
