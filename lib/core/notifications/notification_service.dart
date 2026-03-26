@@ -1,4 +1,4 @@
-import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:app_badge_plus/app_badge_plus.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -114,11 +114,7 @@ class NotificationService {
 
   Future<void> updateBadge(int count) async {
     try {
-      if (count > 0) {
-        await FlutterAppBadger.updateBadgeCount(count);
-      } else {
-        await FlutterAppBadger.removeBadge();
-      }
+      await AppBadgePlus.updateBadge(count);
     } catch (_) {
       // Badge not supported on this device/launcher
     }
