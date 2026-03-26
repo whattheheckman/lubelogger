@@ -22,6 +22,7 @@ class TaxRecordListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Tax Records')),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () => context.push(RouteNames.vehicleTaxAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),

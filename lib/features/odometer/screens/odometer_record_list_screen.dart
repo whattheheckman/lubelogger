@@ -22,6 +22,7 @@ class OdometerRecordListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Odometer Records')),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () => context.push(RouteNames.vehicleOdometerAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),

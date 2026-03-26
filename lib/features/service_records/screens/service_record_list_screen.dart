@@ -23,6 +23,7 @@ class ServiceRecordListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Service Records')),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () => context.push(RouteNames.vehicleServiceAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),

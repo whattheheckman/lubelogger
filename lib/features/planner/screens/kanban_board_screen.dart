@@ -31,6 +31,7 @@ class KanbanBoardScreen extends ConsumerWidget {
             ),
       floatingActionButton: embedded
           ? FloatingActionButton(
+              heroTag: null,
               onPressed: () => _showAddDialog(context, ref),
               child: const Icon(Icons.add),
             )

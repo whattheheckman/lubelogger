@@ -23,6 +23,7 @@ class NotesScreen extends ConsumerWidget {
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Notes')),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () => context.push(RouteNames.vehicleNoteAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),

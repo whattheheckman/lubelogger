@@ -22,6 +22,7 @@ class RepairRecordListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Repair Records')),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () => context.push(RouteNames.vehicleRepairAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),

@@ -22,6 +22,7 @@ class UpgradeRecordListScreen extends ConsumerWidget {
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Upgrade Records')),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () => context.push(RouteNames.vehicleUpgradeAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),

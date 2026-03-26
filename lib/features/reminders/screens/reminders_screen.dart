@@ -40,6 +40,7 @@ class RemindersScreen extends ConsumerWidget {
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Reminders')),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () => context.push(RouteNames.vehicleReminderAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),

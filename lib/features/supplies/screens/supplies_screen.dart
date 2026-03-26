@@ -21,6 +21,7 @@ class SuppliesScreen extends ConsumerWidget {
     return Scaffold(
       appBar: embedded ? null : AppBar(title: const Text('Supplies')),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () => context.push(RouteNames.vehicleSupplyAddPath(vehicleId)),
         child: const Icon(Icons.add),
       ),
