@@ -31,6 +31,13 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => context.go(RouteNames.settingsTabLayout),
           ),
           ListTile(
+            leading: const Icon(Icons.notifications_outlined),
+            title: const Text('Notification Settings'),
+            subtitle: const Text('Reminders and app badge'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(RouteNames.settingsNotifications),
+          ),
+          ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('Mode'),
             subtitle: Text(settings.appMode.name),

@@ -35,6 +35,7 @@ import '../../features/reports/screens/reports_screen.dart';
 import '../../features/settings/screens/settings_screen.dart';
 import '../../features/settings/screens/connection_settings_screen.dart';
 import '../../features/settings/screens/tab_layout_settings_screen.dart';
+import '../../features/settings/screens/notification_settings_screen.dart';
 import 'route_names.dart';
 
 part 'app_router.g.dart';
@@ -311,6 +312,11 @@ GoRouter appRouter(AppRouterRef ref) {
                   GoRoute(
                     path: 'tab-layout',
                     builder: (context, state) => const TabLayoutSettingsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'notifications',
+                    builder: (context, state) =>
+                        const NotificationSettingsScreen(),
                   ),
                 ],
               ),

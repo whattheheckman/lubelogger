@@ -9,6 +9,7 @@ abstract class RouteNames {
   static const vehicleAdd = '/vehicles/add';
   static const settingsConnection = '/settings/connection';
   static const settingsTabLayout = '/settings/tab-layout';
+  static const settingsNotifications = '/settings/notifications';
 
   // ── Resolved location helpers (for context.go / context.push) ────────────
   static String vehicleDetailPath(int vehicleId) => '/vehicles/$vehicleId';
