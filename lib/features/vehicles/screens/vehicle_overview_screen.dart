@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/routing/route_names.dart';
+import '../../../core/settings/tab_layout_repository.dart';
 import '../../gas_records/providers/gas_records_provider.dart';
 import '../../odometer/providers/odometer_records_provider.dart';
 import '../../repair_records/providers/repair_records_provider.dart';
@@ -77,9 +78,12 @@ class VehicleOverviewScreen extends ConsumerWidget {
 
     final vehicle = ref.watch(vehicleByIdProvider(vehicleId)).valueOrNull;
 
-    void goToTab(int index, String route) {
+    final visibleTabs = ref.read(tabLayoutRepositoryProvider).visibleTabs;
+
+    void goToTab(String tabId, String route) {
       if (embedded) {
-        DefaultTabController.of(context).animateTo(index);
+        final index = visibleTabs.indexWhere((c) => c.id == tabId);
+        if (index >= 0) DefaultTabController.of(context).animateTo(index);
       } else {
         context.push(route);
       }
@@ -116,7 +120,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                       icon: Icons.speed,
                       label: 'Odometer',
                       value: odomStr,
-                      onTap: () => goToTab(5, RouteNames.vehicleOdometerListPath(vehicleId)),
+                      onTap: () => goToTab('Odometer', RouteNames.vehicleOdometerListPath(vehicleId)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -125,7 +129,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                       icon: Icons.route,
                       label: 'Distance Travelled',
                       value: distStr,
-                      onTap: () => goToTab(5, RouteNames.vehicleOdometerListPath(vehicleId)),
+                      onTap: () => goToTab('Odometer', RouteNames.vehicleOdometerListPath(vehicleId)),
                     ),
                   ),
                 ],
@@ -138,7 +142,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                       icon: Icons.attach_money,
                       label: 'Total Cost',
                       value: costStr,
-                      onTap: () => goToTab(11, RouteNames.vehicleReportsPath(vehicleId)),
+                      onTap: () => goToTab('Reports', RouteNames.vehicleReportsPath(vehicleId)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -147,7 +151,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                       icon: Icons.local_gas_station,
                       label: 'Avg Fuel Economy',
                       value: mpgStr,
-                      onTap: () => goToTab(4, RouteNames.vehicleFuelListPath(vehicleId)),
+                      onTap: () => goToTab('Fuel', RouteNames.vehicleFuelListPath(vehicleId)),
                     ),
                   ),
                 ],
@@ -166,11 +170,11 @@ class VehicleOverviewScreen extends ConsumerWidget {
           vehicleId: vehicleId,
           shrinkWrapped: true,
           onTapCategory: {
-            'Service': () => goToTab(1, RouteNames.vehicleServiceListPath(vehicleId)),
-            'Repair': () => goToTab(2, RouteNames.vehicleRepairListPath(vehicleId)),
-            'Upgrade': () => goToTab(3, RouteNames.vehicleUpgradeListPath(vehicleId)),
-            'Tax': () => goToTab(6, RouteNames.vehicleTaxListPath(vehicleId)),
-            'Fuel': () => goToTab(4, RouteNames.vehicleFuelListPath(vehicleId)),
+            'Service': () => goToTab('Service', RouteNames.vehicleServiceListPath(vehicleId)),
+            'Repair': () => goToTab('Repairs', RouteNames.vehicleRepairListPath(vehicleId)),
+            'Upgrade': () => goToTab('Upgrades', RouteNames.vehicleUpgradeListPath(vehicleId)),
+            'Tax': () => goToTab('Taxes', RouteNames.vehicleTaxListPath(vehicleId)),
+            'Fuel': () => goToTab('Fuel', RouteNames.vehicleFuelListPath(vehicleId)),
           },
         ),
 

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/routing/route_names.dart';
+import '../../../core/settings/tab_layout_repository.dart';
 import '../providers/vehicles_provider.dart';
 import '../../gas_records/screens/gas_record_list_screen.dart';
 import '../../notes/screens/notes_screen.dart';
@@ -17,28 +18,64 @@ import '../../supplies/screens/supplies_screen.dart';
 import '../../tax_records/screens/tax_record_list_screen.dart';
 import '../../upgrade_records/screens/upgrade_record_list_screen.dart';
 
+/// All possible tab builders keyed by tab ID.
+Widget Function(int) _tabBuilder(String id) {
+  switch (id) {
+    case 'Overview':
+      return (vehicleId) =>
+          VehicleOverviewScreen(vehicleId: vehicleId, embedded: true);
+    case 'Service':
+      return (vehicleId) =>
+          ServiceRecordListScreen(vehicleId: vehicleId, embedded: true);
+    case 'Repairs':
+      return (vehicleId) =>
+          RepairRecordListScreen(vehicleId: vehicleId, embedded: true);
+    case 'Upgrades':
+      return (vehicleId) =>
+          UpgradeRecordListScreen(vehicleId: vehicleId, embedded: true);
+    case 'Fuel':
+      return (vehicleId) =>
+          GasRecordListScreen(vehicleId: vehicleId, embedded: true);
+    case 'Odometer':
+      return (vehicleId) =>
+          OdometerRecordListScreen(vehicleId: vehicleId, embedded: true);
+    case 'Taxes':
+      return (vehicleId) =>
+          TaxRecordListScreen(vehicleId: vehicleId, embedded: true);
+    case 'Reminders':
+      return (vehicleId) =>
+          RemindersScreen(vehicleId: vehicleId, embedded: true);
+    case 'Planner':
+      return (vehicleId) =>
+          KanbanBoardScreen(vehicleId: vehicleId, embedded: true);
+    case 'Supplies':
+      return (vehicleId) =>
+          SuppliesScreen(vehicleId: vehicleId, embedded: true);
+    case 'Notes':
+      return (vehicleId) =>
+          NotesScreen(vehicleId: vehicleId, embedded: true);
+    case 'Reports':
+      return (vehicleId) =>
+          ReportsScreen(vehicleId: vehicleId, embedded: true);
+    default:
+      return (_) => const SizedBox.shrink();
+  }
+}
+
 class VehicleDetailScreen extends ConsumerWidget {
   const VehicleDetailScreen({super.key, required this.vehicleId});
   final int vehicleId;
 
-  static final _tabs = <(String, Widget Function(int))>[
-    ('Overview', (id) => VehicleOverviewScreen(vehicleId: id, embedded: true)),
-    ('Service', (id) => ServiceRecordListScreen(vehicleId: id, embedded: true)),
-    ('Repairs', (id) => RepairRecordListScreen(vehicleId: id, embedded: true)),
-    ('Upgrades', (id) => UpgradeRecordListScreen(vehicleId: id, embedded: true)),
-    ('Fuel', (id) => GasRecordListScreen(vehicleId: id, embedded: true)),
-    ('Odometer', (id) => OdometerRecordListScreen(vehicleId: id, embedded: true)),
-    ('Taxes', (id) => TaxRecordListScreen(vehicleId: id, embedded: true)),
-    ('Reminders', (id) => RemindersScreen(vehicleId: id, embedded: true)),
-    ('Planner', (id) => KanbanBoardScreen(vehicleId: id, embedded: true)),
-    ('Supplies', (id) => SuppliesScreen(vehicleId: id, embedded: true)),
-    ('Notes', (id) => NotesScreen(vehicleId: id, embedded: true)),
-    ('Reports', (id) => ReportsScreen(vehicleId: id, embedded: true)),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncVehicle = ref.watch(vehicleByIdProvider(vehicleId));
+    final visibleTabs =
+        ref.watch(tabLayoutRepositoryProvider).visibleTabs;
+
+    final tabs = visibleTabs
+        .map((c) => (c.id, _tabBuilder(c.id)))
+        .toList();
+
     return asyncVehicle.when(
       loading: () =>
           const Scaffold(body: Center(child: CircularProgressIndicator())),
@@ -49,7 +86,7 @@ class VehicleDetailScreen extends ConsumerWidget {
               body: Center(child: Text('Vehicle not found')));
         }
         return DefaultTabController(
-          length: _tabs.length,
+          length: tabs.length,
           child: Scaffold(
             appBar: AppBar(
               title: Row(
@@ -71,11 +108,12 @@ class VehicleDetailScreen extends ConsumerWidget {
               ],
               bottom: TabBar(
                 isScrollable: true,
-                tabs: _tabs.map((t) => Tab(text: t.$1)).toList(),
+                tabs: tabs.map((t) => Tab(text: t.$1)).toList(),
               ),
             ),
             body: TabBarView(
-              children: _tabs.map((t) => t.$2(vehicleId)).toList(),
+              children:
+                  tabs.map((t) => t.$2(vehicleId)).toList(),
             ),
           ),
         );

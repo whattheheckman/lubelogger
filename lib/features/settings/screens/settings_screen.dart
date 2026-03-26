@@ -24,6 +24,13 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => context.go(RouteNames.settingsConnection),
           ),
           ListTile(
+            leading: const Icon(Icons.tab_outlined),
+            title: const Text('Tab Layout'),
+            subtitle: const Text('Reorder or hide vehicle detail tabs'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(RouteNames.settingsTabLayout),
+          ),
+          ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('Mode'),
             subtitle: Text(settings.appMode.name),
