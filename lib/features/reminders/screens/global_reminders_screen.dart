@@ -45,25 +45,28 @@ class GlobalRemindersScreen extends ConsumerWidget {
         v != null ? '${v.year} ${v.model}' : 'Unknown Vehicle';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('All Reminders')),
+      appBar: AppBar(title: const Text('Upcoming Reminders')),
       body: asyncReminders.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (reminders) {
-          if (reminders.isEmpty) {
+          final upcoming = reminders
+              .where((r) => _urgencyLabel(r) != 'ok')
+              .toList();
+          if (upcoming.isEmpty) {
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.notifications_none, size: 64, color: Colors.grey),
+                  Icon(Icons.check_circle_outline, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text('No reminders across all vehicles.',
+                  Text('No upcoming reminders.',
                       textAlign: TextAlign.center),
                 ],
               ),
             );
           }
-          final sorted = [...reminders]..sort((a, b) {
+          final sorted = [...upcoming]..sort((a, b) {
               const order = {'overdue': 0, 'due_soon': 1, 'ok': 2};
               return (order[_urgencyLabel(a)] ?? 3)
                   .compareTo(order[_urgencyLabel(b)] ?? 3);

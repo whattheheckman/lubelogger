@@ -7,14 +7,14 @@ const _kTabLayoutKey = 'tab_layout';
 /// Stable IDs for every vehicle detail tab, in default order.
 const kDefaultTabOrder = [
   'Overview',
+  'Fuel',
   'Service',
   'Repairs',
   'Upgrades',
-  'Fuel',
+  'Planner',
+  'Reminders',
   'Odometer',
   'Taxes',
-  'Reminders',
-  'Planner',
   'Supplies',
   'Notes',
   'Reports',
@@ -69,8 +69,13 @@ class TabLayoutRepository {
     );
   }
 
-  static List<TabConfig> _defaults() =>
-      kDefaultTabOrder.map((id) => TabConfig(id: id, visible: true)).toList();
+  static const _hiddenByDefault = {'Taxes', 'Planner', 'Supplies', 'Odometer', 'Reports'};
+
+static List<TabConfig> _defaults() =>
+    kDefaultTabOrder
+        .map((id) => TabConfig(id: id, visible: !_hiddenByDefault.contains(id)))
+        .toList();
+
 }
 
 final tabLayoutRepositoryProvider = Provider<TabLayoutRepository>(
