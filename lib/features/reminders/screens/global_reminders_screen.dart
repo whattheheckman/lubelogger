@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../vehicles/domain/vehicle.dart';
+import '../../vehicles/providers/vehicles_provider.dart';
 import '../providers/reminders_provider.dart';
 import '../domain/reminder_record.dart';
 
@@ -36,6 +38,11 @@ class GlobalRemindersScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncReminders = ref.watch(allRemindersProvider);
+    final vehicles = ref.watch(vehicleListProvider).valueOrNull ?? [];
+    final vehicleMap = {for (final v in vehicles) v.id: v};
+
+    String vehicleName(Vehicle? v) =>
+        v != null ? '${v.year} ${v.model}' : 'Unknown Vehicle';
 
     return Scaffold(
       appBar: AppBar(title: const Text('All Reminders')),
@@ -81,7 +88,7 @@ class GlobalRemindersScreen extends ConsumerWidget {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Vehicle ID: ${r.vehicleId}',
+                        Text(vehicleName(vehicleMap[r.vehicleId]),
                             style: const TextStyle(fontSize: 11)),
                         if (r.dateMetric != null)
                           Text('Due: ${_dateFmt.format(r.dateMetric!)}'),

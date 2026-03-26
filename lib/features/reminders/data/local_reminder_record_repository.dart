@@ -28,6 +28,10 @@ class LocalReminderRecordRepository implements ReminderRecordRepository {
       );
 
   @override
+  Stream<List<domain.ReminderRecord>> watchAll() =>
+      _db.reminderRecordsDao.watchAll().map((rows) => rows.map(_fromRow).toList());
+
+  @override
   Stream<List<domain.ReminderRecord>> watchByVehicle(int vehicleId) =>
       _db.reminderRecordsDao
           .watchByVehicle(vehicleId)

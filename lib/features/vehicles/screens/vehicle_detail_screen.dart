@@ -90,9 +90,14 @@ class VehicleDetailScreen extends ConsumerWidget {
           child: Scaffold(
             appBar: AppBar(
               title: Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(vehicle.model),
+                  Flexible(
+                    child: Text(
+                      '${vehicle.year} ${vehicle.model}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
                   if (vehicle.licensePlate.isNotEmpty) ...[
                     const SizedBox(width: 10),
                     LicensePlateBadge(plate: vehicle.licensePlate),

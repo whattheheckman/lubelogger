@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../features/reminders/domain/reminder_record.dart';
+import '../../features/reminders/providers/reminders_provider.dart';
 
 import '../../features/setup/screens/setup_screen.dart';
 import '../../features/vehicles/screens/vehicle_list_screen.dart';
@@ -276,6 +280,15 @@ GoRouter appRouter(AppRouterRef ref) {
             ],
           ),
           StatefulShellBranch(
+            navigatorKey: _quickFuelShellKey,
+            routes: [
+              GoRoute(
+                path: RouteNames.quickFuel,
+                builder: (context, state) => const QuickAddFuelScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
             navigatorKey: _remindersShellKey,
             routes: [
               GoRoute(
@@ -303,38 +316,58 @@ GoRouter appRouter(AppRouterRef ref) {
               ),
             ],
           ),
-          StatefulShellBranch(
-            navigatorKey: _quickFuelShellKey,
-            routes: [
-              GoRoute(
-                path: RouteNames.quickFuel,
-                builder: (context, state) => const QuickAddFuelScreen(),
-              ),
-            ],
-          ),
         ],
       ),
     ],
   );
 }
 
-class ScaffoldWithNavBar extends StatelessWidget {
+class ScaffoldWithNavBar extends ConsumerWidget {
   const ScaffoldWithNavBar({super.key, required this.shell});
   final StatefulNavigationShell shell;
 
+  static bool _isUrgent(ReminderRecord r) {
+    if (r.reminderMetric == 'date' || r.reminderMetric == 'both') {
+      if (r.dateMetric != null) {
+        return r.dateMetric!.difference(DateTime.now()).inDays <= 30;
+      }
+    }
+    return false;
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final reminders =
+        ref.watch(allRemindersStreamProvider).valueOrNull ?? [];
+    final urgentCount = reminders.where(_isUrgent).length;
+
     return Scaffold(
       body: shell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,
         onDestinationSelected: (index) =>
             shell.goBranch(index, initialLocation: index == shell.currentIndex),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.directions_car), label: 'Vehicles'),
-          NavigationDestination(icon: Icon(Icons.bolt), label: 'Quick Fuel'),
-          NavigationDestination(icon: Icon(Icons.notifications), label: 'Reminders'),
-          NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+        destinations: [
+          const NavigationDestination(
+            icon: Icon(Icons.directions_car),
+            label: 'Vehicles',
+          ),
+          const NavigationDestination(
+            icon: Icon(Icons.bolt),
+            label: 'Quick Fuel',
+          ),
+          NavigationDestination(
+            icon: Badge(
+              isLabelVisible: urgentCount > 0,
+              label: Text('$urgentCount'),
+              child: const Icon(Icons.notifications),
+            ),
+            label: 'Reminders',
+          ),
+          const NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
       ),
     );

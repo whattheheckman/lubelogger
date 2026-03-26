@@ -8,6 +8,8 @@ part 'reminder_records_dao.g.dart';
 class ReminderRecordsDao extends DatabaseAccessor<AppDatabase> with _$ReminderRecordsDaoMixin {
   ReminderRecordsDao(super.db);
 
+  Stream<List<ReminderRecord>> watchAll() => select(reminderRecords).watch();
+
   Stream<List<ReminderRecord>> watchByVehicle(int vehicleId) =>
       (select(reminderRecords)..where((t) => t.vehicleId.equals(vehicleId))).watch();
 

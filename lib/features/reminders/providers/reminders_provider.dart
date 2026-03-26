@@ -1,8 +1,15 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/local_reminder_record_repository.dart';
 import '../domain/reminder_record.dart';
 
 part 'reminders_provider.g.dart';
+
+/// Reactive stream of all reminders across every vehicle (used for badge count).
+final allRemindersStreamProvider = StreamProvider<List<ReminderRecord>>((ref) {
+  final repo = ref.watch(localReminderRecordRepositoryProvider);
+  return repo.watchAll();
+});
 
 @riverpod
 Stream<List<ReminderRecord>> reminderList(ReminderListRef ref, int vehicleId) {

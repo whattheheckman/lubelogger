@@ -1,6 +1,7 @@
 import '../domain/reminder_record.dart';
 
 abstract interface class ReminderRecordRepository {
+  Stream<List<ReminderRecord>> watchAll();
   Stream<List<ReminderRecord>> watchByVehicle(int vehicleId);
   Future<List<ReminderRecord>> getAll();
   Future<List<ReminderRecord>> getByVehicle(int vehicleId);
