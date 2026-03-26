@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/routing/route_names.dart';
 import '../../gas_records/providers/gas_records_provider.dart';
 import '../../odometer/providers/odometer_records_provider.dart';
 import '../../repair_records/providers/repair_records_provider.dart';
-import '../../reports/screens/reports_screen.dart';
+import '../../reports/screens/vehicle_charts.dart';
 import '../../service_records/providers/service_records_provider.dart';
 import '../../tax_records/providers/tax_records_provider.dart';
 import '../../upgrade_records/providers/upgrade_records_provider.dart';
@@ -75,6 +77,14 @@ class VehicleOverviewScreen extends ConsumerWidget {
 
     final vehicle = ref.watch(vehicleByIdProvider(vehicleId)).valueOrNull;
 
+    void goToTab(int index, String route) {
+      if (embedded) {
+        DefaultTabController.of(context).animateTo(index);
+      } else {
+        context.push(route);
+      }
+    }
+
     final body = ListView(
       padding: EdgeInsets.zero,
       children: [
@@ -106,6 +116,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                       icon: Icons.speed,
                       label: 'Odometer',
                       value: odomStr,
+                      onTap: () => goToTab(5, RouteNames.vehicleOdometerListPath(vehicleId)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -114,6 +125,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                       icon: Icons.route,
                       label: 'Distance Travelled',
                       value: distStr,
+                      onTap: () => goToTab(5, RouteNames.vehicleOdometerListPath(vehicleId)),
                     ),
                   ),
                 ],
@@ -126,6 +138,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                       icon: Icons.attach_money,
                       label: 'Total Cost',
                       value: costStr,
+                      onTap: () => goToTab(11, RouteNames.vehicleReportsPath(vehicleId)),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -134,6 +147,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
                       icon: Icons.local_gas_station,
                       label: 'Avg Fuel Economy',
                       value: mpgStr,
+                      onTap: () => goToTab(4, RouteNames.vehicleFuelListPath(vehicleId)),
                     ),
                   ),
                 ],
@@ -142,9 +156,23 @@ class VehicleOverviewScreen extends ConsumerWidget {
           ),
         ),
 
+        // ── Spending vs Distance ──────────────────────────────
+        const _SectionHeader('Spending vs Distance (12 Months)'),
+        SpendingDistanceChart(vehicleId: vehicleId),
+
         // ── Cost breakdown ────────────────────────────────────
         const _SectionHeader('Cost Breakdown'),
-        VehicleCostReport(vehicleId: vehicleId, shrinkWrapped: true),
+        VehicleCostReport(
+          vehicleId: vehicleId,
+          shrinkWrapped: true,
+          onTapCategory: {
+            'Service': () => goToTab(1, RouteNames.vehicleServiceListPath(vehicleId)),
+            'Repair': () => goToTab(2, RouteNames.vehicleRepairListPath(vehicleId)),
+            'Upgrade': () => goToTab(3, RouteNames.vehicleUpgradeListPath(vehicleId)),
+            'Tax': () => goToTab(6, RouteNames.vehicleTaxListPath(vehicleId)),
+            'Fuel': () => goToTab(4, RouteNames.vehicleFuelListPath(vehicleId)),
+          },
+        ),
 
         // ── Fuel economy ──────────────────────────────────────
         const _SectionHeader('Fuel Economy'),
@@ -326,37 +354,43 @@ class _MetricCard extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.value,
+    this.onTap,
   });
   final IconData icon;
   final String label;
   final String value;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainerHighest,
+    return Material(
+      color: theme.colorScheme.surfaceContainerHighest,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 18, color: theme.colorScheme.primary),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: theme.textTheme.titleLarge
-                ?.copyWith(fontWeight: FontWeight.w700),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(icon, size: 18, color: theme.colorScheme.primary),
+              const SizedBox(height: 8),
+              Text(
+                value,
+                style: theme.textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
           ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-          ),
-        ],
+        ),
       ),
     );
   }

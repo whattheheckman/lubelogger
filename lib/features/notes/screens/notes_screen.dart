@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../core/routing/route_names.dart';
 import '../../../core/widgets/delete_confirm_dialog.dart';
+import '../../../core/widgets/record_stats_banner.dart';
 import '../providers/notes_provider.dart';
 import '../domain/note_record.dart';
 
@@ -29,26 +30,34 @@ class NotesScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (notes) {
-          if (notes.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.notes, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text('No notes yet.\nTap + to add one.',
-                      textAlign: TextAlign.center),
-                ],
+          return Column(
+            children: [
+              RecordStatsBanner(count: notes.length),
+              const Divider(height: 1),
+              Expanded(
+                child: notes.isEmpty
+                    ? const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.notes, size: 64, color: Colors.grey),
+                            SizedBox(height: 16),
+                            Text('No notes yet.\nTap + to add one.',
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () async =>
+                            ref.invalidate(noteListProvider(vehicleId)),
+                        child: ListView.builder(
+                          itemCount: notes.length,
+                          itemBuilder: (context, i) =>
+                              _NoteCard(note: notes[i], vehicleId: vehicleId),
+                        ),
+                      ),
               ),
-            );
-          }
-          return RefreshIndicator(
-            onRefresh: () async => ref.invalidate(noteListProvider(vehicleId)),
-            child: ListView.builder(
-              itemCount: notes.length,
-              itemBuilder: (context, i) =>
-                  _NoteCard(note: notes[i], vehicleId: vehicleId),
-            ),
+            ],
           );
         },
       ),

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/routing/route_names.dart';
+import '../../../core/widgets/record_stats_banner.dart';
 import '../providers/reminders_provider.dart';
 import '../domain/reminder_record.dart';
 
@@ -46,34 +47,39 @@ class RemindersScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (reminders) {
-          if (reminders.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.notifications_none, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text('No reminders yet.\nTap + to add one.',
-                      textAlign: TextAlign.center),
-                ],
-              ),
-            );
-          }
           final sorted = [...reminders]..sort((a, b) {
               final ua = _urgencyLabel(a);
               final ub = _urgencyLabel(b);
               const order = {'overdue': 0, 'due_soon': 1, 'ok': 2};
               return (order[ua] ?? 3).compareTo(order[ub] ?? 3);
             });
-          return RefreshIndicator(
-            onRefresh: () async =>
-                ref.invalidate(reminderListProvider(vehicleId)),
-            child: ListView.builder(
-              itemCount: sorted.length,
-              itemBuilder: (context, i) {
-                final r = sorted[i];
-                final urgency = _urgencyLabel(r);
-                return Card(
+          return Column(
+            children: [
+              RecordStatsBanner(count: reminders.length),
+              const Divider(height: 1),
+              Expanded(
+                child: reminders.isEmpty
+                    ? const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.notifications_none,
+                                size: 64, color: Colors.grey),
+                            SizedBox(height: 16),
+                            Text('No reminders yet.\nTap + to add one.',
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () async =>
+                            ref.invalidate(reminderListProvider(vehicleId)),
+                        child: ListView.builder(
+                          itemCount: sorted.length,
+                          itemBuilder: (context, i) {
+                            final r = sorted[i];
+                            final urgency = _urgencyLabel(r);
+                            return Card(
                   margin: const EdgeInsets.symmetric(
                       horizontal: 16, vertical: 6),
                   child: ListTile(
@@ -107,9 +113,12 @@ class RemindersScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                );
-              },
-            ),
+                            );
+                          },
+                        ),
+                      ),
+              ),
+            ],
           );
         },
       ),

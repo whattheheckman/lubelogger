@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../core/routing/route_names.dart';
 import '../../../core/sync/sync_status.dart';
 import '../../../core/widgets/delete_confirm_dialog.dart';
+import '../../../core/widgets/record_stats_banner.dart';
 import '../providers/service_records_provider.dart';
 import '../domain/service_record.dart';
 
@@ -29,27 +30,36 @@ class ServiceRecordListScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (records) {
-          if (records.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.build_outlined, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text('No service records yet.\nTap + to add one.',
-                      textAlign: TextAlign.center),
-                ],
+          final totalCost = records.fold(0.0, (s, r) => s + r.cost);
+          return Column(
+            children: [
+              RecordStatsBanner(count: records.length, totalCost: totalCost),
+              const Divider(height: 1),
+              Expanded(
+                child: records.isEmpty
+                    ? const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.build_outlined,
+                                size: 64, color: Colors.grey),
+                            SizedBox(height: 16),
+                            Text('No service records yet.\nTap + to add one.',
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () async =>
+                            ref.invalidate(serviceRecordListProvider(vehicleId)),
+                        child: ListView.builder(
+                          itemCount: records.length,
+                          itemBuilder: (context, i) =>
+                              _RecordCard(record: records[i], vehicleId: vehicleId),
+                        ),
+                      ),
               ),
-            );
-          }
-          return RefreshIndicator(
-            onRefresh: () async =>
-                ref.invalidate(serviceRecordListProvider(vehicleId)),
-            child: ListView.builder(
-              itemCount: records.length,
-              itemBuilder: (context, i) =>
-                  _RecordCard(record: records[i], vehicleId: vehicleId),
-            ),
+            ],
           );
         },
       ),

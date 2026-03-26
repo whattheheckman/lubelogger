@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/widgets/record_stats_banner.dart';
 import '../domain/plan_record.dart';
 import '../providers/plan_records_provider.dart';
 
@@ -37,19 +38,27 @@ class KanbanBoardScreen extends ConsumerWidget {
       body: asyncRecords.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
-        data: (records) => ListView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.all(8),
-          children: _columns
-              .map((col) => _KanbanColumn(
-                    title: col,
-                    vehicleId: vehicleId,
-                    cards: records
-                        .where((r) => r.progress == col)
-                        .toList(),
-                    allColumns: _columns,
-                  ))
-              .toList(),
+        data: (records) => Column(
+          children: [
+            RecordStatsBanner(count: records.length),
+            const Divider(height: 1),
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.all(8),
+                children: _columns
+                    .map((col) => _KanbanColumn(
+                          title: col,
+                          vehicleId: vehicleId,
+                          cards: records
+                              .where((r) => r.progress == col)
+                              .toList(),
+                          allColumns: _columns,
+                        ))
+                    .toList(),
+              ),
+            ),
+          ],
         ),
       ),
     );
