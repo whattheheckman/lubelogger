@@ -457,7 +457,7 @@ class SpendingDistanceChart extends ConsumerWidget {
                     ),
                     barTouchData: BarTouchData(
                       touchTooltipData: BarTouchTooltipData(
-                        getTooltipItem: (group, _, rod, __) {
+                        getTooltipItem: (group, _, rod, _) {
                           final label = _monthFmt.format(months[group.x]);
                           return BarTooltipItem(
                             '$label\n\$${spendingData[group.x].toStringAsFixed(0)}',

@@ -187,7 +187,7 @@ class _VehiclePickerPage extends ConsumerWidget {
               Expanded(
                 child: ListView.separated(
                   itemCount: vehicles.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  separatorBuilder: (_, _) => const SizedBox(height: 8),
                   itemBuilder: (context, i) {
                     final v = vehicles[i];
                     return Material(
