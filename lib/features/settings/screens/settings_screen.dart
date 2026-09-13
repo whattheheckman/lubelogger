@@ -105,6 +105,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.go(RouteNames.settingsNotifications),
           ),
+          ListTile(
+            leading: const Icon(Icons.download_outlined),
+            title: const Text('Export Data'),
+            subtitle: const Text('Save records as CSV files'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(RouteNames.settingsExport),
+          ),
+          ListTile(
+            leading: const Icon(Icons.upload_outlined),
+            title: const Text('Import Data'),
+            subtitle: const Text('Load records from CSV files'),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.go(RouteNames.settingsImport),
+          ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.info_outline),

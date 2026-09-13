@@ -11,6 +11,8 @@ abstract class RouteNames {
   static const settingsTabLayout = '/settings/tab-layout';
   static const settingsNotifications = '/settings/notifications';
   static const settingsSyncLog = '/settings/sync-log';
+  static const settingsExport = '/settings/export';
+  static const settingsImport = '/settings/import';
 
   // ── Resolved location helpers (for context.go / context.push) ────────────
   static String vehicleDetailPath(int vehicleId) => '/vehicles/$vehicleId';

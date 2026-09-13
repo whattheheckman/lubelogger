@@ -37,6 +37,8 @@ import '../../features/settings/screens/connection_settings_screen.dart';
 import '../../features/settings/screens/tab_layout_settings_screen.dart';
 import '../../features/settings/screens/notification_settings_screen.dart';
 import '../../features/settings/screens/sync_log_screen.dart';
+import '../../features/settings/screens/export_screen.dart';
+import '../../features/settings/screens/import_screen.dart';
 import 'route_names.dart';
 
 part 'app_router.g.dart';
@@ -322,6 +324,14 @@ GoRouter appRouter(AppRouterRef ref) {
                   GoRoute(
                     path: 'sync-log',
                     builder: (context, state) => const SyncLogScreen(),
+                  ),
+                  GoRoute(
+                    path: 'export',
+                    builder: (context, state) => const ExportScreen(),
+                  ),
+                  GoRoute(
+                    path: 'import',
+                    builder: (context, state) => const ImportScreen(),
                   ),
                 ],
               ),
