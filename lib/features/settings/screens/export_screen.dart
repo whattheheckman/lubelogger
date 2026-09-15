@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -27,21 +28,12 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
   final _loading = <String, bool>{};
 
   static final _dateFmt = DateFormat('yyyy-MM-dd HH:mm');
+  static final _csv = Csv();
 
-  // RFC 4180 CSV cell escaping
-  String _cell(String s) {
-    if (s.contains(',') || s.contains('"') || s.contains('\n')) {
-      return '"${s.replaceAll('"', '""')}"';
-    }
-    return s;
-  }
-
-  String _row(List<String> cells) => cells.map(_cell).join(',');
-
-  Future<void> _share(StringBuffer csv, String fileName) async {
+  Future<void> _share(List<List<String>> rows, String fileName) async {
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/$fileName');
-    await file.writeAsString(csv.toString());
+    await file.writeAsString(_csv.encode(rows));
     await SharePlus.instance.share(
       ShareParams(files: [XFile(file.path)], subject: fileName),
     );
@@ -74,24 +66,25 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
         .read(localGasRecordRepositoryProvider)
         .getByVehicle(_selectedVehicle!.id);
     records.sort((a, b) => a.date.compareTo(b.date));
-    final buf = StringBuffer()
-      ..writeln(_row([
-        'Date', 'Odometer (mi)', 'Gallons', 'Cost', 'MPG',
-        'Fill To Full', 'Missed Fill-up', 'Notes',
-      ]));
-    for (final r in records) {
-      buf.writeln(_row([
-        _dateFmt.format(r.date),
-        r.mileage.toStringAsFixed(0),
-        r.gallons.toStringAsFixed(3),
-        r.cost.toStringAsFixed(2),
-        r.mpg?.toStringAsFixed(2) ?? '',
-        r.isFillToFull ? 'Yes' : 'No',
-        r.missedFuelUp ? 'Yes' : 'No',
-        r.notes,
-      ]));
-    }
-    await _share(buf, _fileName('fuel'));
+    // Headers match LubeLogger's accepted fuel CSV import columns:
+    // https://docs.lubelogger.com/Records/Fuel%20Records/#importing-from-csvfuellyspiritmonitorde
+    final rows = [
+      [
+        'date', 'odometer', 'fuelconsumed', 'cost',
+        'isfilltofull', 'missedfuelup', 'notes',
+      ],
+      for (final r in records)
+        [
+          _dateFmt.format(r.date),
+          r.mileage.toStringAsFixed(0),
+          r.gallons.toStringAsFixed(3),
+          r.cost.toStringAsFixed(2),
+          r.isFillToFull.toString(),
+          r.missedFuelUp.toString(),
+          r.notes,
+        ],
+    ];
+    await _share(rows, _fileName('fuel'));
   }
 
   Future<void> _exportService() async {
@@ -99,19 +92,19 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
         .read(localServiceRecordRepositoryProvider)
         .getByVehicle(_selectedVehicle!.id);
     records.sort((a, b) => a.date.compareTo(b.date));
-    final buf = StringBuffer()
-      ..writeln(_row(['Date', 'Odometer (mi)', 'Description', 'Cost', 'Tags', 'Notes']));
-    for (final r in records) {
-      buf.writeln(_row([
-        _dateFmt.format(r.date),
-        r.mileage.toStringAsFixed(0),
-        r.description,
-        r.cost.toStringAsFixed(2),
-        r.tags.join('; '),
-        r.notes,
-      ]));
-    }
-    await _share(buf, _fileName('service'));
+    final rows = [
+      ['Date', 'Odometer (mi)', 'Description', 'Cost', 'Tags', 'Notes'],
+      for (final r in records)
+        [
+          _dateFmt.format(r.date),
+          r.mileage.toStringAsFixed(0),
+          r.description,
+          r.cost.toStringAsFixed(2),
+          r.tags.join('; '),
+          r.notes,
+        ],
+    ];
+    await _share(rows, _fileName('service'));
   }
 
   Future<void> _exportRepair() async {
@@ -119,19 +112,19 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
         .read(localRepairRecordRepositoryProvider)
         .getByVehicle(_selectedVehicle!.id);
     records.sort((a, b) => a.date.compareTo(b.date));
-    final buf = StringBuffer()
-      ..writeln(_row(['Date', 'Odometer (mi)', 'Description', 'Cost', 'Tags', 'Notes']));
-    for (final r in records) {
-      buf.writeln(_row([
-        _dateFmt.format(r.date),
-        r.mileage.toStringAsFixed(0),
-        r.description,
-        r.cost.toStringAsFixed(2),
-        r.tags.join('; '),
-        r.notes,
-      ]));
-    }
-    await _share(buf, _fileName('repairs'));
+    final rows = [
+      ['Date', 'Odometer (mi)', 'Description', 'Cost', 'Tags', 'Notes'],
+      for (final r in records)
+        [
+          _dateFmt.format(r.date),
+          r.mileage.toStringAsFixed(0),
+          r.description,
+          r.cost.toStringAsFixed(2),
+          r.tags.join('; '),
+          r.notes,
+        ],
+    ];
+    await _share(rows, _fileName('repairs'));
   }
 
   Future<void> _exportUpgrades() async {
@@ -139,19 +132,19 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
         .read(localUpgradeRecordRepositoryProvider)
         .getByVehicle(_selectedVehicle!.id);
     records.sort((a, b) => a.date.compareTo(b.date));
-    final buf = StringBuffer()
-      ..writeln(_row(['Date', 'Odometer (mi)', 'Description', 'Cost', 'Tags', 'Notes']));
-    for (final r in records) {
-      buf.writeln(_row([
-        _dateFmt.format(r.date),
-        r.mileage.toStringAsFixed(0),
-        r.description,
-        r.cost.toStringAsFixed(2),
-        r.tags.join('; '),
-        r.notes,
-      ]));
-    }
-    await _share(buf, _fileName('upgrades'));
+    final rows = [
+      ['Date', 'Odometer (mi)', 'Description', 'Cost', 'Tags', 'Notes'],
+      for (final r in records)
+        [
+          _dateFmt.format(r.date),
+          r.mileage.toStringAsFixed(0),
+          r.description,
+          r.cost.toStringAsFixed(2),
+          r.tags.join('; '),
+          r.notes,
+        ],
+    ];
+    await _share(rows, _fileName('upgrades'));
   }
 
   Future<void> _exportOdometer() async {
@@ -159,16 +152,16 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
         .read(localOdometerRecordRepositoryProvider)
         .getByVehicle(_selectedVehicle!.id);
     records.sort((a, b) => a.date.compareTo(b.date));
-    final buf = StringBuffer()
-      ..writeln(_row(['Date', 'Odometer (mi)', 'Notes']));
-    for (final r in records) {
-      buf.writeln(_row([
-        _dateFmt.format(r.date),
-        r.mileage.toStringAsFixed(0),
-        r.notes,
-      ]));
-    }
-    await _share(buf, _fileName('odometer'));
+    final rows = [
+      ['Date', 'Odometer (mi)', 'Notes'],
+      for (final r in records)
+        [
+          _dateFmt.format(r.date),
+          r.mileage.toStringAsFixed(0),
+          r.notes,
+        ],
+    ];
+    await _share(rows, _fileName('odometer'));
   }
 
   Future<void> _exportTax() async {
@@ -176,21 +169,21 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
         .read(localTaxRecordRepositoryProvider)
         .getByVehicle(_selectedVehicle!.id);
     records.sort((a, b) => a.date.compareTo(b.date));
-    final buf = StringBuffer()
-      ..writeln(_row([
+    final rows = [
+      [
         'Date', 'Description', 'Cost', 'Recurring', 'Recurring Interval', 'Notes',
-      ]));
-    for (final r in records) {
-      buf.writeln(_row([
-        _dateFmt.format(r.date),
-        r.description,
-        r.cost.toStringAsFixed(2),
-        r.isRecurring ? 'Yes' : 'No',
-        r.recurringInterval,
-        r.notes,
-      ]));
-    }
-    await _share(buf, _fileName('tax'));
+      ],
+      for (final r in records)
+        [
+          _dateFmt.format(r.date),
+          r.description,
+          r.cost.toStringAsFixed(2),
+          r.isRecurring ? 'Yes' : 'No',
+          r.recurringInterval,
+          r.notes,
+        ],
+    ];
+    await _share(rows, _fileName('tax'));
   }
 
   @override

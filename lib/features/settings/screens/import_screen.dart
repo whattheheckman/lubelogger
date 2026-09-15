@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,49 +22,15 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
   Vehicle? _selectedVehicle;
   final _loading = <String, bool>{};
 
-  // ── CSV parser (RFC 4180) ────────────────────────────────────────────────
+  // ── CSV parser ───────────────────────────────────────────────────────────
 
-  List<List<String>> _parseCsv(String content) {
-    final result = <List<String>>[];
-    final text = content.replaceAll('\r\n', '\n').replaceAll('\r', '\n');
-    var i = 0;
+  // Comma-delimited only; fields stay strings (no dynamic typing).
+  static final _csv = Csv(autoDetect: false);
 
-    while (i < text.length) {
-      final row = <String>[];
-      while (i < text.length && text[i] != '\n') {
-        if (text[i] == '"') {
-          i++; // skip opening quote
-          final buf = StringBuffer();
-          while (i < text.length) {
-            if (text[i] == '"') {
-              if (i + 1 < text.length && text[i + 1] == '"') {
-                buf.write('"');
-                i += 2;
-              } else {
-                i++; // skip closing quote
-                break;
-              }
-            } else {
-              buf.write(text[i]);
-              i++;
-            }
-          }
-          row.add(buf.toString());
-          if (i < text.length && text[i] == ',') i++;
-        } else {
-          final start = i;
-          while (i < text.length && text[i] != ',' && text[i] != '\n') {
-            i++;
-          }
-          row.add(text.substring(start, i));
-          if (i < text.length && text[i] == ',') i++;
-        }
-      }
-      if (i < text.length && text[i] == '\n') i++;
-      if (row.isNotEmpty) result.add(row);
-    }
-    return result;
-  }
+  List<List<String>> _parseCsv(String content) => _csv
+      .decode(content)
+      .map((row) => row.map((cell) => cell.toString()).toList())
+      .toList();
 
   // ── Header utilities ─────────────────────────────────────────────────────
 
@@ -128,7 +95,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
     final dayCol = _findCol(headers, ['day']);
     final monthCol = _findCol(headers, ['month']);
     final yearCol = _findCol(headers, ['year']);
-    final odoCol = _findCol(headers, ['odometer', 'odo', 'Odometer (mi)']);
+    final odoCol = _findCol(headers, ['odometer', 'odo']);
     final fuelCol = _findCol(headers, [
       'gallons',
       'liters',
