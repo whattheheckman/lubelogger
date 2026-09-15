@@ -48,7 +48,7 @@ class _TabLayoutSettingsScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+  ///TODO:make this reload the vehicle table when changed
     return Scaffold(
       appBar: AppBar(title: const Text('Tab Layout')),
       body: Column(
@@ -64,7 +64,7 @@ class _TabLayoutSettingsScreenState
           Expanded(
             child: ReorderableListView.builder(
               itemCount: _tabs.length,
-              onReorder: _reorder,
+              onReorderItem: _reorder,
               itemBuilder: (context, i) {
                 final tab = _tabs[i];
                 return ListTile(

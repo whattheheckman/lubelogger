@@ -36,6 +36,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  ///TODO: Refactor this dialog (maybe manual options?) as well as the data path
   Future<void> _pickSyncInterval(int current) async {
     int selected = current;
     final confirmed = await showDialog<bool>(
@@ -43,22 +44,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
           title: const Text('Sync Interval'),
-          content: Column(
+          content:
+          RadioGroup<int>(onChanged: (v) => setState(() => selected = v!), groupValue: selected, child:
+          Column(
             mainAxisSize: MainAxisSize.min,
             children: _intervalOptions
                 .map((m) => RadioListTile<int>(
                       title: Text(_formatInterval(m)),
                       value: m,
-                      groupValue: selected,
-                      onChanged: (v) => setState(() => selected = v!),
                     ))
                 .toList(),
-          ),
+          )),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
               child: const Text('Cancel'),
             ),
+            ///FIXME: make this button actually change the interval data path
             TextButton(
               onPressed: () => Navigator.pop(context, true),
               child: const Text('Save'),

@@ -146,24 +146,22 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
             const SizedBox(height: 16),
             const Text('Reminder Type',
                 style: TextStyle(fontWeight: FontWeight.bold)),
-            RadioListTile(
+            RadioGroup<String>(onChanged: (v) => setState(() => _metric = v!), groupValue: _metric, child:Column(crossAxisAlignment: CrossAxisAlignment.start, children : [RadioListTile(
               title: const Text('Date-based'),
               value: 'date',
-              groupValue: _metric,
-              onChanged: (v) => setState(() => _metric = v!),
+
             ),
             RadioListTile(
               title: const Text('Mileage-based'),
               value: 'mileage',
-              groupValue: _metric,
-              onChanged: (v) => setState(() => _metric = v!),
+
             ),
             RadioListTile(
               title: const Text('Both'),
               value: 'both',
-              groupValue: _metric,
-              onChanged: (v) => setState(() => _metric = v!),
-            ),
+
+            ),],)),
+            
             const SizedBox(height: 8),
             if (_metric == 'date' || _metric == 'both') ...[
               TextFormField(
