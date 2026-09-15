@@ -4,7 +4,7 @@ part 'service_record.freezed.dart';
 part 'service_record.g.dart';
 
 @freezed
-class ServiceRecord with _$ServiceRecord {
+abstract class ServiceRecord with _$ServiceRecord {
   const factory ServiceRecord({
     required int id,
     int? remoteId,

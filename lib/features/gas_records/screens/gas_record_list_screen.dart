@@ -106,7 +106,7 @@ class _GasCard extends ConsumerWidget {
       ),
       confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
-          ref.read(gasRecordsNotifierProvider.notifier).delete(record.id),
+          ref.read(gasRecordsProvider.notifier).delete(record.id),
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: ListTile(

@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:lubelogger/features/vehicles/data/local_vehicle_repository.dart';
 import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
@@ -13,7 +14,7 @@ final vehicleByIdProvider = StreamProvider.family<Vehicle?, int>((ref, vehicleId
 });
 
 @riverpod
-Stream<List<Vehicle>> vehicleList(VehicleListRef ref) {
+Stream<List<Vehicle>> vehicleList(Ref ref) {
   final repo = ref.watch(localVehicleRepositoryProvider);
   return repo.watchAll();
 }

@@ -6,164 +6,127 @@ part of 'repair_records_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$repairRecordListHash() => r'815ff945da47e0ce519b0436ef540fa9ab2ca290';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [repairRecordList].
 @ProviderFor(repairRecordList)
-const repairRecordListProvider = RepairRecordListFamily();
+final repairRecordListProvider = RepairRecordListFamily._();
 
-/// See also [repairRecordList].
-class RepairRecordListFamily extends Family<AsyncValue<List<RepairRecord>>> {
-  /// See also [repairRecordList].
-  const RepairRecordListFamily();
+final class RepairRecordListProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<RepairRecord>>,
+          List<RepairRecord>,
+          Stream<List<RepairRecord>>
+        >
+    with
+        $FutureModifier<List<RepairRecord>>,
+        $StreamProvider<List<RepairRecord>> {
+  RepairRecordListProvider._({
+    required RepairRecordListFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'repairRecordListProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [repairRecordList].
-  RepairRecordListProvider call(int vehicleId) {
-    return RepairRecordListProvider(vehicleId);
+  @override
+  String debugGetCreateSourceHash() => _$repairRecordListHash();
+
+  @override
+  String toString() {
+    return r'repairRecordListProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  RepairRecordListProvider getProviderOverride(
-    covariant RepairRecordListProvider provider,
-  ) {
-    return call(provider.vehicleId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  $StreamProviderElement<List<RepairRecord>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'repairRecordListProvider';
-}
-
-/// See also [repairRecordList].
-class RepairRecordListProvider
-    extends AutoDisposeStreamProvider<List<RepairRecord>> {
-  /// See also [repairRecordList].
-  RepairRecordListProvider(int vehicleId)
-    : this._internal(
-        (ref) => repairRecordList(ref as RepairRecordListRef, vehicleId),
-        from: repairRecordListProvider,
-        name: r'repairRecordListProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$repairRecordListHash,
-        dependencies: RepairRecordListFamily._dependencies,
-        allTransitiveDependencies:
-            RepairRecordListFamily._allTransitiveDependencies,
-        vehicleId: vehicleId,
-      );
-
-  RepairRecordListProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.vehicleId,
-  }) : super.internal();
-
-  final int vehicleId;
-
-  @override
-  Override overrideWith(
-    Stream<List<RepairRecord>> Function(RepairRecordListRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: RepairRecordListProvider._internal(
-        (ref) => create(ref as RepairRecordListRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        vehicleId: vehicleId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeStreamProviderElement<List<RepairRecord>> createElement() {
-    return _RepairRecordListProviderElement(this);
+  Stream<List<RepairRecord>> create(Ref ref) {
+    final argument = this.argument as int;
+    return repairRecordList(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is RepairRecordListProvider && other.vehicleId == vehicleId;
+    return other is RepairRecordListProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, vehicleId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin RepairRecordListRef on AutoDisposeStreamProviderRef<List<RepairRecord>> {
-  /// The parameter `vehicleId` of this provider.
-  int get vehicleId;
-}
+String _$repairRecordListHash() => r'dfdf4f803b5b7f3a499b017aa4dd50ceb9ec8547';
 
-class _RepairRecordListProviderElement
-    extends AutoDisposeStreamProviderElement<List<RepairRecord>>
-    with RepairRecordListRef {
-  _RepairRecordListProviderElement(super.provider);
+final class RepairRecordListFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<List<RepairRecord>>, int> {
+  RepairRecordListFamily._()
+    : super(
+        retry: null,
+        name: r'repairRecordListProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  RepairRecordListProvider call(int vehicleId) =>
+      RepairRecordListProvider._(argument: vehicleId, from: this);
 
   @override
-  int get vehicleId => (origin as RepairRecordListProvider).vehicleId;
+  String toString() => r'repairRecordListProvider';
+}
+
+@ProviderFor(RepairRecordsNotifier)
+final repairRecordsProvider = RepairRecordsNotifierProvider._();
+
+final class RepairRecordsNotifierProvider
+    extends $AsyncNotifierProvider<RepairRecordsNotifier, void> {
+  RepairRecordsNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'repairRecordsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$repairRecordsNotifierHash();
+
+  @$internal
+  @override
+  RepairRecordsNotifier create() => RepairRecordsNotifier();
 }
 
 String _$repairRecordsNotifierHash() =>
     r'd07444187656ef0c0850380255c0c8eaff78909f';
 
-/// See also [RepairRecordsNotifier].
-@ProviderFor(RepairRecordsNotifier)
-final repairRecordsNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<RepairRecordsNotifier, void>.internal(
-      RepairRecordsNotifier.new,
-      name: r'repairRecordsNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$repairRecordsNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$RepairRecordsNotifier = AutoDisposeAsyncNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$RepairRecordsNotifier extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

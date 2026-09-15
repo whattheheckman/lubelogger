@@ -6,25 +6,56 @@ part of 'local_odometer_record_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$localOdometerRecordRepositoryHash() =>
-    r'dc8d236ec83c00d60e0c8d4a44d2618a35f1be34';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [localOdometerRecordRepository].
 @ProviderFor(localOdometerRecordRepository)
 final localOdometerRecordRepositoryProvider =
-    AutoDisposeProvider<LocalOdometerRecordRepository>.internal(
-      localOdometerRecordRepository,
-      name: r'localOdometerRecordRepositoryProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$localOdometerRecordRepositoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+    LocalOdometerRecordRepositoryProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LocalOdometerRecordRepositoryRef =
-    AutoDisposeProviderRef<LocalOdometerRecordRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class LocalOdometerRecordRepositoryProvider
+    extends
+        $FunctionalProvider<
+          LocalOdometerRecordRepository,
+          LocalOdometerRecordRepository,
+          LocalOdometerRecordRepository
+        >
+    with $Provider<LocalOdometerRecordRepository> {
+  LocalOdometerRecordRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localOdometerRecordRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localOdometerRecordRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<LocalOdometerRecordRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  LocalOdometerRecordRepository create(Ref ref) {
+    return localOdometerRecordRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LocalOdometerRecordRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LocalOdometerRecordRepository>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$localOdometerRecordRepositoryHash() =>
+    r'dc8d236ec83c00d60e0c8d4a44d2618a35f1be34';

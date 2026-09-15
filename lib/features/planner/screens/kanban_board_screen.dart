@@ -87,7 +87,7 @@ class KanbanBoardScreen extends ConsumerWidget {
       ),
     );
     if (result != null && result.isNotEmpty) {
-      await ref.read(planRecordsNotifierProvider.notifier).create(
+      await ref.read(planRecordsProvider.notifier).create(
             PlanRecord(
               id: 0,
               vehicleId: vehicleId,
@@ -178,7 +178,7 @@ class _KanbanColumn extends ConsumerWidget {
                 final dragged = details.data;
                 if (dragged.progress != title) {
                   ref
-                      .read(planRecordsNotifierProvider.notifier)
+                      .read(planRecordsProvider.notifier)
                       .updateProgress(dragged, title);
                 }
               },
@@ -249,7 +249,7 @@ class _KanbanCard extends ConsumerWidget {
                 ),
                 GestureDetector(
                   onTap: () =>
-                      ref.read(planRecordsNotifierProvider.notifier).delete(record.id),
+                      ref.read(planRecordsProvider.notifier).delete(record.id),
                   child: const Icon(Icons.close, size: 16, color: Colors.grey),
                 ),
               ],

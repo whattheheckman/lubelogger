@@ -56,7 +56,7 @@ int? _optionalId(GoRouterState state, String key) =>
     int.tryParse(state.pathParameters[key] ?? '');
 
 @riverpod
-GoRouter appRouter(AppRouterRef ref) {
+GoRouter appRouter(Ref ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: RouteNames.vehicles,
@@ -359,7 +359,7 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reminders =
-        ref.watch(allRemindersStreamProvider).valueOrNull ?? [];
+        ref.watch(allRemindersStreamProvider).value ?? [];
     final urgentCount = reminders.where(_isUrgent).length;
 
     return Scaffold(

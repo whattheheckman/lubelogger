@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -240,20 +239,14 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
   }
 
   Future<String?> _pickCsvContent() async {
-    final result = await FilePicker.platform.pickFiles(
+    final file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['csv', 'txt'],
-      withData: true,
     );
-    if (result == null) return null;
+    if (file == null) return null;
 
-    final bytes = result.files.single.bytes;
-    if (bytes != null) return utf8.decode(bytes, allowMalformed: true);
-
-    final path = result.files.single.path;
-    if (path != null) return await File(path).readAsString();
-
-    return null;
+    final bytes = await file.readAsBytes();
+    return utf8.decode(bytes, allowMalformed: true);
   }
 
   Future<void> _importFuel() async {

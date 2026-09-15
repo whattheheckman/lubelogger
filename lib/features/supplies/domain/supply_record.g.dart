@@ -6,8 +6,8 @@ part of 'supply_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SupplyRecordImpl _$$SupplyRecordImplFromJson(Map<String, dynamic> json) =>
-    _$SupplyRecordImpl(
+_SupplyRecord _$SupplyRecordFromJson(Map<String, dynamic> json) =>
+    _SupplyRecord(
       id: (json['id'] as num).toInt(),
       remoteId: (json['remoteId'] as num?)?.toInt(),
       vehicleId: (json['vehicleId'] as num).toInt(),
@@ -20,7 +20,7 @@ _$SupplyRecordImpl _$$SupplyRecordImplFromJson(Map<String, dynamic> json) =>
       syncStatus: json['syncStatus'] as String? ?? 'synced',
     );
 
-Map<String, dynamic> _$$SupplyRecordImplToJson(_$SupplyRecordImpl instance) =>
+Map<String, dynamic> _$SupplyRecordToJson(_SupplyRecord instance) =>
     <String, dynamic>{
       'id': instance.id,
       'remoteId': instance.remoteId,

@@ -110,7 +110,7 @@ class _RepairRecordFormScreenState
             notes: _notesController.text.trim(),
             updatedAt: DateTime.now(),
           );
-      await ref.read(repairRecordsNotifierProvider.notifier).save(record);
+      await ref.read(repairRecordsProvider.notifier).save(record);
       final mileage = double.tryParse(_mileageController.text) ?? 0;
       final autoAdd = ref.read(settingsRepositoryProvider).current.autoAddOdometerRecords;
       if (autoAdd && mileage > 0) {

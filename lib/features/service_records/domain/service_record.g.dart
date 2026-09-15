@@ -6,8 +6,8 @@ part of 'service_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ServiceRecordImpl _$$ServiceRecordImplFromJson(Map<String, dynamic> json) =>
-    _$ServiceRecordImpl(
+_ServiceRecord _$ServiceRecordFromJson(Map<String, dynamic> json) =>
+    _ServiceRecord(
       id: (json['id'] as num).toInt(),
       remoteId: (json['remoteId'] as num?)?.toInt(),
       vehicleId: (json['vehicleId'] as num).toInt(),
@@ -23,7 +23,7 @@ _$ServiceRecordImpl _$$ServiceRecordImplFromJson(Map<String, dynamic> json) =>
       syncStatus: json['syncStatus'] as String? ?? 'synced',
     );
 
-Map<String, dynamic> _$$ServiceRecordImplToJson(_$ServiceRecordImpl instance) =>
+Map<String, dynamic> _$ServiceRecordToJson(_ServiceRecord instance) =>
     <String, dynamic>{
       'id': instance.id,
       'remoteId': instance.remoteId,

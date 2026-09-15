@@ -6,25 +6,53 @@ part of 'local_tax_record_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(localTaxRecordRepository)
+final localTaxRecordRepositoryProvider = LocalTaxRecordRepositoryProvider._();
+
+final class LocalTaxRecordRepositoryProvider
+    extends
+        $FunctionalProvider<
+          LocalTaxRecordRepository,
+          LocalTaxRecordRepository,
+          LocalTaxRecordRepository
+        >
+    with $Provider<LocalTaxRecordRepository> {
+  LocalTaxRecordRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localTaxRecordRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localTaxRecordRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<LocalTaxRecordRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  LocalTaxRecordRepository create(Ref ref) {
+    return localTaxRecordRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LocalTaxRecordRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LocalTaxRecordRepository>(value),
+    );
+  }
+}
+
 String _$localTaxRecordRepositoryHash() =>
     r'7202e395f772920cc90f922bc1bc414fcb300e50';
-
-/// See also [localTaxRecordRepository].
-@ProviderFor(localTaxRecordRepository)
-final localTaxRecordRepositoryProvider =
-    AutoDisposeProvider<LocalTaxRecordRepository>.internal(
-      localTaxRecordRepository,
-      name: r'localTaxRecordRepositoryProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$localTaxRecordRepositoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LocalTaxRecordRepositoryRef =
-    AutoDisposeProviderRef<LocalTaxRecordRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

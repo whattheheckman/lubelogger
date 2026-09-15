@@ -4,7 +4,7 @@ part 'tax_record.freezed.dart';
 part 'tax_record.g.dart';
 
 @freezed
-class TaxRecord with _$TaxRecord {
+abstract class TaxRecord with _$TaxRecord {
   const factory TaxRecord({
     required int id,
     int? remoteId,

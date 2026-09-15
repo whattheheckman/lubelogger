@@ -6,22 +6,46 @@ part of 'sync_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$syncServiceHash() => r'6b8892750b5d4bce0291ef73712af143205aa3df';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [syncService].
 @ProviderFor(syncService)
-final syncServiceProvider = AutoDisposeProvider<SyncService>.internal(
-  syncService,
-  name: r'syncServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$syncServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final syncServiceProvider = SyncServiceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SyncServiceRef = AutoDisposeProviderRef<SyncService>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class SyncServiceProvider
+    extends $FunctionalProvider<SyncService, SyncService, SyncService>
+    with $Provider<SyncService> {
+  SyncServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'syncServiceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$syncServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<SyncService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SyncService create(Ref ref) {
+    return syncService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SyncService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SyncService>(value),
+    );
+  }
+}
+
+String _$syncServiceHash() => r'd7a0fe3890da27b57c37c1d967b6e92b673ac126';

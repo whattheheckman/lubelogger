@@ -38,7 +38,7 @@ class GlobalRemindersScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncReminders = ref.watch(allRemindersProvider);
-    final vehicles = ref.watch(vehicleListProvider).valueOrNull ?? [];
+    final vehicles = ref.watch(vehicleListProvider).value ?? [];
     final vehicleMap = {for (final v in vehicles) v.id: v};
 
     String vehicleName(Vehicle? v) =>

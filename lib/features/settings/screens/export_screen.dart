@@ -42,7 +42,9 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/$fileName');
     await file.writeAsString(csv.toString());
-    await Share.shareXFiles([XFile(file.path)], subject: fileName);
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(file.path)], subject: fileName),
+    );
   }
 
   String _fileName(String type) {

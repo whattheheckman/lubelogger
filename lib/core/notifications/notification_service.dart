@@ -21,7 +21,7 @@ class NotificationService {
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     await _plugin.initialize(
-      const InitializationSettings(android: androidSettings),
+      settings: const InitializationSettings(android: androidSettings),
     );
 
     await _plugin
@@ -77,11 +77,11 @@ class NotificationService {
       final dueStr = _dateFmt.format(r.dateMetric!);
 
       await _plugin.zonedSchedule(
-        r.id,
-        r.description,
-        '$vehicleName — due $dueStr',
-        tz.TZDateTime.from(notifyAt, tz.local),
-        const NotificationDetails(
+        id: r.id,
+        title: r.description,
+        body: '$vehicleName — due $dueStr',
+        scheduledDate: tz.TZDateTime.from(notifyAt, tz.local),
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails(
             _channelId,
             _channelName,
@@ -90,18 +90,16 @@ class NotificationService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }
 
   Future<void> showTestNotification() async {
     await _plugin.show(
-      0,
-      'Test Notification',
-      'LubeLogger reminders are working!',
-      const NotificationDetails(
+      id: 0,
+      title: 'Test Notification',
+      body: 'LubeLogger reminders are working!',
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
           _channelName,

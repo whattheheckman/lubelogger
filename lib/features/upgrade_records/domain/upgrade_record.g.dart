@@ -6,8 +6,8 @@ part of 'upgrade_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$UpgradeRecordImpl _$$UpgradeRecordImplFromJson(Map<String, dynamic> json) =>
-    _$UpgradeRecordImpl(
+_UpgradeRecord _$UpgradeRecordFromJson(Map<String, dynamic> json) =>
+    _UpgradeRecord(
       id: (json['id'] as num).toInt(),
       remoteId: (json['remoteId'] as num?)?.toInt(),
       vehicleId: (json['vehicleId'] as num).toInt(),
@@ -23,7 +23,7 @@ _$UpgradeRecordImpl _$$UpgradeRecordImplFromJson(Map<String, dynamic> json) =>
       syncStatus: json['syncStatus'] as String? ?? 'synced',
     );
 
-Map<String, dynamic> _$$UpgradeRecordImplToJson(_$UpgradeRecordImpl instance) =>
+Map<String, dynamic> _$UpgradeRecordToJson(_UpgradeRecord instance) =>
     <String, dynamic>{
       'id': instance.id,
       'remoteId': instance.remoteId,

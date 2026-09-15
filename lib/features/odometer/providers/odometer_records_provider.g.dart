@@ -6,168 +6,128 @@ part of 'odometer_records_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$odometerRecordListHash() =>
-    r'f5be74e6f720a5eb40822c5962229ec6d851cd2b';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [odometerRecordList].
 @ProviderFor(odometerRecordList)
-const odometerRecordListProvider = OdometerRecordListFamily();
+final odometerRecordListProvider = OdometerRecordListFamily._();
 
-/// See also [odometerRecordList].
-class OdometerRecordListFamily
-    extends Family<AsyncValue<List<OdometerRecord>>> {
-  /// See also [odometerRecordList].
-  const OdometerRecordListFamily();
+final class OdometerRecordListProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<OdometerRecord>>,
+          List<OdometerRecord>,
+          Stream<List<OdometerRecord>>
+        >
+    with
+        $FutureModifier<List<OdometerRecord>>,
+        $StreamProvider<List<OdometerRecord>> {
+  OdometerRecordListProvider._({
+    required OdometerRecordListFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'odometerRecordListProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [odometerRecordList].
-  OdometerRecordListProvider call(int vehicleId) {
-    return OdometerRecordListProvider(vehicleId);
+  @override
+  String debugGetCreateSourceHash() => _$odometerRecordListHash();
+
+  @override
+  String toString() {
+    return r'odometerRecordListProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  OdometerRecordListProvider getProviderOverride(
-    covariant OdometerRecordListProvider provider,
-  ) {
-    return call(provider.vehicleId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
+  $StreamProviderElement<List<OdometerRecord>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
 
   @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'odometerRecordListProvider';
-}
-
-/// See also [odometerRecordList].
-class OdometerRecordListProvider
-    extends AutoDisposeStreamProvider<List<OdometerRecord>> {
-  /// See also [odometerRecordList].
-  OdometerRecordListProvider(int vehicleId)
-    : this._internal(
-        (ref) => odometerRecordList(ref as OdometerRecordListRef, vehicleId),
-        from: odometerRecordListProvider,
-        name: r'odometerRecordListProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$odometerRecordListHash,
-        dependencies: OdometerRecordListFamily._dependencies,
-        allTransitiveDependencies:
-            OdometerRecordListFamily._allTransitiveDependencies,
-        vehicleId: vehicleId,
-      );
-
-  OdometerRecordListProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.vehicleId,
-  }) : super.internal();
-
-  final int vehicleId;
-
-  @override
-  Override overrideWith(
-    Stream<List<OdometerRecord>> Function(OdometerRecordListRef provider)
-    create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: OdometerRecordListProvider._internal(
-        (ref) => create(ref as OdometerRecordListRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        vehicleId: vehicleId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeStreamProviderElement<List<OdometerRecord>> createElement() {
-    return _OdometerRecordListProviderElement(this);
+  Stream<List<OdometerRecord>> create(Ref ref) {
+    final argument = this.argument as int;
+    return odometerRecordList(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is OdometerRecordListProvider && other.vehicleId == vehicleId;
+    return other is OdometerRecordListProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, vehicleId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin OdometerRecordListRef
-    on AutoDisposeStreamProviderRef<List<OdometerRecord>> {
-  /// The parameter `vehicleId` of this provider.
-  int get vehicleId;
-}
+String _$odometerRecordListHash() =>
+    r'5bf5414eb1970b60950ad5cac0d27814708d9d91';
 
-class _OdometerRecordListProviderElement
-    extends AutoDisposeStreamProviderElement<List<OdometerRecord>>
-    with OdometerRecordListRef {
-  _OdometerRecordListProviderElement(super.provider);
+final class OdometerRecordListFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<List<OdometerRecord>>, int> {
+  OdometerRecordListFamily._()
+    : super(
+        retry: null,
+        name: r'odometerRecordListProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  OdometerRecordListProvider call(int vehicleId) =>
+      OdometerRecordListProvider._(argument: vehicleId, from: this);
 
   @override
-  int get vehicleId => (origin as OdometerRecordListProvider).vehicleId;
+  String toString() => r'odometerRecordListProvider';
+}
+
+@ProviderFor(OdometerRecordsNotifier)
+final odometerRecordsProvider = OdometerRecordsNotifierProvider._();
+
+final class OdometerRecordsNotifierProvider
+    extends $AsyncNotifierProvider<OdometerRecordsNotifier, void> {
+  OdometerRecordsNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'odometerRecordsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$odometerRecordsNotifierHash();
+
+  @$internal
+  @override
+  OdometerRecordsNotifier create() => OdometerRecordsNotifier();
 }
 
 String _$odometerRecordsNotifierHash() =>
     r'43c257832835d89082a55c82264cdfd926bbe569';
 
-/// See also [OdometerRecordsNotifier].
-@ProviderFor(OdometerRecordsNotifier)
-final odometerRecordsNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<OdometerRecordsNotifier, void>.internal(
-      OdometerRecordsNotifier.new,
-      name: r'odometerRecordsNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$odometerRecordsNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$OdometerRecordsNotifier = AutoDisposeAsyncNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$OdometerRecordsNotifier extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

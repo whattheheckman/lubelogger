@@ -8,7 +8,7 @@ enum AppMode { local, connected }
 enum ConflictStrategy { lastWriteWins, userPrompt }
 
 @freezed
-class AppSettings with _$AppSettings {
+abstract class AppSettings with _$AppSettings {
   const factory AppSettings({
     @Default(AppMode.local) AppMode appMode,
     @Default('') String serverUrl,

@@ -5,7 +5,7 @@ import 'package:lubelogger/features/planner/domain/plan_record.dart';
 part 'plan_records_provider.g.dart';
 
 @riverpod
-Stream<List<PlanRecord>> planRecordList(PlanRecordListRef ref, int vehicleId) {
+Stream<List<PlanRecord>> planRecordList(Ref ref, int vehicleId) {
   final repo = ref.watch(localPlanRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }

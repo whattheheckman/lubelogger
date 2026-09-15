@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:lubelogger/features/reminders/data/local_reminder_record_repository.dart';
 import 'package:lubelogger/features/reminders/domain/reminder_record.dart';
@@ -11,13 +12,13 @@ final allRemindersStreamProvider = StreamProvider<List<ReminderRecord>>((ref) {
 });
 
 @riverpod
-Stream<List<ReminderRecord>> reminderList(ReminderListRef ref, int vehicleId) {
+Stream<List<ReminderRecord>> reminderList(Ref ref, int vehicleId) {
   final repo = ref.watch(localReminderRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }
 
 @riverpod
-Future<List<ReminderRecord>> allReminders(AllRemindersRef ref) {
+Future<List<ReminderRecord>> allReminders(Ref ref) {
   final repo = ref.watch(localReminderRecordRepositoryProvider);
   return repo.getAll();
 }

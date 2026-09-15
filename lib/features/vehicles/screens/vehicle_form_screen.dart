@@ -67,7 +67,7 @@ class _VehicleFormScreenState extends ConsumerState<VehicleFormScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _isLoading = true);
     try {
-      final notifier = ref.read(vehiclesNotifierProvider.notifier);
+      final notifier = ref.read(vehiclesProvider.notifier);
       final vehicle = _existing?.copyWith(
             year: _yearController.text.trim(),
             make: _makeController.text.trim(),

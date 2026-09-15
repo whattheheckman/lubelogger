@@ -6,20 +6,19 @@ part of 'plan_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PlanRecordImpl _$$PlanRecordImplFromJson(Map<String, dynamic> json) =>
-    _$PlanRecordImpl(
-      id: (json['id'] as num).toInt(),
-      remoteId: (json['remoteId'] as num?)?.toInt(),
-      vehicleId: (json['vehicleId'] as num).toInt(),
-      description: json['description'] as String,
-      priority: json['priority'] as String? ?? 'normal',
-      progress: json['progress'] as String? ?? 'Backlog',
-      notes: json['notes'] as String? ?? '',
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
-      syncStatus: json['syncStatus'] as String? ?? 'synced',
-    );
+_PlanRecord _$PlanRecordFromJson(Map<String, dynamic> json) => _PlanRecord(
+  id: (json['id'] as num).toInt(),
+  remoteId: (json['remoteId'] as num?)?.toInt(),
+  vehicleId: (json['vehicleId'] as num).toInt(),
+  description: json['description'] as String,
+  priority: json['priority'] as String? ?? 'normal',
+  progress: json['progress'] as String? ?? 'Backlog',
+  notes: json['notes'] as String? ?? '',
+  updatedAt: DateTime.parse(json['updatedAt'] as String),
+  syncStatus: json['syncStatus'] as String? ?? 'synced',
+);
 
-Map<String, dynamic> _$$PlanRecordImplToJson(_$PlanRecordImpl instance) =>
+Map<String, dynamic> _$PlanRecordToJson(_PlanRecord instance) =>
     <String, dynamic>{
       'id': instance.id,
       'remoteId': instance.remoteId,

@@ -7877,7 +7877,16 @@ class $$VehiclesTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$VehiclesTable, Vehicle>(table),
+                  BaseReferences<_$AppDatabase, $VehiclesTable, Vehicle>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -8188,7 +8197,16 @@ class $$ServiceRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$ServiceRecordsTable, ServiceRecord>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ServiceRecordsTable,
+                    ServiceRecord
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -8500,7 +8518,16 @@ class $$RepairRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$RepairRecordsTable, RepairRecord>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $RepairRecordsTable,
+                    RepairRecord
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -8814,7 +8841,16 @@ class $$UpgradeRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$UpgradeRecordsTable, UpgradeRecord>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $UpgradeRecordsTable,
+                    UpgradeRecord
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -9166,7 +9202,16 @@ class $$GasRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$GasRecordsTable, GasRecord>(table),
+                  BaseReferences<_$AppDatabase, $GasRecordsTable, GasRecord>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -9443,7 +9488,16 @@ class $$OdometerRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$OdometerRecordsTable, OdometerRecord>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $OdometerRecordsTable,
+                    OdometerRecord
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -9759,7 +9813,16 @@ class $$TaxRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$TaxRecordsTable, TaxRecord>(table),
+                  BaseReferences<_$AppDatabase, $TaxRecordsTable, TaxRecord>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -10082,7 +10145,16 @@ class $$ReminderRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$ReminderRecordsTable, ReminderRecord>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ReminderRecordsTable,
+                    ReminderRecord
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -10356,7 +10428,16 @@ class $$PlanRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$PlanRecordsTable, PlanRecord>(table),
+                  BaseReferences<_$AppDatabase, $PlanRecordsTable, PlanRecord>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -10651,7 +10732,16 @@ class $$SupplyRecordsTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$SupplyRecordsTable, SupplyRecord>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $SupplyRecordsTable,
+                    SupplyRecord
+                  >(db, table, e),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -10881,7 +10971,16 @@ class $$NotesTableTableManager
                 syncStatus: syncStatus,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$NotesTable, Note>(table),
+                  BaseReferences<_$AppDatabase, $NotesTable, Note>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),
@@ -11173,7 +11272,16 @@ class $$SyncQueueTableTableManager
                 status: status,
               ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map(
+                (e) => (
+                  e.readTable<$SyncQueueTable, SyncQueueData>(table),
+                  BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueData>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
               .toList(),
           prefetchHooksCallback: null,
         ),

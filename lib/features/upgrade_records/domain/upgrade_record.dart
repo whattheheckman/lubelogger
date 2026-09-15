@@ -4,7 +4,7 @@ part 'upgrade_record.freezed.dart';
 part 'upgrade_record.g.dart';
 
 @freezed
-class UpgradeRecord with _$UpgradeRecord {
+abstract class UpgradeRecord with _$UpgradeRecord {
   const factory UpgradeRecord({
     required int id,
     int? remoteId,

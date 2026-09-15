@@ -6,159 +6,124 @@ part of 'notes_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$noteListHash() => r'c9bd7725a1b8492a09ee77918166873dbcd41db9';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [noteList].
 @ProviderFor(noteList)
-const noteListProvider = NoteListFamily();
+final noteListProvider = NoteListFamily._();
 
-/// See also [noteList].
-class NoteListFamily extends Family<AsyncValue<List<NoteRecord>>> {
-  /// See also [noteList].
-  const NoteListFamily();
+final class NoteListProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<NoteRecord>>,
+          List<NoteRecord>,
+          Stream<List<NoteRecord>>
+        >
+    with $FutureModifier<List<NoteRecord>>, $StreamProvider<List<NoteRecord>> {
+  NoteListProvider._({
+    required NoteListFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'noteListProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [noteList].
-  NoteListProvider call(int vehicleId) {
-    return NoteListProvider(vehicleId);
+  @override
+  String debugGetCreateSourceHash() => _$noteListHash();
+
+  @override
+  String toString() {
+    return r'noteListProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  NoteListProvider getProviderOverride(covariant NoteListProvider provider) {
-    return call(provider.vehicleId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+  $StreamProviderElement<List<NoteRecord>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
 
   @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'noteListProvider';
-}
-
-/// See also [noteList].
-class NoteListProvider extends AutoDisposeStreamProvider<List<NoteRecord>> {
-  /// See also [noteList].
-  NoteListProvider(int vehicleId)
-    : this._internal(
-        (ref) => noteList(ref as NoteListRef, vehicleId),
-        from: noteListProvider,
-        name: r'noteListProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$noteListHash,
-        dependencies: NoteListFamily._dependencies,
-        allTransitiveDependencies: NoteListFamily._allTransitiveDependencies,
-        vehicleId: vehicleId,
-      );
-
-  NoteListProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.vehicleId,
-  }) : super.internal();
-
-  final int vehicleId;
-
-  @override
-  Override overrideWith(
-    Stream<List<NoteRecord>> Function(NoteListRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: NoteListProvider._internal(
-        (ref) => create(ref as NoteListRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        vehicleId: vehicleId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeStreamProviderElement<List<NoteRecord>> createElement() {
-    return _NoteListProviderElement(this);
+  Stream<List<NoteRecord>> create(Ref ref) {
+    final argument = this.argument as int;
+    return noteList(ref, argument);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is NoteListProvider && other.vehicleId == vehicleId;
+    return other is NoteListProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, vehicleId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin NoteListRef on AutoDisposeStreamProviderRef<List<NoteRecord>> {
-  /// The parameter `vehicleId` of this provider.
-  int get vehicleId;
-}
+String _$noteListHash() => r'b8217e35b746cd9ec238d55ef8466a656060936e';
 
-class _NoteListProviderElement
-    extends AutoDisposeStreamProviderElement<List<NoteRecord>>
-    with NoteListRef {
-  _NoteListProviderElement(super.provider);
+final class NoteListFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<List<NoteRecord>>, int> {
+  NoteListFamily._()
+    : super(
+        retry: null,
+        name: r'noteListProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  NoteListProvider call(int vehicleId) =>
+      NoteListProvider._(argument: vehicleId, from: this);
 
   @override
-  int get vehicleId => (origin as NoteListProvider).vehicleId;
+  String toString() => r'noteListProvider';
+}
+
+@ProviderFor(NotesNotifier)
+final notesProvider = NotesNotifierProvider._();
+
+final class NotesNotifierProvider
+    extends $AsyncNotifierProvider<NotesNotifier, void> {
+  NotesNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'notesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$notesNotifierHash();
+
+  @$internal
+  @override
+  NotesNotifier create() => NotesNotifier();
 }
 
 String _$notesNotifierHash() => r'3f445b9171cde98ec5e23e0234afbce7080a5e7a';
 
-/// See also [NotesNotifier].
-@ProviderFor(NotesNotifier)
-final notesNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<NotesNotifier, void>.internal(
-      NotesNotifier.new,
-      name: r'notesNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$notesNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$NotesNotifier = AutoDisposeAsyncNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$NotesNotifier extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

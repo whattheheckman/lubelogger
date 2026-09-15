@@ -86,7 +86,7 @@ class _RecordCard extends ConsumerWidget {
       ),
       confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
-          ref.read(upgradeRecordsNotifierProvider.notifier).delete(record.id),
+          ref.read(upgradeRecordsProvider.notifier).delete(record.id),
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: ListTile(

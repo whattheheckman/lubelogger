@@ -4,7 +4,7 @@ part 'gas_record.freezed.dart';
 part 'gas_record.g.dart';
 
 @freezed
-class GasRecord with _$GasRecord {
+abstract class GasRecord with _$GasRecord {
   const factory GasRecord({
     required int id,
     int? remoteId,

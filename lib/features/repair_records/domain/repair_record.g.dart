@@ -6,8 +6,8 @@ part of 'repair_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$RepairRecordImpl _$$RepairRecordImplFromJson(Map<String, dynamic> json) =>
-    _$RepairRecordImpl(
+_RepairRecord _$RepairRecordFromJson(Map<String, dynamic> json) =>
+    _RepairRecord(
       id: (json['id'] as num).toInt(),
       remoteId: (json['remoteId'] as num?)?.toInt(),
       vehicleId: (json['vehicleId'] as num).toInt(),
@@ -23,7 +23,7 @@ _$RepairRecordImpl _$$RepairRecordImplFromJson(Map<String, dynamic> json) =>
       syncStatus: json['syncStatus'] as String? ?? 'synced',
     );
 
-Map<String, dynamic> _$$RepairRecordImplToJson(_$RepairRecordImpl instance) =>
+Map<String, dynamic> _$RepairRecordToJson(_RepairRecord instance) =>
     <String, dynamic>{
       'id': instance.id,
       'remoteId': instance.remoteId,

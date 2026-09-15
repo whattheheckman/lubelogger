@@ -8,7 +8,7 @@ import 'api_exception.dart';
 part 'api_client.g.dart';
 
 @riverpod
-Dio apiClient(ApiClientRef ref) {
+Dio apiClient(Ref ref) {
   final settingsRepo = ref.watch(settingsRepositoryProvider);
   final baseUrl = settingsRepo.current.serverUrl;
 

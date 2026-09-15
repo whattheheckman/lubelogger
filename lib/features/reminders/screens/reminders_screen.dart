@@ -108,7 +108,7 @@ class RemindersScreen extends ConsumerWidget {
                         IconButton(
                           icon: const Icon(Icons.delete_outline),
                           onPressed: () => ref
-                              .read(remindersNotifierProvider.notifier)
+                              .read(remindersProvider.notifier)
                               .delete(r.id),
                         ),
                       ],

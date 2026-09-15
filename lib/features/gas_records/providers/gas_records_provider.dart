@@ -5,7 +5,7 @@ import 'package:lubelogger/features/gas_records/domain/gas_record.dart';
 part 'gas_records_provider.g.dart';
 
 @riverpod
-Stream<List<GasRecord>> gasRecordList(GasRecordListRef ref, int vehicleId) {
+Stream<List<GasRecord>> gasRecordList(Ref ref, int vehicleId) {
   final repo = ref.watch(localGasRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }

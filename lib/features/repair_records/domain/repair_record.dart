@@ -4,7 +4,7 @@ part 'repair_record.freezed.dart';
 part 'repair_record.g.dart';
 
 @freezed
-class RepairRecord with _$RepairRecord {
+abstract class RepairRecord with _$RepairRecord {
   const factory RepairRecord({
     required int id,
     int? remoteId,

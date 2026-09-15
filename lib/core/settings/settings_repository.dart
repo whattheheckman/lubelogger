@@ -27,6 +27,6 @@ class SettingsRepository {
 }
 
 @riverpod
-SettingsRepository settingsRepository(SettingsRepositoryRef ref) {
+SettingsRepository settingsRepository(Ref ref) {
   throw UnimplementedError('Override in ProviderScope overrides');
 }

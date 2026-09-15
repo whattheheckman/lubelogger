@@ -83,7 +83,7 @@ class _SupplyCard extends ConsumerWidget {
       ),
       confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
-          ref.read(supplyRecordsNotifierProvider.notifier).delete(record.id),
+          ref.read(supplyRecordsProvider.notifier).delete(record.id),
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: ListTile(

@@ -4,7 +4,7 @@ part 'odometer_record.freezed.dart';
 part 'odometer_record.g.dart';
 
 @freezed
-class OdometerRecord with _$OdometerRecord {
+abstract class OdometerRecord with _$OdometerRecord {
   const factory OdometerRecord({
     required int id,
     int? remoteId,

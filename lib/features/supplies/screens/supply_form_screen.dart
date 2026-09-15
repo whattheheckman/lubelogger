@@ -83,7 +83,7 @@ class _SupplyFormScreenState extends ConsumerState<SupplyFormScreen> {
             notes: _notesController.text.trim(),
             updatedAt: DateTime.now(),
           );
-      await ref.read(supplyRecordsNotifierProvider.notifier).save(record);
+      await ref.read(supplyRecordsProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isLoading = false);

@@ -6,7 +6,7 @@ part 'upgrade_records_provider.g.dart';
 
 @riverpod
 Stream<List<UpgradeRecord>> upgradeRecordList(
-    UpgradeRecordListRef ref, int vehicleId) {
+    Ref ref, int vehicleId) {
   final repo = ref.watch(localUpgradeRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }

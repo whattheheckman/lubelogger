@@ -6,8 +6,8 @@ part of 'reminder_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ReminderRecordImpl _$$ReminderRecordImplFromJson(Map<String, dynamic> json) =>
-    _$ReminderRecordImpl(
+_ReminderRecord _$ReminderRecordFromJson(Map<String, dynamic> json) =>
+    _ReminderRecord(
       id: (json['id'] as num).toInt(),
       remoteId: (json['remoteId'] as num?)?.toInt(),
       vehicleId: (json['vehicleId'] as num).toInt(),
@@ -23,18 +23,17 @@ _$ReminderRecordImpl _$$ReminderRecordImplFromJson(Map<String, dynamic> json) =>
       syncStatus: json['syncStatus'] as String? ?? 'synced',
     );
 
-Map<String, dynamic> _$$ReminderRecordImplToJson(
-  _$ReminderRecordImpl instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'remoteId': instance.remoteId,
-  'vehicleId': instance.vehicleId,
-  'description': instance.description,
-  'reminderMetric': instance.reminderMetric,
-  'dateMetric': instance.dateMetric?.toIso8601String(),
-  'mileageMetric': instance.mileageMetric,
-  'isRecurring': instance.isRecurring,
-  'notes': instance.notes,
-  'updatedAt': instance.updatedAt.toIso8601String(),
-  'syncStatus': instance.syncStatus,
-};
+Map<String, dynamic> _$ReminderRecordToJson(_ReminderRecord instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'remoteId': instance.remoteId,
+      'vehicleId': instance.vehicleId,
+      'description': instance.description,
+      'reminderMetric': instance.reminderMetric,
+      'dateMetric': instance.dateMetric?.toIso8601String(),
+      'mileageMetric': instance.mileageMetric,
+      'isRecurring': instance.isRecurring,
+      'notes': instance.notes,
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'syncStatus': instance.syncStatus,
+    };

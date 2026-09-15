@@ -5,7 +5,7 @@ import 'package:lubelogger/features/notes/domain/note_record.dart';
 part 'notes_provider.g.dart';
 
 @riverpod
-Stream<List<NoteRecord>> noteList(NoteListRef ref, int vehicleId) {
+Stream<List<NoteRecord>> noteList(Ref ref, int vehicleId) {
   final repo = ref.watch(localNoteRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }

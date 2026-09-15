@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:lubelogger/features/odometer/data/local_odometer_record_repository.dart';
 import 'package:lubelogger/features/odometer/domain/odometer_record.dart';
@@ -16,7 +17,7 @@ final latestOdometerProvider =
 
 @riverpod
 Stream<List<OdometerRecord>> odometerRecordList(
-    OdometerRecordListRef ref, int vehicleId) {
+    Ref ref, int vehicleId) {
   final repo = ref.watch(localOdometerRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }

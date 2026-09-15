@@ -71,7 +71,7 @@ class _VehicleCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final imagePath = vehicle.imagePath;
     final latestMileage =
-        ref.watch(latestOdometerProvider(vehicle.id)).valueOrNull;
+        ref.watch(latestOdometerProvider(vehicle.id)).value;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

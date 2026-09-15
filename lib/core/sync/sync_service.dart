@@ -143,7 +143,7 @@ class SyncService {
 }
 
 @riverpod
-SyncService syncService(SyncServiceRef ref) {
+SyncService syncService(Ref ref) {
   final db = ref.watch(appDatabaseProvider);
   final dio = ref.watch(apiClientProvider);
   final settings = ref.watch(settingsRepositoryProvider).current;

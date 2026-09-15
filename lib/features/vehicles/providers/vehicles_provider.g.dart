@@ -6,38 +6,88 @@ part of 'vehicles_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$vehicleListHash() => r'0160c06e7f67616ab94ac27fdfa011de76e3c13f';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [vehicleList].
 @ProviderFor(vehicleList)
-final vehicleListProvider = AutoDisposeStreamProvider<List<Vehicle>>.internal(
-  vehicleList,
-  name: r'vehicleListProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$vehicleListHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final vehicleListProvider = VehicleListProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef VehicleListRef = AutoDisposeStreamProviderRef<List<Vehicle>>;
+final class VehicleListProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Vehicle>>,
+          List<Vehicle>,
+          Stream<List<Vehicle>>
+        >
+    with $FutureModifier<List<Vehicle>>, $StreamProvider<List<Vehicle>> {
+  VehicleListProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'vehicleListProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$vehicleListHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Vehicle>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Vehicle>> create(Ref ref) {
+    return vehicleList(ref);
+  }
+}
+
+String _$vehicleListHash() => r'6269c80af4f79f3d1025092d6f6c43c8ca087b92';
+
+@ProviderFor(VehiclesNotifier)
+final vehiclesProvider = VehiclesNotifierProvider._();
+
+final class VehiclesNotifierProvider
+    extends $AsyncNotifierProvider<VehiclesNotifier, void> {
+  VehiclesNotifierProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'vehiclesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$vehiclesNotifierHash();
+
+  @$internal
+  @override
+  VehiclesNotifier create() => VehiclesNotifier();
+}
+
 String _$vehiclesNotifierHash() => r'd18af589ec59711bc95f0f4308264228c5502d71';
 
-/// See also [VehiclesNotifier].
-@ProviderFor(VehiclesNotifier)
-final vehiclesNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<VehiclesNotifier, void>.internal(
-      VehiclesNotifier.new,
-      name: r'vehiclesNotifierProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$vehiclesNotifierHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-typedef _$VehiclesNotifier = AutoDisposeAsyncNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$VehiclesNotifier extends $AsyncNotifier<void> {
+  FutureOr<void> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}

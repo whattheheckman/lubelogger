@@ -4,7 +4,7 @@ part 'supply_record.freezed.dart';
 part 'supply_record.g.dart';
 
 @freezed
-class SupplyRecord with _$SupplyRecord {
+abstract class SupplyRecord with _$SupplyRecord {
   const factory SupplyRecord({
     required int id,
     int? remoteId,

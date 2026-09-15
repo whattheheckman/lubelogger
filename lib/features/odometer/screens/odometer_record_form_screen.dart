@@ -144,7 +144,7 @@ class _OdometerRecordFormScreenState
             notes: _notesController.text.trim(),
             updatedAt: DateTime.now(),
           );
-      await ref.read(odometerRecordsNotifierProvider.notifier).save(record);
+      await ref.read(odometerRecordsProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isLoading = false);

@@ -6,7 +6,7 @@ part 'repair_records_provider.g.dart';
 
 @riverpod
 Stream<List<RepairRecord>> repairRecordList(
-    RepairRecordListRef ref, int vehicleId) {
+    Ref ref, int vehicleId) {
   final repo = ref.watch(localRepairRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }

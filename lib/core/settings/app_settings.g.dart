@@ -6,9 +6,7 @@ part of 'app_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AppSettingsImpl _$$AppSettingsImplFromJson(
-  Map<String, dynamic> json,
-) => _$AppSettingsImpl(
+_AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => _AppSettings(
   appMode:
       $enumDecodeNullable(_$AppModeEnumMap, json['appMode']) ?? AppMode.local,
   serverUrl: json['serverUrl'] as String? ?? '',
@@ -28,7 +26,7 @@ _$AppSettingsImpl _$$AppSettingsImplFromJson(
   autoAddOdometerRecords: json['autoAddOdometerRecords'] as bool? ?? true,
 );
 
-Map<String, dynamic> _$$AppSettingsImplToJson(_$AppSettingsImpl instance) =>
+Map<String, dynamic> _$AppSettingsToJson(_AppSettings instance) =>
     <String, dynamic>{
       'appMode': _$AppModeEnumMap[instance.appMode]!,
       'serverUrl': instance.serverUrl,

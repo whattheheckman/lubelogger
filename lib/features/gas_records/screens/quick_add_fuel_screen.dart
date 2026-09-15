@@ -71,7 +71,7 @@ class _QuickAddFuelScreenState extends ConsumerState<QuickAddFuelScreen> {
       isFillToFull: true,
       updatedAt: now,
     );
-    await ref.read(gasRecordsNotifierProvider.notifier).save(record);
+    await ref.read(gasRecordsProvider.notifier).save(record);
     if (mounted) context.go(RouteNames.vehicleDetailPath(vehicleId));
   }
 

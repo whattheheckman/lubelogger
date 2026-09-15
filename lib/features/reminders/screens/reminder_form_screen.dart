@@ -115,7 +115,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
             notes: _notesController.text.trim(),
             updatedAt: DateTime.now(),
           );
-      await ref.read(remindersNotifierProvider.notifier).save(record);
+      await ref.read(remindersProvider.notifier).save(record);
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isLoading = false);

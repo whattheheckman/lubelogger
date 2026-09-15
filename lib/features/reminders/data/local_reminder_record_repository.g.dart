@@ -6,25 +6,56 @@ part of 'local_reminder_record_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$localReminderRecordRepositoryHash() =>
-    r'e8f7e03cba164c54248a72f40961efbd2c097e22';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [localReminderRecordRepository].
 @ProviderFor(localReminderRecordRepository)
 final localReminderRecordRepositoryProvider =
-    AutoDisposeProvider<LocalReminderRecordRepository>.internal(
-      localReminderRecordRepository,
-      name: r'localReminderRecordRepositoryProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$localReminderRecordRepositoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+    LocalReminderRecordRepositoryProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LocalReminderRecordRepositoryRef =
-    AutoDisposeProviderRef<LocalReminderRecordRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class LocalReminderRecordRepositoryProvider
+    extends
+        $FunctionalProvider<
+          LocalReminderRecordRepository,
+          LocalReminderRecordRepository,
+          LocalReminderRecordRepository
+        >
+    with $Provider<LocalReminderRecordRepository> {
+  LocalReminderRecordRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localReminderRecordRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localReminderRecordRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<LocalReminderRecordRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  LocalReminderRecordRepository create(Ref ref) {
+    return localReminderRecordRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LocalReminderRecordRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LocalReminderRecordRepository>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$localReminderRecordRepositoryHash() =>
+    r'e8f7e03cba164c54248a72f40961efbd2c097e22';

@@ -67,7 +67,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
             body: _bodyController.text,
             updatedAt: DateTime.now(),
           );
-      await ref.read(notesNotifierProvider.notifier).save(note);
+      await ref.read(notesProvider.notifier).save(note);
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isLoading = false);

@@ -4,7 +4,7 @@ part 'plan_record.freezed.dart';
 part 'plan_record.g.dart';
 
 @freezed
-class PlanRecord with _$PlanRecord {
+abstract class PlanRecord with _$PlanRecord {
   const factory PlanRecord({
     required int id,
     int? remoteId,

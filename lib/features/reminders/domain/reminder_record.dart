@@ -4,7 +4,7 @@ part 'reminder_record.freezed.dart';
 part 'reminder_record.g.dart';
 
 @freezed
-class ReminderRecord with _$ReminderRecord {
+abstract class ReminderRecord with _$ReminderRecord {
   const factory ReminderRecord({
     required int id,
     int? remoteId,

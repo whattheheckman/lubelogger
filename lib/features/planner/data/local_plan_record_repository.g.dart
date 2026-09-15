@@ -6,25 +6,53 @@ part of 'local_plan_record_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(localPlanRecordRepository)
+final localPlanRecordRepositoryProvider = LocalPlanRecordRepositoryProvider._();
+
+final class LocalPlanRecordRepositoryProvider
+    extends
+        $FunctionalProvider<
+          LocalPlanRecordRepository,
+          LocalPlanRecordRepository,
+          LocalPlanRecordRepository
+        >
+    with $Provider<LocalPlanRecordRepository> {
+  LocalPlanRecordRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localPlanRecordRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localPlanRecordRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<LocalPlanRecordRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  LocalPlanRecordRepository create(Ref ref) {
+    return localPlanRecordRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LocalPlanRecordRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LocalPlanRecordRepository>(value),
+    );
+  }
+}
+
 String _$localPlanRecordRepositoryHash() =>
     r'8c855bf7ef3bf251640dde6a3f2f99f35b3ef360';
-
-/// See also [localPlanRecordRepository].
-@ProviderFor(localPlanRecordRepository)
-final localPlanRecordRepositoryProvider =
-    AutoDisposeProvider<LocalPlanRecordRepository>.internal(
-      localPlanRecordRepository,
-      name: r'localPlanRecordRepositoryProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$localPlanRecordRepositoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LocalPlanRecordRepositoryRef =
-    AutoDisposeProviderRef<LocalPlanRecordRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

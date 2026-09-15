@@ -63,7 +63,7 @@ class _LubeLoggerAppState extends ConsumerState<LubeLoggerApp> {
 
     ref.listen(allRemindersStreamProvider, (_, next) {
       next.whenData((reminders) {
-        final vehicles = ref.read(vehicleListProvider).valueOrNull ?? [];
+        final vehicles = ref.read(vehicleListProvider).value ?? [];
         final settings =
             ref.read(notificationSettingsRepositoryProvider).settings;
         final service = ref.read(notificationServiceProvider);

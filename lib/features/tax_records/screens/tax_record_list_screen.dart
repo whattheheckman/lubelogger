@@ -86,7 +86,7 @@ class _TaxCard extends ConsumerWidget {
       ),
       confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
-          ref.read(taxRecordsNotifierProvider.notifier).delete(record.id),
+          ref.read(taxRecordsProvider.notifier).delete(record.id),
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: ListTile(

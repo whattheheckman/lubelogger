@@ -5,7 +5,7 @@ import 'package:lubelogger/features/tax_records/domain/tax_record.dart';
 part 'tax_records_provider.g.dart';
 
 @riverpod
-Stream<List<TaxRecord>> taxRecordList(TaxRecordListRef ref, int vehicleId) {
+Stream<List<TaxRecord>> taxRecordList(Ref ref, int vehicleId) {
   final repo = ref.watch(localTaxRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }

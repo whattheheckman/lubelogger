@@ -142,7 +142,7 @@ class _GasRecordFormScreenState extends ConsumerState<GasRecordFormScreen> {
             notes: _notesController.text.trim(),
             updatedAt: DateTime.now(),
           );
-      await ref.read(gasRecordsNotifierProvider.notifier).save(record);
+      await ref.read(gasRecordsProvider.notifier).save(record);
       final mileage = double.tryParse(_mileageController.text) ?? 0;
       final autoAdd = ref
           .read(settingsRepositoryProvider)

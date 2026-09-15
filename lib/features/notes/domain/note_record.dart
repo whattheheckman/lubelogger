@@ -4,7 +4,7 @@ part 'note_record.freezed.dart';
 part 'note_record.g.dart';
 
 @freezed
-class NoteRecord with _$NoteRecord {
+abstract class NoteRecord with _$NoteRecord {
   const factory NoteRecord({
     required int id,
     int? remoteId,

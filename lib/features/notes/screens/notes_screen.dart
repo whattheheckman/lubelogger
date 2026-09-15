@@ -86,7 +86,7 @@ class _NoteCard extends ConsumerWidget {
       ),
       confirmDismiss: (_) => showDeleteConfirmDialog(context),
       onDismissed: (_) =>
-          ref.read(notesNotifierProvider.notifier).delete(note.id),
+          ref.read(notesProvider.notifier).delete(note.id),
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         child: ExpansionTile(

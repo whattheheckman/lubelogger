@@ -6,7 +6,7 @@ part 'supply_records_provider.g.dart';
 
 @riverpod
 Stream<List<SupplyRecord>> supplyRecordList(
-    SupplyRecordListRef ref, int vehicleId) {
+    Ref ref, int vehicleId) {
   final repo = ref.watch(localSupplyRecordRepositoryProvider);
   return repo.watchByVehicle(vehicleId);
 }

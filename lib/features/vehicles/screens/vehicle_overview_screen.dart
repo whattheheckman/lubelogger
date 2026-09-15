@@ -31,7 +31,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // ── Odometer metrics ──────────────────────────────────────
     final odomRecords =
-        ref.watch(odometerRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(odometerRecordListProvider(vehicleId)).value ?? [];
     final mileages = odomRecords.map((r) => r.mileage).toList();
     final lastOdom =
         mileages.isEmpty ? null : mileages.reduce((a, b) => a > b ? a : b);
@@ -43,15 +43,15 @@ class VehicleOverviewScreen extends ConsumerWidget {
 
     // ── Cost metrics ──────────────────────────────────────────
     final service =
-        ref.watch(serviceRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(serviceRecordListProvider(vehicleId)).value ?? [];
     final repair =
-        ref.watch(repairRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(repairRecordListProvider(vehicleId)).value ?? [];
     final upgrade =
-        ref.watch(upgradeRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(upgradeRecordListProvider(vehicleId)).value ?? [];
     final tax =
-        ref.watch(taxRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(taxRecordListProvider(vehicleId)).value ?? [];
     final gas =
-        ref.watch(gasRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(gasRecordListProvider(vehicleId)).value ?? [];
 
     final totalCost = [
       ...service.map((r) => r.cost),
@@ -76,7 +76,7 @@ class VehicleOverviewScreen extends ConsumerWidget {
     final costStr = _costFmt.format(totalCost);
     final mpgStr = avgMpg != null ? '${avgMpg.toStringAsFixed(1)} mpg' : '—';
 
-    final vehicle = ref.watch(vehicleByIdProvider(vehicleId)).valueOrNull;
+    final vehicle = ref.watch(vehicleByIdProvider(vehicleId)).value;
 
     final visibleTabs = ref.read(tabLayoutRepositoryProvider).visibleTabs;
 

@@ -51,11 +51,11 @@ class VehicleCostReport extends ConsumerWidget {
           : indicator;
     }
 
-    final service = asyncService.valueOrNull ?? [];
-    final repair = asyncRepair.valueOrNull ?? [];
-    final upgrade = asyncUpgrade.valueOrNull ?? [];
-    final tax = asyncTax.valueOrNull ?? [];
-    final gas = asyncGas.valueOrNull ?? [];
+    final service = asyncService.value ?? [];
+    final repair = asyncRepair.value ?? [];
+    final upgrade = asyncUpgrade.value ?? [];
+    final tax = asyncTax.value ?? [];
+    final gas = asyncGas.value ?? [];
 
     final totalService = service.fold(0.0, (s, r) => s + r.cost);
     final totalRepair = repair.fold(0.0, (s, r) => s + r.cost);
@@ -300,17 +300,17 @@ class SpendingDistanceChart extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final service =
-        ref.watch(serviceRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(serviceRecordListProvider(vehicleId)).value ?? [];
     final repair =
-        ref.watch(repairRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(repairRecordListProvider(vehicleId)).value ?? [];
     final upgrade =
-        ref.watch(upgradeRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(upgradeRecordListProvider(vehicleId)).value ?? [];
     final tax =
-        ref.watch(taxRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(taxRecordListProvider(vehicleId)).value ?? [];
     final gas =
-        ref.watch(gasRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(gasRecordListProvider(vehicleId)).value ?? [];
     final odom =
-        ref.watch(odometerRecordListProvider(vehicleId)).valueOrNull ?? [];
+        ref.watch(odometerRecordListProvider(vehicleId)).value ?? [];
 
     final now = DateTime.now();
     final months = List.generate(12, (i) {

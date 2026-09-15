@@ -6,25 +6,54 @@ part of 'local_supply_record_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$localSupplyRecordRepositoryHash() =>
-    r'65436a6812971fceb8c12f17d335476e8bd6f26c';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [localSupplyRecordRepository].
 @ProviderFor(localSupplyRecordRepository)
 final localSupplyRecordRepositoryProvider =
-    AutoDisposeProvider<LocalSupplyRecordRepository>.internal(
-      localSupplyRecordRepository,
-      name: r'localSupplyRecordRepositoryProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$localSupplyRecordRepositoryHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+    LocalSupplyRecordRepositoryProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LocalSupplyRecordRepositoryRef =
-    AutoDisposeProviderRef<LocalSupplyRecordRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class LocalSupplyRecordRepositoryProvider
+    extends
+        $FunctionalProvider<
+          LocalSupplyRecordRepository,
+          LocalSupplyRecordRepository,
+          LocalSupplyRecordRepository
+        >
+    with $Provider<LocalSupplyRecordRepository> {
+  LocalSupplyRecordRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localSupplyRecordRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localSupplyRecordRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<LocalSupplyRecordRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  LocalSupplyRecordRepository create(Ref ref) {
+    return localSupplyRecordRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LocalSupplyRecordRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LocalSupplyRecordRepository>(value),
+    );
+  }
+}
+
+String _$localSupplyRecordRepositoryHash() =>
+    r'65436a6812971fceb8c12f17d335476e8bd6f26c';
