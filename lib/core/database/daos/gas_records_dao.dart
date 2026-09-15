@@ -39,11 +39,4 @@ class GasRecordsDao extends DatabaseAccessor<AppDatabase> with _$GasRecordsDaoMi
 
   Future<List<GasRecord>> getPending() =>
       (select(gasRecords)..where((t) => t.syncStatus.isIn(['pending_create', 'pending_update', 'pending_delete']))).get();
-
-  /// Records between two mileages for missed-fill-up accumulation.
-  Future<List<GasRecord>> getBetweenMileage(int vehicleId, double from, double to) =>
-      (select(gasRecords)
-        ..where((t) => t.vehicleId.equals(vehicleId) & t.mileage.isBiggerThan(Variable(from)) & t.mileage.isSmallerOrEqualValue(to))
-        ..orderBy([(t) => OrderingTerm.asc(t.mileage)]))
-          .get();
 }

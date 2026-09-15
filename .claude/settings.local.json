@@ -3,7 +3,9 @@
     "allow": [
       "Bash(flutter analyze:*)",
       "Bash(xargs grep:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "mcp__deepwiki__ask_question",
+      "Bash(flutter pub *)"
     ]
   }
 }

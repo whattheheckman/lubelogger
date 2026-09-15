@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Run the app
 flutter run
 
-# Run code generation (required after modifying annotated providers or models)
+# Run code generation (required after modifying @riverpod, @freezed, or @DriftAccessor annotated classes)
 flutter pub run build_runner build
 
 # Watch mode for development
@@ -17,64 +17,76 @@ flutter pub run build_runner watch
 # Analyze
 flutter analyze
 
-# Tests
+# Run all tests
 flutter test
+
+# Run a single test file
+flutter test test/widget_test.dart
 ```
 
 ## Architecture Overview
 
-LubeLogger is a **local-first Flutter mobile app** for tracking vehicle maintenance records. It uses offline SQLite storage with optional cloud sync.
+LubeLogger is a **local-first Flutter mobile app** for tracking vehicle maintenance records. It uses offline SQLite storage (Drift ORM) with optional cloud sync.
 
-### Directory Structure
+### Feature Structure
+
+Each feature under `lib/features/` follows the same layered pattern:
 
 ```
-lib/
-  core/
-    database/     # Drift ORM setup, AppDatabase singleton, DAOs (12 tables)
-    network/      # Dio HTTP client with AuthInterceptor, CultureInvariantInterceptor
-    routing/      # GoRouter configuration (RouteNames, app_router.dart)
-    settings/     # AppSettings (Freezed), SettingsRepository (SharedPreferences)
-    sync/         # SyncService — push/pull with exponential backoff retry
-    utils/
-    widgets/      # Shared UI (e.g., delete confirmation dialog)
-  features/
-    vehicles/     # Central entity; all other records belong to a vehicle
-    service_records/ repair_records/ upgrade_records/ gas_records/
-    odometer/ tax_records/ reminders/ planner/ supplies/ notes/ reports/
-    settings/ setup/
+data/       — repository interface + LocalXxxRepository (Drift-backed)
+domain/     — Freezed model (immutable, JSON-serializable)
+providers/  — @riverpod-annotated providers (code-generated into .g.dart)
+screens/    — ConsumerWidget / ConsumerStatefulWidget UI
 ```
 
-Each feature follows: `data/` (repository + DB adapters) → `domain/` (Freezed models) → `providers/` (Riverpod) → `screens/` (UI).
+Core infrastructure lives in `lib/core/`:
+- `database/` — `AppDatabase` (Drift singleton, schema version), one `*_table.dart` per entity, one `*_dao.dart` per table
+- `network/` — Dio client with `AuthInterceptor` (Bearer token) and `CultureInvariantInterceptor`
+- `routing/` — GoRouter via `app_router.dart`; use `RouteNames` static methods for all path strings
+- `settings/` — `AppSettings` (Freezed, stored in SharedPreferences via `SettingsRepository`)
+- `sync/` — `SyncService` push/pull, `SyncLogger`, `SyncStatus` constants
+- `widgets/` — shared UI (`DeleteConfirmDialog`, `RecordStatsBanner`)
 
-### State Management: Riverpod with Code Generation
+### State Management: Riverpod
 
-Providers use `@riverpod` annotation and are code-generated. Always run `build_runner` after changing annotated classes.
+- Use `@riverpod` annotation; always run `build_runner` after changes.
+- `StreamProvider` — real-time DB watches (e.g., `gasRecordListProvider(vehicleId)`)
+- `StateNotifier` (`@riverpod class XxxNotifier`) — mutations (save / delete)
+- `.family` providers accept `vehicleId` or `recordId` from GoRouter path params.
+- Key singletons: `appDatabaseProvider`, `apiClientProvider`, `settingsRepositoryProvider`, `syncServiceProvider`.
 
-- **StreamProvider** — real-time DB watches (e.g., `vehicleListProvider`, `vehicleByIdProvider`)
-- **FutureProvider** — async computed values
-- **StateNotifier** — mutations (`addVehicle`, `updateVehicle`, `deleteVehicle`)
-- **`.family`** — providers parameterized by vehicle ID or record ID
+### Database (Drift)
 
-Key singletons injected via Riverpod: `appDatabaseProvider`, `apiClientProvider`, `settingsRepositoryProvider`, `syncServiceProvider`.
+- `AppDatabase` in `app_database.dart` declares all tables and DAOs; bump `schemaVersion` and add a migration case in `MigrationStrategy.onUpgrade` whenever the schema changes.
+- Tables define columns; DAOs expose typed query methods. Never query Drift tables directly from UI or providers — always go through a DAO.
+- MPG is **calculated and cached** in `mpg` (nullable column) at write time by `LocalGasRecordRepository._calculateMpg()`. It is `null` for partial fills (`!isFillToFull`) and skipped for `missedFuelUp` records in the next fill's MPG calculation.
 
-### Navigation: GoRouter
+### Sync
 
-Multi-tab bottom nav (Vehicles / Reminders / Settings) using `StatefulShellRoute`. Use `RouteNames` abstract class for type-safe path strings:
+Records carry a `syncStatus` string field (`synced`, `pending_create`, `pending_update`, `pending_delete`, `sync_failed`). On every write, the repository also enqueues a `SyncQueueCompanion` entry. `SyncService.pushPending()` drains the queue; it is a no-op when `appMode == offline`.
 
+### Gas Records — MPG Calculation
+
+`LocalGasRecordRepository._calculateMpg(r)` in `local_gas_record_repository.dart`:
+1. Returns `null` for non-fill-to-full records.
+2. Looks up the previous fill-to-full record via `GasRecordsDao.getPreviousFillToFull`.
+3. If `missedFuelUp == true`, fetches partial fills between the two mileage points via `getBetweenMileage` and sums their gallons.
+4. Returns `deltaMiles / totalGallons`, or `null` if missing data.
+
+`VehicleFuelEconomyReport` (in `vehicle_charts.dart`) filters to `r.mpg != null && r.isFillToFull` before plotting, so missed-fill-up records and non-full fills are already excluded from the chart and stats.
+
+### Navigation
+
+Multi-tab bottom nav (Vehicles / Reminders / Settings) uses `StatefulShellRoute`. Always use `RouteNames` static methods:
 ```dart
-RouteNames.vehicles
 RouteNames.vehicleDetailPath(vehicleId)
-RouteNames.vehicleServiceAddPath(vehicleId)
+RouteNames.vehicleFuelAddPath(vehicleId)
+RouteNames.vehicleFuelEditPath(vehicleId, recordId)
 ```
-
-Nested routes use `/{vehicleId}` path parameters passed into `.family` providers.
-
-### Local-First Sync
-
-`SyncService` manages push (local→remote) and pull (remote→local) via a `SyncQueue` table. Entities are tagged with `SyncStatus` constants: `pending_create`, `pending_update`, `pending_delete`, `synced`, `sync_failed`. Retry uses exponential backoff (30s → 2m → 8m). App mode (`offline` / `connected`) controls sync eligibility.
 
 ### UI Patterns
 
-- **`ConsumerWidget`** — standard widget base for Riverpod access
-- **`AsyncValue.when()`** — handle loading/error/data states
-- **`RefreshIndicator`** — pull-to-refresh calls `ref.invalidate(provider)`
+- All Riverpod-aware widgets extend `ConsumerWidget` or `ConsumerStatefulWidget`.
+- Use `asyncValue.when(loading:, error:, data:)` for async state.
+- `ref.invalidate(provider)` triggers refresh (used in `RefreshIndicator.onRefresh`).
+- Swipe-to-delete uses `Dismissible` + `showDeleteConfirmDialog` from `core/widgets/`.

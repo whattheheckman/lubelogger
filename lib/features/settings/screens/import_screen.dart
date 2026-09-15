@@ -129,7 +129,7 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
     final dayCol = _findCol(headers, ['day']);
     final monthCol = _findCol(headers, ['month']);
     final yearCol = _findCol(headers, ['year']);
-    final odoCol = _findCol(headers, ['odometer', 'odo']);
+    final odoCol = _findCol(headers, ['odometer', 'odo', 'Odometer (mi)']);
     final fuelCol = _findCol(headers, [
       'gallons',
       'liters',

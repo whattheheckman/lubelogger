@@ -399,6 +399,9 @@ class SpendingDistanceChart extends ConsumerWidget {
     const double rightReserved = 44;
     const double bottomReserved = 20;
 
+    var chartWidth = MediaQuery.of(context).size.width - 32;
+    var chartHeight = 200.0;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
       child: Column(
@@ -467,14 +470,16 @@ class SpendingDistanceChart extends ConsumerWidget {
                         },
                       ),
                     ),
+                    // barChartAlignment: BarChartAlignment.spaceAround,
                   ),
                 ),
 
                 // ── Distance line (overlaid) ─────────────────
                 LineChart(
                   LineChartData(
-                    minY: 0,
+                    minY: -10,
                     maxY: 105,
+                    minX: -2,
                     backgroundColor: Colors.transparent,
                     gridData: const FlGridData(show: false),
                     borderData: FlBorderData(show: false),

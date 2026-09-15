@@ -30,24 +30,17 @@ class LocalGasRecordRepository implements GasRecordRepository {
         syncStatus: row.syncStatus,
       );
 
-  /// Calculates MPG for a fill-to-full event.
-  /// If missedFuelUp, accumulates gallons since the previous fill-to-full.
+  /// Returns null (no MPG) for partial fills and missed-fill-up records.
   Future<double?> _calculateMpg(domain.GasRecord r) async {
     if (!r.isFillToFull) return null;
+    if (r.missedFuelUp) return null;
     final prev =
         await _db.gasRecordsDao.getPreviousFillToFull(r.vehicleId, r.mileage);
     if (prev == null) return null;
     final deltaMiles = r.mileage - prev.mileage;
     if (deltaMiles <= 0) return null;
 
-    double totalGallons = r.gallons;
-    if (r.missedFuelUp) {
-      // Sum all partial fills between prev and this fill
-      final partials = await _db.gasRecordsDao
-          .getBetweenMileage(r.vehicleId, prev.mileage, r.mileage);
-      totalGallons +=
-          partials.where((p) => !p.isFillToFull).fold<double>(0.0, (s, p) => s + p.gallons);
-    }
+    final totalGallons = r.gallons;
     if (totalGallons <= 0) return null;
     return deltaMiles / totalGallons;
   }
