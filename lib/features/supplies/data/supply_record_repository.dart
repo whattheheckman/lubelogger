@@ -1,4 +1,4 @@
-import '../domain/supply_record.dart';
+import 'package:lubelogger/features/supplies/domain/supply_record.dart';
 
 abstract interface class SupplyRecordRepository {
   Stream<List<SupplyRecord>> watchByVehicle(int vehicleId);

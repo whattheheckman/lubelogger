@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/settings/settings_repository.dart';
-import '../../../core/sync/sync_service.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/settings/settings_repository.dart';
+import 'package:lubelogger/core/sync/sync_service.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});

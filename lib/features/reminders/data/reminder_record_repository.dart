@@ -1,4 +1,4 @@
-import '../domain/reminder_record.dart';
+import 'package:lubelogger/features/reminders/domain/reminder_record.dart';
 
 abstract interface class ReminderRecordRepository {
   Stream<List<ReminderRecord>> watchAll();

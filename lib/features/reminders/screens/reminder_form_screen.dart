@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../core/utils/input_formatters.dart';
+import 'package:lubelogger/core/utils/input_formatters.dart';
 
-import '../data/local_reminder_record_repository.dart';
-import '../domain/reminder_record.dart';
-import '../providers/reminders_provider.dart';
+import 'package:lubelogger/features/reminders/data/local_reminder_record_repository.dart';
+import 'package:lubelogger/features/reminders/domain/reminder_record.dart';
+import 'package:lubelogger/features/reminders/providers/reminders_provider.dart';
 
 class ReminderFormScreen extends ConsumerStatefulWidget {
   const ReminderFormScreen(

@@ -1,4 +1,4 @@
-import '../domain/repair_record.dart';
+import 'package:lubelogger/features/repair_records/domain/repair_record.dart';
 
 abstract interface class RepairRecordRepository {
   Stream<List<RepairRecord>> watchByVehicle(int vehicleId);

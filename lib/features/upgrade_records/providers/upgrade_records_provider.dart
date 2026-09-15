@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_upgrade_record_repository.dart';
-import '../domain/upgrade_record.dart';
+import 'package:lubelogger/features/upgrade_records/data/local_upgrade_record_repository.dart';
+import 'package:lubelogger/features/upgrade_records/domain/upgrade_record.dart';
 
 part 'upgrade_records_provider.g.dart';
 

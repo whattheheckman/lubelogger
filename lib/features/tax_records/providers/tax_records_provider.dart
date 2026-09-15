@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_tax_record_repository.dart';
-import '../domain/tax_record.dart';
+import 'package:lubelogger/features/tax_records/data/local_tax_record_repository.dart';
+import 'package:lubelogger/features/tax_records/domain/tax_record.dart';
 
 part 'tax_records_provider.g.dart';
 

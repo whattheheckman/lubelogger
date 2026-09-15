@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_repair_record_repository.dart';
-import '../domain/repair_record.dart';
+import 'package:lubelogger/features/repair_records/data/local_repair_record_repository.dart';
+import 'package:lubelogger/features/repair_records/domain/repair_record.dart';
 
 part 'repair_records_provider.g.dart';
 

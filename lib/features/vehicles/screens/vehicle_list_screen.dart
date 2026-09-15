@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/sync/sync_status.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/sync/sync_status.dart';
 import 'vehicle_overview_screen.dart';
-import '../../odometer/providers/odometer_records_provider.dart';
-import '../domain/vehicle.dart';
-import '../providers/vehicles_provider.dart';
+import 'package:lubelogger/features/odometer/providers/odometer_records_provider.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
+import 'package:lubelogger/features/vehicles/providers/vehicles_provider.dart';
 
 class VehicleListScreen extends ConsumerWidget {
   const VehicleListScreen({super.key});

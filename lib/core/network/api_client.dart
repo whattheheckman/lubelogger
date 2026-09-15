@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../settings/settings_repository.dart';
+import 'package:lubelogger/core/settings/settings_repository.dart';
 import 'auth_interceptor.dart';
 import 'culture_invariant_interceptor.dart';
 import 'api_exception.dart';

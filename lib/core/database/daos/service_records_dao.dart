@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
-import '../app_database.dart';
-import '../tables/service_records_table.dart';
+import 'package:lubelogger/core/database/app_database.dart';
+import 'package:lubelogger/core/database/tables/service_records_table.dart';
 
 part 'service_records_dao.g.dart';
 

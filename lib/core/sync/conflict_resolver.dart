@@ -1,4 +1,4 @@
-import '../settings/app_settings.dart';
+import 'package:lubelogger/core/settings/app_settings.dart';
 
 /// Decides which version wins when local and remote records diverge.
 class ConflictResolver {

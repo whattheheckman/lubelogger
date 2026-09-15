@@ -6,16 +6,16 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/settings/tab_layout_repository.dart';
-import '../../gas_records/providers/gas_records_provider.dart';
-import '../../odometer/providers/odometer_records_provider.dart';
-import '../../repair_records/providers/repair_records_provider.dart';
-import '../../reports/screens/vehicle_charts.dart';
-import '../../service_records/providers/service_records_provider.dart';
-import '../../tax_records/providers/tax_records_provider.dart';
-import '../../upgrade_records/providers/upgrade_records_provider.dart';
-import '../providers/vehicles_provider.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/settings/tab_layout_repository.dart';
+import 'package:lubelogger/features/gas_records/providers/gas_records_provider.dart';
+import 'package:lubelogger/features/odometer/providers/odometer_records_provider.dart';
+import 'package:lubelogger/features/repair_records/providers/repair_records_provider.dart';
+import 'package:lubelogger/features/reports/screens/vehicle_charts.dart';
+import 'package:lubelogger/features/service_records/providers/service_records_provider.dart';
+import 'package:lubelogger/features/tax_records/providers/tax_records_provider.dart';
+import 'package:lubelogger/features/upgrade_records/providers/upgrade_records_provider.dart';
+import 'package:lubelogger/features/vehicles/providers/vehicles_provider.dart';
 
 class VehicleOverviewScreen extends ConsumerWidget {
   const VehicleOverviewScreen(

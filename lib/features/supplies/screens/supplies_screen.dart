@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/widgets/delete_confirm_dialog.dart';
-import '../../../core/widgets/record_stats_banner.dart';
-import '../providers/supply_records_provider.dart';
-import '../domain/supply_record.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/widgets/delete_confirm_dialog.dart';
+import 'package:lubelogger/core/widgets/record_stats_banner.dart';
+import 'package:lubelogger/features/supplies/providers/supply_records_provider.dart';
+import 'package:lubelogger/features/supplies/domain/supply_record.dart';
 
 class SuppliesScreen extends ConsumerWidget {
   const SuppliesScreen(

@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_plan_record_repository.dart';
-import '../domain/plan_record.dart';
+import 'package:lubelogger/features/planner/data/local_plan_record_repository.dart';
+import 'package:lubelogger/features/planner/domain/plan_record.dart';
 
 part 'plan_records_provider.g.dart';
 

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../vehicles/domain/vehicle.dart';
-import '../../vehicles/providers/vehicles_provider.dart';
-import '../providers/reminders_provider.dart';
-import '../domain/reminder_record.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
+import 'package:lubelogger/features/vehicles/providers/vehicles_provider.dart';
+import 'package:lubelogger/features/reminders/providers/reminders_provider.dart';
+import 'package:lubelogger/features/reminders/domain/reminder_record.dart';
 
 class GlobalRemindersScreen extends ConsumerWidget {
   const GlobalRemindersScreen({super.key});

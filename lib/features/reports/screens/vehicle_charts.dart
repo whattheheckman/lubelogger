@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../gas_records/providers/gas_records_provider.dart';
-import '../../odometer/providers/odometer_records_provider.dart';
-import '../../repair_records/providers/repair_records_provider.dart';
-import '../../service_records/providers/service_records_provider.dart';
-import '../../tax_records/providers/tax_records_provider.dart';
-import '../../upgrade_records/providers/upgrade_records_provider.dart';
+import 'package:lubelogger/features/gas_records/providers/gas_records_provider.dart';
+import 'package:lubelogger/features/odometer/providers/odometer_records_provider.dart';
+import 'package:lubelogger/features/repair_records/providers/repair_records_provider.dart';
+import 'package:lubelogger/features/service_records/providers/service_records_provider.dart';
+import 'package:lubelogger/features/tax_records/providers/tax_records_provider.dart';
+import 'package:lubelogger/features/upgrade_records/providers/upgrade_records_provider.dart';
 
 // ─────────────────────────────────────────────────────────────
 // Cost Report

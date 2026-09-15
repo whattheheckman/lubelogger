@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../../features/reminders/domain/reminder_record.dart';
+import 'package:lubelogger/features/reminders/domain/reminder_record.dart';
 import 'notification_settings.dart';
 
 class NotificationService {

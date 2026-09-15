@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
-import '../settings/app_settings.dart';
-import '../settings/settings_repository.dart';
+import 'package:lubelogger/core/settings/app_settings.dart';
+import 'package:lubelogger/core/settings/settings_repository.dart';
 
 class AuthInterceptor extends Interceptor {
   AuthInterceptor(this._settings);

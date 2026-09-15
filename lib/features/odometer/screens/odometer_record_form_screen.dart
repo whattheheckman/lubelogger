@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../core/utils/input_formatters.dart';
+import 'package:lubelogger/core/utils/input_formatters.dart';
 
-import '../data/local_odometer_record_repository.dart';
-import '../domain/odometer_record.dart';
-import '../providers/odometer_records_provider.dart';
+import 'package:lubelogger/features/odometer/data/local_odometer_record_repository.dart';
+import 'package:lubelogger/features/odometer/domain/odometer_record.dart';
+import 'package:lubelogger/features/odometer/providers/odometer_records_provider.dart';
 
 class OdometerRecordFormScreen extends ConsumerStatefulWidget {
   const OdometerRecordFormScreen(

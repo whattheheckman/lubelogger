@@ -1,4 +1,4 @@
-import '../domain/upgrade_record.dart';
+import 'package:lubelogger/features/upgrade_records/domain/upgrade_record.dart';
 
 abstract interface class UpgradeRecordRepository {
   Stream<List<UpgradeRecord>> watchByVehicle(int vehicleId);

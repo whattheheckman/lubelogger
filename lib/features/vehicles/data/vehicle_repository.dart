@@ -1,4 +1,4 @@
-import '../domain/vehicle.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
 
 abstract interface class VehicleRepository {
   Stream<List<Vehicle>> watchAll();

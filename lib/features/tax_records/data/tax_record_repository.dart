@@ -1,4 +1,4 @@
-import '../domain/tax_record.dart';
+import 'package:lubelogger/features/tax_records/domain/tax_record.dart';
 
 abstract interface class TaxRecordRepository {
   Stream<List<TaxRecord>> watchByVehicle(int vehicleId);

@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_supply_record_repository.dart';
-import '../domain/supply_record.dart';
+import 'package:lubelogger/features/supplies/data/local_supply_record_repository.dart';
+import 'package:lubelogger/features/supplies/domain/supply_record.dart';
 
 part 'supply_records_provider.g.dart';
 

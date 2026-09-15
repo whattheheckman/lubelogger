@@ -1,4 +1,4 @@
-import '../domain/odometer_record.dart';
+import 'package:lubelogger/features/odometer/domain/odometer_record.dart';
 
 abstract interface class OdometerRecordRepository {
   Stream<List<OdometerRecord>> watchByVehicle(int vehicleId);

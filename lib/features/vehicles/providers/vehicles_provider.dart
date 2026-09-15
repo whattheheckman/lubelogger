@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_vehicle_repository.dart';
-import '../domain/vehicle.dart';
+import 'package:lubelogger/features/vehicles/data/local_vehicle_repository.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
 
 part 'vehicles_provider.g.dart';
 

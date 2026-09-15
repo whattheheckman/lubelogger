@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/widgets/record_stats_banner.dart';
-import '../domain/plan_record.dart';
-import '../providers/plan_records_provider.dart';
+import 'package:lubelogger/core/widgets/record_stats_banner.dart';
+import 'package:lubelogger/features/planner/domain/plan_record.dart';
+import 'package:lubelogger/features/planner/providers/plan_records_provider.dart';
 
 class KanbanBoardScreen extends ConsumerWidget {
   const KanbanBoardScreen(

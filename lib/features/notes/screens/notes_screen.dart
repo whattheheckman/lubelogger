@@ -4,11 +4,11 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/widgets/delete_confirm_dialog.dart';
-import '../../../core/widgets/record_stats_banner.dart';
-import '../providers/notes_provider.dart';
-import '../domain/note_record.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/widgets/delete_confirm_dialog.dart';
+import 'package:lubelogger/core/widgets/record_stats_banner.dart';
+import 'package:lubelogger/features/notes/providers/notes_provider.dart';
+import 'package:lubelogger/features/notes/domain/note_record.dart';
 
 class NotesScreen extends ConsumerWidget {
   const NotesScreen(

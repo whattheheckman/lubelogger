@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/notifications/notification_service.dart';
-import '../../../core/notifications/notification_settings.dart';
+import 'package:lubelogger/core/notifications/notification_service.dart';
+import 'package:lubelogger/core/notifications/notification_settings.dart';
 
 class NotificationSettingsScreen extends ConsumerStatefulWidget {
   const NotificationSettingsScreen({super.key});

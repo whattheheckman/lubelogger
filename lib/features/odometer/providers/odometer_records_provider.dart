@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_odometer_record_repository.dart';
-import '../domain/odometer_record.dart';
+import 'package:lubelogger/features/odometer/data/local_odometer_record_repository.dart';
+import 'package:lubelogger/features/odometer/domain/odometer_record.dart';
 
 part 'odometer_records_provider.g.dart';
 

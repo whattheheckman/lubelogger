@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/widgets/delete_confirm_dialog.dart';
-import '../../../core/widgets/record_stats_banner.dart';
-import '../providers/odometer_records_provider.dart';
-import '../domain/odometer_record.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/widgets/delete_confirm_dialog.dart';
+import 'package:lubelogger/core/widgets/record_stats_banner.dart';
+import 'package:lubelogger/features/odometer/providers/odometer_records_provider.dart';
+import 'package:lubelogger/features/odometer/domain/odometer_record.dart';
 
 class OdometerRecordListScreen extends ConsumerWidget {
   const OdometerRecordListScreen(

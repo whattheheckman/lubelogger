@@ -1,4 +1,4 @@
-import '../domain/gas_record.dart';
+import 'package:lubelogger/features/gas_records/domain/gas_record.dart';
 
 abstract interface class GasRecordRepository {
   Stream<List<GasRecord>> watchByVehicle(int vehicleId);

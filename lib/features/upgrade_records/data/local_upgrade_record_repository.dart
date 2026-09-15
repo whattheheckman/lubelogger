@@ -3,9 +3,9 @@ import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/database/app_database.dart';
-import '../../../features/vehicles/data/local_vehicle_repository.dart';
-import '../domain/upgrade_record.dart' as domain;
+import 'package:lubelogger/core/database/app_database.dart';
+import 'package:lubelogger/features/vehicles/data/local_vehicle_repository.dart';
+import 'package:lubelogger/features/upgrade_records/domain/upgrade_record.dart' as domain;
 import 'upgrade_record_repository.dart';
 
 part 'local_upgrade_record_repository.g.dart';

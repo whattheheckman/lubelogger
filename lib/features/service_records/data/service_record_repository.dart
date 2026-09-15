@@ -1,4 +1,4 @@
-import '../domain/service_record.dart';
+import 'package:lubelogger/features/service_records/domain/service_record.dart';
 
 abstract interface class ServiceRecordRepository {
   Stream<List<ServiceRecord>> watchByVehicle(int vehicleId);

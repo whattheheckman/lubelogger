@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../data/local_vehicle_repository.dart';
-import '../domain/vehicle.dart';
-import '../providers/vehicles_provider.dart';
+import 'package:lubelogger/features/vehicles/data/local_vehicle_repository.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
+import 'package:lubelogger/features/vehicles/providers/vehicles_provider.dart';
 
 class VehicleFormScreen extends ConsumerStatefulWidget {
   const VehicleFormScreen({super.key, this.vehicleId});

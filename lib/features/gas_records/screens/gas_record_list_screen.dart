@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/widgets/delete_confirm_dialog.dart';
-import '../../../core/widgets/record_stats_banner.dart';
-import '../providers/gas_records_provider.dart';
-import '../domain/gas_record.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/widgets/delete_confirm_dialog.dart';
+import 'package:lubelogger/core/widgets/record_stats_banner.dart';
+import 'package:lubelogger/features/gas_records/providers/gas_records_provider.dart';
+import 'package:lubelogger/features/gas_records/domain/gas_record.dart';
 
 class GasRecordListScreen extends ConsumerWidget {
   const GasRecordListScreen(

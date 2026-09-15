@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../core/utils/input_formatters.dart';
+import 'package:lubelogger/core/utils/input_formatters.dart';
 
-import '../data/local_supply_record_repository.dart';
-import '../domain/supply_record.dart';
-import '../providers/supply_records_provider.dart';
+import 'package:lubelogger/features/supplies/data/local_supply_record_repository.dart';
+import 'package:lubelogger/features/supplies/domain/supply_record.dart';
+import 'package:lubelogger/features/supplies/providers/supply_records_provider.dart';
 
 class SupplyFormScreen extends ConsumerStatefulWidget {
   const SupplyFormScreen({super.key, required this.vehicleId, this.supplyId});

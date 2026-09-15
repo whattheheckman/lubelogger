@@ -6,14 +6,14 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../features/gas_records/data/local_gas_record_repository.dart';
-import '../../../features/odometer/data/local_odometer_record_repository.dart';
-import '../../../features/repair_records/data/local_repair_record_repository.dart';
-import '../../../features/service_records/data/local_service_record_repository.dart';
-import '../../../features/tax_records/data/local_tax_record_repository.dart';
-import '../../../features/upgrade_records/data/local_upgrade_record_repository.dart';
-import '../../../features/vehicles/domain/vehicle.dart';
-import '../../../features/vehicles/providers/vehicles_provider.dart';
+import 'package:lubelogger/features/gas_records/data/local_gas_record_repository.dart';
+import 'package:lubelogger/features/odometer/data/local_odometer_record_repository.dart';
+import 'package:lubelogger/features/repair_records/data/local_repair_record_repository.dart';
+import 'package:lubelogger/features/service_records/data/local_service_record_repository.dart';
+import 'package:lubelogger/features/tax_records/data/local_tax_record_repository.dart';
+import 'package:lubelogger/features/upgrade_records/data/local_upgrade_record_repository.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
+import 'package:lubelogger/features/vehicles/providers/vehicles_provider.dart';
 
 class ExportScreen extends ConsumerStatefulWidget {
   const ExportScreen({super.key});

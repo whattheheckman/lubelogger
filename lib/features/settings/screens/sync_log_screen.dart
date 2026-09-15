@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/sync/sync_logger.dart';
+import 'package:lubelogger/core/sync/sync_logger.dart';
 
 class SyncLogScreen extends ConsumerWidget {
   const SyncLogScreen({super.key});

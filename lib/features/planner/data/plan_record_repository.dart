@@ -1,4 +1,4 @@
-import '../domain/plan_record.dart';
+import 'package:lubelogger/features/planner/domain/plan_record.dart';
 
 abstract interface class PlanRecordRepository {
   Stream<List<PlanRecord>> watchByVehicle(int vehicleId);

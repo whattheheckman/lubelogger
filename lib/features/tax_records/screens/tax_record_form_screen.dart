@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../core/utils/input_formatters.dart';
+import 'package:lubelogger/core/utils/input_formatters.dart';
 
-import '../data/local_tax_record_repository.dart';
-import '../domain/tax_record.dart';
-import '../providers/tax_records_provider.dart';
+import 'package:lubelogger/features/tax_records/data/local_tax_record_repository.dart';
+import 'package:lubelogger/features/tax_records/domain/tax_record.dart';
+import 'package:lubelogger/features/tax_records/providers/tax_records_provider.dart';
 
 class TaxRecordFormScreen extends ConsumerStatefulWidget {
   const TaxRecordFormScreen(

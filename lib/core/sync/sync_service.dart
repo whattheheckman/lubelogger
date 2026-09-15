@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../database/app_database.dart';
-import '../network/api_client.dart';
-import '../settings/settings_repository.dart';
-import '../settings/app_settings.dart';
+import 'package:lubelogger/core/database/app_database.dart';
+import 'package:lubelogger/core/network/api_client.dart';
+import 'package:lubelogger/core/settings/settings_repository.dart';
+import 'package:lubelogger/core/settings/app_settings.dart';
 import 'sync_logger.dart';
-import '../../features/vehicles/data/local_vehicle_repository.dart';
+import 'package:lubelogger/features/vehicles/data/local_vehicle_repository.dart';
 
 part 'sync_service.g.dart';
 

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/settings/app_settings.dart';
-import '../../../core/settings/settings_repository.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/settings/app_settings.dart';
+import 'package:lubelogger/core/settings/settings_repository.dart';
 
 class SetupScreen extends ConsumerStatefulWidget {
   const SetupScreen({super.key});

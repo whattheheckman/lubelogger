@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_gas_record_repository.dart';
-import '../domain/gas_record.dart';
+import 'package:lubelogger/features/gas_records/data/local_gas_record_repository.dart';
+import 'package:lubelogger/features/gas_records/domain/gas_record.dart';
 
 part 'gas_records_provider.g.dart';
 

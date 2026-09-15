@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/settings/app_settings.dart';
-import '../../../core/settings/settings_repository.dart';
-import '../../../core/network/api_client.dart';
+import 'package:lubelogger/core/settings/app_settings.dart';
+import 'package:lubelogger/core/settings/settings_repository.dart';
+import 'package:lubelogger/core/network/api_client.dart';
 
 class ConnectionSettingsScreen extends ConsumerStatefulWidget {
   const ConnectionSettingsScreen({super.key});

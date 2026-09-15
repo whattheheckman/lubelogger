@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../vehicles/providers/vehicles_provider.dart';
-import '../../vehicles/domain/vehicle.dart';
-import '../domain/gas_record.dart';
-import '../providers/gas_records_provider.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/features/vehicles/providers/vehicles_provider.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
+import 'package:lubelogger/features/gas_records/domain/gas_record.dart';
+import 'package:lubelogger/features/gas_records/providers/gas_records_provider.dart';
 
 class QuickAddFuelScreen extends ConsumerStatefulWidget {
   const QuickAddFuelScreen({super.key, this.vehicleId});

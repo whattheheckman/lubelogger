@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/widgets/record_stats_banner.dart';
-import '../providers/reminders_provider.dart';
-import '../domain/reminder_record.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/widgets/record_stats_banner.dart';
+import 'package:lubelogger/features/reminders/providers/reminders_provider.dart';
+import 'package:lubelogger/features/reminders/domain/reminder_record.dart';
 
 class RemindersScreen extends ConsumerWidget {
   const RemindersScreen(

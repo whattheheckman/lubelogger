@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../data/local_reminder_record_repository.dart';
-import '../domain/reminder_record.dart';
+import 'package:lubelogger/features/reminders/data/local_reminder_record_repository.dart';
+import 'package:lubelogger/features/reminders/domain/reminder_record.dart';
 
 part 'reminders_provider.g.dart';
 

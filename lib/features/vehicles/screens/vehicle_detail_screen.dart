@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/routing/route_names.dart';
-import '../../../core/settings/tab_layout_repository.dart';
-import '../providers/vehicles_provider.dart';
-import '../../gas_records/screens/gas_record_list_screen.dart';
-import '../../notes/screens/notes_screen.dart';
+import 'package:lubelogger/core/routing/route_names.dart';
+import 'package:lubelogger/core/settings/tab_layout_repository.dart';
+import 'package:lubelogger/features/vehicles/providers/vehicles_provider.dart';
+import 'package:lubelogger/features/gas_records/screens/gas_record_list_screen.dart';
+import 'package:lubelogger/features/notes/screens/notes_screen.dart';
 import 'vehicle_overview_screen.dart';
-import '../../odometer/screens/odometer_record_list_screen.dart';
-import '../../planner/screens/kanban_board_screen.dart';
-import '../../reminders/screens/reminders_screen.dart';
-import '../../repair_records/screens/repair_record_list_screen.dart';
-import '../../reports/screens/reports_screen.dart';
-import '../../service_records/screens/service_record_list_screen.dart';
-import '../../supplies/screens/supplies_screen.dart';
-import '../../tax_records/screens/tax_record_list_screen.dart';
-import '../../upgrade_records/screens/upgrade_record_list_screen.dart';
+import 'package:lubelogger/features/odometer/screens/odometer_record_list_screen.dart';
+import 'package:lubelogger/features/planner/screens/kanban_board_screen.dart';
+import 'package:lubelogger/features/reminders/screens/reminders_screen.dart';
+import 'package:lubelogger/features/repair_records/screens/repair_record_list_screen.dart';
+import 'package:lubelogger/features/reports/screens/reports_screen.dart';
+import 'package:lubelogger/features/service_records/screens/service_record_list_screen.dart';
+import 'package:lubelogger/features/supplies/screens/supplies_screen.dart';
+import 'package:lubelogger/features/tax_records/screens/tax_record_list_screen.dart';
+import 'package:lubelogger/features/upgrade_records/screens/upgrade_record_list_screen.dart';
 
 /// All possible tab builders keyed by tab ID.
 Widget Function(int) _tabBuilder(String id) {

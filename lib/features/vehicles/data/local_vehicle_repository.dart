@@ -3,8 +3,8 @@ import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/database/app_database.dart';
-import '../domain/vehicle.dart' as domain;
+import 'package:lubelogger/core/database/app_database.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart' as domain;
 import 'vehicle_repository.dart';
 
 part 'local_vehicle_repository.g.dart';

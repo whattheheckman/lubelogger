@@ -1,4 +1,4 @@
-import '../domain/note_record.dart';
+import 'package:lubelogger/features/notes/domain/note_record.dart';
 
 abstract interface class NoteRecordRepository {
   Stream<List<NoteRecord>> watchByVehicle(int vehicleId);

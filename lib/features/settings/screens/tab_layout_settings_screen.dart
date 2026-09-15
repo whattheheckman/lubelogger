@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/settings/tab_layout_repository.dart';
+import 'package:lubelogger/core/settings/tab_layout_repository.dart';
 
 class TabLayoutSettingsScreen extends ConsumerStatefulWidget {
   const TabLayoutSettingsScreen({super.key});

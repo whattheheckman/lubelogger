@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 
-import '../data/local_note_record_repository.dart';
-import '../domain/note_record.dart';
-import '../providers/notes_provider.dart';
+import 'package:lubelogger/features/notes/data/local_note_record_repository.dart';
+import 'package:lubelogger/features/notes/domain/note_record.dart';
+import 'package:lubelogger/features/notes/providers/notes_provider.dart';
 
 class NoteFormScreen extends ConsumerStatefulWidget {
   const NoteFormScreen({super.key, required this.vehicleId, this.noteId});

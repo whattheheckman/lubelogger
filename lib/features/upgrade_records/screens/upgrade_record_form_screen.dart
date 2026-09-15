@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../core/utils/input_formatters.dart';
+import 'package:lubelogger/core/utils/input_formatters.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/settings/settings_repository.dart';
-import '../../../features/odometer/data/local_odometer_record_repository.dart';
-import '../../../features/odometer/domain/odometer_record.dart' as odom;
-import '../data/local_upgrade_record_repository.dart';
-import '../domain/upgrade_record.dart';
-import '../providers/upgrade_records_provider.dart';
+import 'package:lubelogger/core/settings/settings_repository.dart';
+import 'package:lubelogger/features/odometer/data/local_odometer_record_repository.dart';
+import 'package:lubelogger/features/odometer/domain/odometer_record.dart' as odom;
+import 'package:lubelogger/features/upgrade_records/data/local_upgrade_record_repository.dart';
+import 'package:lubelogger/features/upgrade_records/domain/upgrade_record.dart';
+import 'package:lubelogger/features/upgrade_records/providers/upgrade_records_provider.dart';
 
 class UpgradeRecordFormScreen extends ConsumerStatefulWidget {
   const UpgradeRecordFormScreen(

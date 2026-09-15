@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../features/gas_records/data/local_gas_record_repository.dart';
-import '../../../features/gas_records/domain/gas_record.dart';
-import '../../../features/vehicles/domain/vehicle.dart';
-import '../../../features/vehicles/providers/vehicles_provider.dart';
+import 'package:lubelogger/features/gas_records/data/local_gas_record_repository.dart';
+import 'package:lubelogger/features/gas_records/domain/gas_record.dart';
+import 'package:lubelogger/features/vehicles/domain/vehicle.dart';
+import 'package:lubelogger/features/vehicles/providers/vehicles_provider.dart';
 
 class ImportScreen extends ConsumerStatefulWidget {
   const ImportScreen({super.key});
