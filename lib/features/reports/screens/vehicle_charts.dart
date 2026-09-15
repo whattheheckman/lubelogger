@@ -399,8 +399,8 @@ class SpendingDistanceChart extends ConsumerWidget {
     const double rightReserved = 44;
     const double bottomReserved = 20;
 
-    var chartWidth = MediaQuery.of(context).size.width - 32;
-    var chartHeight = 200.0;
+    //var chartWidth = MediaQuery.of(context).size.width - 32;
+    //var chartHeight = 200.0;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
